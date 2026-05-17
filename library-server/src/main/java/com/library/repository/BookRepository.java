@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b WHERE " +
-           "(:keyword IS NULL OR b.title LIKE %:keyword% OR b.author LIKE %:keyword% OR b.isbn LIKE %:keyword%) AND " +
+           "(:keyword IS NULL OR b.title LIKE CONCAT('%', :keyword, '%') OR b.author LIKE CONCAT('%', :keyword, '%') OR b.isbn LIKE CONCAT('%', :keyword, '%')) AND " +
            "(:categoryId IS NULL OR b.categoryId = :categoryId) AND " +
            "(:status IS NULL OR b.status = :status)")
     Page<Book> findWithFilters(@Param("keyword") String keyword,
