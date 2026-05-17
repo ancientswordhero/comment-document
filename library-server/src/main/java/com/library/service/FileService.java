@@ -12,6 +12,10 @@ public class FileService {
 
     private final Path uploadPath;
 
+    public FileService() {
+        this("uploads/covers");
+    }
+
     public FileService(FileUploadConfig config) {
         this(config.getUploadDir());
     }
