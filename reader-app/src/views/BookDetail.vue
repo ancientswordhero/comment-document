@@ -1,0 +1,62 @@
+<template>
+  <div class="detail-page" v-if="book">
+    <div class="detail-card">
+      <div class="detail-cover">
+        <img v-if="book.coverUrl" :src="coverSrc" :alt="book.title" />
+        <span v-else class="cover-placeholder">📖</span>
+      </div>
+      <div class="detail-info">
+        <h1 class="detail-title">{{ book.title }}</h1>
+        <div class="detail-meta">
+          <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
+          <div class="meta-item"><span class="meta-label">ISBN</span>{{ book.isbn }}</div>
+          <div class="meta-item"><span class="meta-label">分类</span>{{ book.categoryName || '未分类' }}</div>
+          <div class="meta-item"><span class="meta-label">上架时间</span>{{ formatDate(book.createdAt) }}</div>
+        </div>
+        <div class="detail-desc-title">图书简介</div>
+        <div class="detail-desc" v-html="book.description || '暂无简介'"></div>
+        <button class="back-btn" @click="$router.push('/')">← 返回首页</button>
+      </div>
+    </div>
+  </div>
+  <div v-else class="loading-text">加载中...</div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { getBookById } from '../api/book'
+
+const route = useRoute()
+const book = ref(null)
+const coverSrc = computed(() =>
+  book.value?.coverUrl ? `http://localhost:8080${book.value.coverUrl}` : null
+)
+
+onMounted(async () => {
+  const res = await getBookById(route.params.id)
+  book.value = res.data
+})
+
+function formatDate(dateStr) {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleDateString('zh-CN')
+}
+</script>
+
+<style scoped>
+.detail-page { padding: 28px 36px; }
+.detail-card { display: flex; gap: 28px; background: #fff; border: 1px solid var(--card-border); padding: 24px; }
+.detail-cover { width: 260px; height: 360px; background: #f8f5ee; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.detail-cover img { width: 100%; height: 100%; object-fit: cover; }
+.cover-placeholder { font-size: 64px; color: #d0c8b4; }
+.detail-info { flex: 1; }
+.detail-title { font-size: 24px; font-family: var(--font-serif); color: var(--text); font-weight: 600; letter-spacing: 2px; margin-bottom: 20px; }
+.detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.meta-item { font-size: 13px; color: var(--text-secondary); }
+.meta-label { color: var(--text-muted); margin-right: 8px; font-size: 12px; }
+.detail-desc-title { font-size: 14px; font-family: var(--font-serif); color: var(--text); margin-bottom: 8px; font-weight: 600; }
+.detail-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+.back-btn { margin-top: 20px; padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 2px; cursor: pointer; font-size: 13px; }
+.loading-text { text-align: center; padding: 60px; color: var(--text-muted); }
+</style>
