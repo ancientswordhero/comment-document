@@ -1,14 +1,43 @@
 package com.library.dto;
 
-import lombok.*;
 import java.util.List;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Builder
 public class PageResult<T> {
     private List<T> records;
     private long total;
     private int page;
     private int size;
+
+    public PageResult() {}
+
+    public PageResult(List<T> records, long total, int page, int size) {
+        this.records = records;
+        this.total = total;
+        this.page = page;
+        this.size = size;
+    }
+
+    public List<T> getRecords() { return records; }
+    public void setRecords(List<T> records) { this.records = records; }
+    public long getTotal() { return total; }
+    public void setTotal(long total) { this.total = total; }
+    public int getPage() { return page; }
+    public void setPage(int page) { this.page = page; }
+    public int getSize() { return size; }
+    public void setSize(int size) { this.size = size; }
+
+    public static <T> Builder<T> builder() { return new Builder<>(); }
+
+    public static class Builder<T> {
+        private List<T> records;
+        private long total;
+        private int page;
+        private int size;
+
+        public Builder<T> records(List<T> records) { this.records = records; return this; }
+        public Builder<T> total(long total) { this.total = total; return this; }
+        public Builder<T> page(int page) { this.page = page; return this; }
+        public Builder<T> size(int size) { this.size = size; return this; }
+        public PageResult<T> build() { return new PageResult<>(records, total, page, size); }
+    }
 }

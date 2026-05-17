@@ -1,14 +1,10 @@
 package com.library.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "books")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Builder
 public class Book {
 
     @Id
@@ -34,7 +30,6 @@ public class Book {
     private String description;
 
     @Column(nullable = false)
-    @Builder.Default
     private Integer status = 1;
 
     @Column(name = "created_at", updatable = false)
@@ -42,6 +37,44 @@ public class Book {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public Book() {}
+
+    public Book(Long id, String title, String author, String isbn, Long categoryId,
+                String coverUrl, String description, Integer status,
+                LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.categoryId = categoryId;
+        this.coverUrl = coverUrl;
+        this.description = description;
+        this.status = status != null ? status : 1;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+    public String getIsbn() { return isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+    public String getCoverUrl() { return coverUrl; }
+    public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     @PrePersist
     protected void onCreate() {
@@ -52,5 +85,35 @@ public class Book {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private Long id;
+        private String title;
+        private String author;
+        private String isbn;
+        private Long categoryId;
+        private String coverUrl;
+        private String description;
+        private Integer status = 1;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder id(Long id) { this.id = id; return this; }
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder author(String author) { this.author = author; return this; }
+        public Builder isbn(String isbn) { this.isbn = isbn; return this; }
+        public Builder categoryId(Long categoryId) { this.categoryId = categoryId; return this; }
+        public Builder coverUrl(String coverUrl) { this.coverUrl = coverUrl; return this; }
+        public Builder description(String description) { this.description = description; return this; }
+        public Builder status(Integer status) { this.status = status; return this; }
+        public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
+        public Book build() {
+            return new Book(id, title, author, isbn, categoryId, coverUrl, description,
+                status, createdAt, updatedAt);
+        }
     }
 }
