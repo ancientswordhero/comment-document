@@ -4,6 +4,7 @@ import com.library.dto.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,6 +28,18 @@ public class GlobalExceptionHandler {
             return ApiResponse.error(409, "ISBN已存在");
         }
         return ApiResponse.error(409, "数据冲突");
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRuntime(RuntimeException e) {
+        String msg = e.getMessage();
+        if (msg != null && msg.contains("用户名已存在")) {
+            return ResponseEntity.status(409).body(ApiResponse.error(409, msg));
+        }
+        if (msg != null && msg.contains("用户名或密码错误")) {
+            return ResponseEntity.status(401).body(ApiResponse.error(401, msg));
+        }
+        return ResponseEntity.status(500).body(ApiResponse.error(500, "服务器内部错误"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
