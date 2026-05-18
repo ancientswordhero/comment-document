@@ -2,12 +2,21 @@
   <header class="admin-header">
     <span class="admin-logo">云图书馆 · 管理后台</span>
     <div class="admin-links">
-      <span>图书管理</span>
+      <router-link to="/">图书管理</router-link>
       <span class="divider">|</span>
-      <span>管理员</span>
+      <router-link to="/admins">新增管理员</router-link>
+      <span class="divider">|</span>
+      <a @click="logout">退出</a>
     </div>
   </header>
 </template>
+
+<script setup>
+function logout() {
+  localStorage.removeItem('token')
+  window.location.href = 'http://localhost:5175'
+}
+</script>
 
 <style scoped>
 .admin-header {
@@ -19,6 +28,8 @@
   font-weight: 600; font-size: 16px; color: var(--text);
   font-family: var(--font-serif); letter-spacing: 2px;
 }
-.admin-links { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); }
+.admin-links { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); align-items: center; }
+.admin-links a { cursor: pointer; }
+.admin-links a:hover { color: var(--accent); }
 .divider { color: var(--border); }
 </style>

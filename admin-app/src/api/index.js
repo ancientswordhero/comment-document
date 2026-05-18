@@ -5,6 +5,14 @@ const api = axios.create({
   timeout: 10000
 })
 
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 api.interceptors.response.use(
   response => {
     if (response.data.code !== 200) {
@@ -14,6 +22,10 @@ api.interceptors.response.use(
   },
   error => {
     const msg = error.response?.data?.message || '网络错误'
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      localStorage.removeItem('token')
+      window.location.href = 'http://localhost:5175'
+    }
     console.error(msg)
     return Promise.reject(error)
   }
