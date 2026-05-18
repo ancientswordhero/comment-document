@@ -1,7 +1,7 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <HelloWorld />
+  <AuthForm />
 </template>
+
+<script setup>
+import AuthForm from './components/AuthForm.vue'
+</script>
