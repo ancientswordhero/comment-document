@@ -10,15 +10,45 @@
         <span class="search-placeholder">搜索书名 · 作者 · ISBN</span>
       </div>
     </div>
-    <div class="header-right">
-      <span class="nav-link">登录</span>
+    <div class="header-right" v-if="username">
+      <span class="nav-link user-name">{{ username }}</span>
       <span class="nav-divider">|</span>
-      <span class="nav-link">注册</span>
+      <span class="nav-link" @click="logout">退出</span>
+    </div>
+    <div class="header-right" v-else>
+      <span class="nav-link" @click="toLogin">登录</span>
+      <span class="nav-divider">|</span>
+      <span class="nav-link" @click="toLogin">注册</span>
     </div>
   </header>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { getMe } from '../api/auth'
+
+const username = ref('')
+
+onMounted(async () => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    try {
+      const res = await getMe(token)
+      username.value = res.data.username
+    } catch {
+      localStorage.removeItem('token')
+    }
+  }
+})
+
+function logout() {
+  localStorage.removeItem('token')
+  window.location.href = 'http://localhost:5175'
+}
+
+function toLogin() {
+  window.location.href = 'http://localhost:5175'
+}
 </script>
 
 <style scoped>
@@ -52,4 +82,5 @@
 .nav-divider { color: var(--border); }
 .nav-link { cursor: pointer; }
 .nav-link:hover { color: var(--accent); }
+.user-name { color: var(--accent); font-weight: 500; }
 </style>
