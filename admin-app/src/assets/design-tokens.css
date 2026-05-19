@@ -4,6 +4,7 @@
   /* 颜色 */
   --color-bg:            #fafaf7;
   --color-card-bg:       #fff;
+  --color-header-bg:     #fff;
   --color-accent-light:  #f0ebe0;
   --color-primary:       #c9a96e;
   --color-primary-hover: #b8944d;
@@ -36,7 +37,7 @@
 
   /* 字体 */
   --font-serif: 'Noto Serif SC', 'SimSun', serif;
-  --font-sans:  'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-sans:  'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   /* 布局 — 管理后台专用 */
   --header-padding: 10px 24px;
