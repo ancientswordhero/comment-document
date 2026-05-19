@@ -17,7 +17,7 @@
             placeholder="搜索书名 · 作者 · ISBN"
             @keyup.enter="onSearch"
           />
-          <button class="search-btn" @click="onSearch">搜索</button>
+          <button type="button" class="search-btn" @click="onSearch">搜索</button>
         </div>
         <div class="banner-tagline">万卷古今消永日 · 一窗昏晓送流年</div>
       </div>
@@ -34,22 +34,17 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { setSearchKeyword } from '../composables/useSearch'
 import bannerBg from '../assets/banner-bg.jpg'
 import chibiSrc from '../assets/banner-chibi.png'
 import characterSrc from '../assets/banner-character.png'
 
 const searchKeywords = ref('')
-let bannerTimer = null
 
 function onSearch() {
   setSearchKeyword(searchKeywords.value)
 }
-
-onUnmounted(() => {
-  if (bannerTimer) clearInterval(bannerTimer)
-})
 </script>
 
 <style scoped>
