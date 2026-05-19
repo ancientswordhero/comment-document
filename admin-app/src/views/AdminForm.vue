@@ -53,26 +53,41 @@ async function onSubmit() {
 </script>
 
 <style scoped>
-.admin-form-page { padding: 24px 28px; max-width: 480px; }
-.form-title { font-size: 18px; font-family: var(--font-serif); color: var(--text); letter-spacing: 2px; margin-bottom: 16px; }
-.form-card { background: #fff; border: 1px solid var(--card-border); padding: 24px; }
-.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
-.field label { font-size: 12px; color: var(--text-secondary); }
-.input {
-  padding: 7px 12px; border: 1px solid #e0dbd0; border-radius: 2px;
-  font-size: 13px; color: var(--text); outline: none; background: #fff;
+.admin-form-page { padding: var(--content-padding); max-width: 480px; }
+.form-title {
+  font-size: 18px; font-family: var(--font-serif); color: var(--color-text);
+  letter-spacing: 2px; margin-bottom: 16px;
 }
-.input:focus { border-color: var(--accent); }
-.error { font-size: 11px; color: #c04040; }
-.success { font-size: 12px; color: #5b8c5a; margin-top: 10px; }
+.form-card {
+  background: var(--color-card-bg); border: 1px solid var(--color-card-border);
+  border-radius: var(--radius); padding: 24px;
+}
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.field label { font-size: 12px; color: var(--color-text-secondary); }
+.input {
+  padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: 13px; color: var(--color-text); outline: none; background: var(--color-card-bg);
+}
+.input:focus { border-color: var(--color-primary); }
+.error { font-size: 11px; color: var(--color-danger); }
+.success { font-size: 12px; color: var(--color-success); margin-top: 10px; }
 .form-actions { display: flex; gap: 10px; justify-content: flex-end; }
 .btn-cancel {
-  padding: 8px 20px; background: #fff; border: 1px solid #e0dbd0;
-  border-radius: 2px; color: var(--text-secondary); font-size: 13px; cursor: pointer;
+  padding: 8px 20px; background: var(--color-card-bg);
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  color: var(--color-text-secondary); font-size: 13px; cursor: pointer;
 }
 .btn-save {
-  padding: 8px 20px; background: var(--accent); color: #fff;
-  border: none; border-radius: 2px; font-size: 13px; cursor: pointer;
+  padding: 8px 20px; background: var(--color-primary); color: #fff;
+  border: none; border-radius: var(--radius); font-size: 13px; cursor: pointer;
+  transition: background 0.2s;
 }
+.btn-save:hover { background: var(--color-primary-hover); }
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .form-title { font-size: 16px; }
+  .form-actions { flex-direction: column-reverse; }
+  .btn-cancel, .btn-save { width: 100%; text-align: center; }
+}
 </style>

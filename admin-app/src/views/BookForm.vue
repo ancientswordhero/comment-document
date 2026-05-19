@@ -67,15 +67,27 @@ const form = reactive({
 const errors = reactive({ title: '', author: '', isbn: '' })
 
 onMounted(async () => {
-  const res = await getCategories()
-  flatCategories.value = flattenCategories(res.data)
+  try {
+    const catRes = await getCategories()
+    flatCategories.value = flattenCategories(catRes)
+  } catch (err) {
+    console.error('获取分类失败:', err)
+  }
+  
   if (isEdit.value) {
-    const res2 = await getBookById(route.params.id)
-    const b = res2.data
-    form.title = b.title; form.author = b.author; form.isbn = b.isbn
-    form.categoryId = b.categoryId; form.coverUrl = b.coverUrl || ''
-    form.description = b.description || ''
-    if (b.coverUrl) previewUrl.value = 'http://localhost:8080' + b.coverUrl
+    try {
+      const bookRes = await getBookById(route.params.id)
+      const b = bookRes
+      form.title = b.title
+      form.author = b.author
+      form.isbn = b.isbn
+      form.categoryId = b.categoryId
+      form.coverUrl = b.coverUrl || ''
+      form.description = b.description || ''
+      if (b.coverUrl) previewUrl.value = 'http://localhost:8080' + b.coverUrl
+    } catch (err) {
+      console.error('获取图书详情失败:', err)
+    }
   }
 })
 
@@ -93,9 +105,13 @@ function triggerUpload() { fileInput.value?.click() }
 async function onFileChange(e) {
   const file = e.target.files[0]
   if (!file) return
-  const res = await uploadCover(file)
-  form.coverUrl = res.data
-  previewUrl.value = 'http://localhost:8080' + res.data
+  try {
+    const res = await uploadCover(file)
+    form.coverUrl = res
+    previewUrl.value = 'http://localhost:8080' + res
+  } catch (err) {
+    console.error('上传封面失败:', err)
+  }
 }
 
 function validate() {
@@ -117,44 +133,71 @@ async function onSubmit() {
     if (isEdit.value) { await updateBook(route.params.id, data) }
     else { await createBook(data) }
     router.push('/')
-  } finally { saving.value = false }
+  } catch (err) {
+    console.error('保存失败:', err)
+  } finally {
+    saving.value = false
+  }
 }
 </script>
 
 <style scoped>
-.form-page { padding: 24px 28px; max-width: 640px; }
-.form-title { font-size: 18px; font-family: var(--font-serif); color: var(--text); letter-spacing: 2px; margin-bottom: 16px; }
-.form-card { background: #fff; border: 1px solid var(--card-border); padding: 24px; }
+.form-page { padding: var(--content-padding); max-width: 640px; }
+.form-title {
+  font-size: 18px; font-family: var(--font-serif); color: var(--color-text);
+  letter-spacing: 2px; margin-bottom: 16px;
+}
+.form-card {
+  background: var(--color-card-bg); border: 1px solid var(--color-card-border);
+  border-radius: var(--radius); padding: 24px;
+}
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field.full { grid-column: 1 / -1; }
-.field label { font-size: 12px; color: var(--text-secondary); }
+.field label { font-size: 12px; color: var(--color-text-secondary); }
 .input {
-  padding: 7px 12px; border: 1px solid #e0dbd0; border-radius: 2px;
-  font-size: 13px; color: var(--text); outline: none; background: #fff;
+  padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: 13px; color: var(--color-text); outline: none; background: var(--color-card-bg);
 }
-.input:focus { border-color: var(--accent); }
-.error { font-size: 11px; color: #c04040; }
+.input:focus { border-color: var(--color-primary); }
+.error { font-size: 11px; color: var(--color-danger); }
 .upload-zone {
-  border: 1px dashed #e0dbd0; padding: 24px; text-align: center;
-  font-size: 12px; color: var(--text-muted); background: #fafaf7;
-  cursor: pointer; min-height: 100px; display: flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--color-border); padding: 24px; text-align: center;
+  font-size: 12px; color: var(--color-text-muted); background: var(--color-bg);
+  cursor: pointer; min-height: 100px; display: flex; align-items: center;
+  justify-content: center; border-radius: var(--radius);
 }
 .preview-img { max-width: 100%; max-height: 200px; object-fit: contain; }
 .textarea {
-  width: 100%; padding: 10px 12px; border: 1px solid #e0dbd0;
-  border-radius: 2px; font-size: 12px; color: var(--text); outline: none;
+  width: 100%; padding: 10px 12px; border: 1px solid var(--color-border);
+  border-radius: var(--radius); font-size: 12px; color: var(--color-text); outline: none;
   resize: vertical; font-family: var(--font-sans);
 }
-.textarea:focus { border-color: var(--accent); }
+.textarea:focus { border-color: var(--color-primary); }
 .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 .btn-cancel {
-  padding: 8px 20px; background: #fff; border: 1px solid #e0dbd0;
-  border-radius: 2px; color: var(--text-secondary); font-size: 13px; cursor: pointer;
+  padding: 8px 20px; background: var(--color-card-bg);
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  color: var(--color-text-secondary); font-size: 13px; cursor: pointer;
 }
 .btn-save {
-  padding: 8px 20px; background: var(--accent); color: #fff;
-  border: none; border-radius: 2px; font-size: 13px; cursor: pointer;
+  padding: 8px 20px; background: var(--color-primary); color: #fff;
+  border: none; border-radius: var(--radius); font-size: 13px; cursor: pointer;
+  transition: background 0.2s;
 }
+.btn-save:hover { background: var(--color-primary-hover); }
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: 1; }
+  .form-card { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+  .form-page { padding: var(--content-padding); }
+  .form-title { font-size: 16px; }
+  .form-actions { flex-direction: column-reverse; }
+  .btn-cancel, .btn-save { width: 100%; text-align: center; }
+}
 </style>

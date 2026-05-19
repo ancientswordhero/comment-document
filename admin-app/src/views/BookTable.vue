@@ -17,6 +17,7 @@
       <button class="btn-add" @click="$router.push('/book/new')">+ 新增图书</button>
     </div>
 
+    <div class="table-wrapper">
     <table class="data-table">
       <thead>
         <tr><th>封面</th><th>书名</th><th>作者</th><th>ISBN</th><th>分类</th><th>状态</th><th>操作</th></tr>
@@ -48,6 +49,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <div class="table-pagination" v-if="totalPages > 1">
       <button :disabled="page <= 1" @click="goPage(page - 1)">← 上一页</button>
@@ -81,79 +83,128 @@ function flattenCategories(cats, prefix = '') {
 }
 
 onMounted(async () => {
-  const res = await getCategories()
-  flatCategories.value = flattenCategories(res.data)
+  try {
+    const catRes = await getCategories()
+    flatCategories.value = flattenCategories(catRes)
+  } catch (err) {
+    console.error('获取分类失败:', err)
+  }
   fetchBooks()
 })
 
 async function fetchBooks() {
-  const res = await getBooks({
-    keyword: keyword.value || undefined,
-    categoryId: categoryId.value || undefined,
-    status: statusFilter.value,
-    page: page.value, size
-  })
-  books.value = res.data.records
-  total.value = res.data.total
+  try {
+    const res = await getBooks({
+      keyword: keyword.value || undefined,
+      categoryId: categoryId.value || undefined,
+      status: statusFilter.value,
+      page: page.value, size
+    })
+    books.value = res.records
+    total.value = res.total
+  } catch (err) {
+    console.error('获取图书列表失败:', err)
+  }
 }
 
 function search() { page.value = 1; fetchBooks() }
 function goPage(p) { page.value = p; fetchBooks() }
 
 async function onToggle(book) {
-  await toggleStatus(book.id); fetchBooks()
+  try {
+    await toggleStatus(book.id)
+    fetchBooks()
+  } catch (err) {
+    console.error('切换状态失败:', err)
+  }
 }
+
 async function onDelete(book) {
   if (confirm(`确定删除「${book.title}」吗？`)) {
-    await deleteBook(book.id); fetchBooks()
+    try {
+      await deleteBook(book.id)
+      fetchBooks()
+    } catch (err) {
+      console.error('删除图书失败:', err)
+    }
   }
 }
 </script>
 
 <style scoped>
-.table-page { padding: 16px 28px; }
-.toolbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+.table-page { padding: var(--content-padding); }
+.toolbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
 .toolbar-search {
-  flex: 1; max-width: 280px; padding: 7px 12px;
-  border: 1px solid #e0dbd0; border-radius: 2px; font-size: 12px; outline: none;
+  flex: 1; min-width: 160px; max-width: 280px; padding: 8px 12px;
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: 12px; outline: none; color: var(--color-text);
 }
+.toolbar-search::placeholder { color: var(--color-text-muted); }
 .toolbar-select {
-  padding: 7px 12px; border: 1px solid #e0dbd0; border-radius: 2px;
-  font-size: 12px; color: var(--text-secondary); outline: none;
+  padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: 12px; color: var(--color-text-secondary); outline: none; background: var(--color-card-bg);
 }
 .btn-add {
   margin-left: auto; padding: 8px 20px;
-  background: var(--accent); color: #fff; border: none;
-  border-radius: 2px; font-size: 12px; cursor: pointer;
+  background: var(--color-primary); color: #fff; border: none;
+  border-radius: var(--radius); font-size: 12px; cursor: pointer;
+  transition: background 0.2s;
 }
-.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.btn-add:hover { background: var(--color-primary-hover); }
+.table-wrapper { overflow-x: auto; }
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px;
+}
 .data-table th {
-  text-align: left; padding: 10px 12px; color: var(--text-secondary);
-  font-weight: 500; border-bottom: 2px solid var(--border);
+  text-align: left; padding: 10px 12px; color: var(--color-text-secondary);
+  font-weight: 500; border-bottom: 2px solid var(--color-border);
+  background: var(--color-bg);
 }
-.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--accent-light); }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-accent-light); }
 .thumb {
-  width: 36px; height: 48px; background: #f5f1ea;
+  width: 36px; height: 48px; background: var(--color-accent-light);
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--text-muted); overflow: hidden;
+  font-size: 10px; color: var(--color-text-muted); overflow: hidden;
+  border-radius: var(--radius-sm);
 }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.cell-title { color: var(--text); font-weight: 500; }
-.cell-isbn { color: var(--text-muted); font-size: 11px; }
-.status-tag { padding: 2px 8px; border-radius: 2px; font-size: 11px; }
-.status-tag.up { background: #e8f5e9; color: #5b8c5a; }
-.status-tag.down { background: #fff3e0; color: #c08840; }
-.cell-actions a { cursor: pointer; color: var(--text-secondary); }
-.cell-actions a:hover { color: var(--accent); }
-.cell-actions a.del:hover { color: #c04040; }
-.cell-actions .sep { color: var(--border); margin: 0 6px; }
+.cell-title { color: var(--color-text); font-weight: 500; }
+.cell-isbn { color: var(--color-text-muted); font-size: 11px; }
+.status-tag {
+  padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;
+}
+.status-tag.up { background: #e8f5e9; color: var(--color-success); }
+.status-tag.down { background: #fff3e0; color: var(--color-warning); }
+.cell-actions a { cursor: pointer; color: var(--color-text-secondary); }
+.cell-actions a:hover { color: var(--color-primary); }
+.cell-actions a.del:hover { color: var(--color-danger); }
+.cell-actions .sep { color: var(--color-border); margin: 0 4px; }
 .table-pagination {
   text-align: center; margin-top: 16px;
   display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 12px;
 }
 .table-pagination button {
-  padding: 3px 12px; border: 1px solid #e0dbd0;
-  background: #fff; border-radius: 2px; color: var(--text-secondary); cursor: pointer;
+  padding: 5px 14px; border: 1px solid var(--color-border);
+  background: var(--color-card-bg); border-radius: var(--radius);
+  color: var(--color-text-secondary); cursor: pointer;
+  transition: all 0.2s;
 }
-.page-info { color: var(--text-muted); }
+.table-pagination button:hover:not(:disabled) {
+  border-color: var(--color-primary); color: var(--color-primary);
+}
+.table-pagination button:disabled { color: #d0c8b4; cursor: not-allowed; }
+.page-info { color: var(--color-text-muted); }
+
+@media (max-width: 768px) {
+  .toolbar { gap: 6px; }
+  .toolbar-search { min-width: 120px; }
+  .btn-add { padding: 6px 14px; font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar-search { max-width: 100%; }
+  .btn-add { margin-left: 0; text-align: center; }
+  .table-pagination { flex-wrap: wrap; gap: 8px; }
+}
 </style>
