@@ -108,7 +108,7 @@ onUnmounted(() => {
   background: #fff; border-radius: 24px;
   box-shadow: var(--shadow-md, 0 4px 16px rgba(74,61,47,0.1));
   overflow: hidden;
-  width: 460px; max-width: 85vw;
+  width: 480px; max-width: 85vw;
 }
 .search-input {
   flex: 1; border: none; padding: 13px 18px;
