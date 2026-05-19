@@ -42,4 +42,16 @@
   /* 布局 — 管理后台专用 */
   --header-padding: 10px 24px;
   --content-padding: 16px 24px;
+
+  /* 向后兼容别名 */
+  --bg: var(--color-bg);
+  --card-bg: var(--color-card-bg);
+  --header-bg: var(--color-header-bg);
+  --accent: var(--color-primary);
+  --accent-light: var(--color-accent-light);
+  --text: var(--color-text);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --border: var(--color-border);
+  --card-border: var(--color-card-border);
 }
