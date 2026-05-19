@@ -1,5 +1,8 @@
 <template>
   <div class="auth-wrapper">
+    <img :src="bgSrc" class="auth-bg" alt="" />
+    <div class="auth-overlay"></div>
+
     <div class="auth-card">
       <div class="auth-logo">
         <span class="logo-icon">書</span>
@@ -54,6 +57,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { login, register } from '../api/auth'
+import bgSrc from '../assets/login-bg.jpg'
 
 const tab = ref('login')
 const loggingIn = ref(false)
@@ -125,49 +129,92 @@ async function onRegister() {
 
 <style scoped>
 .auth-wrapper {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100vh; padding: 40px 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(245,240,232,0.6) 0%,
+    rgba(250,250,247,0.7) 50%,
+    rgba(245,240,232,0.6) 100%
+  );
+  z-index: 1;
 }
 .auth-card {
-  background: #fff; border: 1px solid var(--card-border);
-  padding: 40px 36px; width: 380px; text-align: center;
+  position: relative;
+  z-index: 2;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
+  padding: var(--auth-padding);
+  width: var(--auth-width);
+  text-align: center;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
 }
-.auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 28px; }
+.auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
 .logo-icon {
-  width: 30px; height: 30px;
-  background: var(--accent); color: #fff;
+  width: 36px; height: 36px;
+  background: var(--color-primary); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; border-radius: 2px;
+  font-size: 18px; border-radius: var(--radius);
 }
 .logo-text {
-  font-weight: 600; font-size: 18px; color: var(--text);
+  font-weight: 600; font-size: 18px; color: var(--color-text);
   font-family: var(--font-serif); letter-spacing: 2px;
 }
-.auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--color-border); }
 .auth-tabs button {
-  flex: 1; padding: 10px 0; background: none; border: none;
-  font-size: 14px; color: var(--text-muted); cursor: pointer;
+  flex: 1; padding: 8px 0; background: none; border: none;
+  font-size: 13px; color: var(--color-text-muted); cursor: pointer;
   border-bottom: 2px solid transparent; font-family: var(--font-serif);
+  transition: all 0.2s;
 }
 .auth-tabs button.active {
-  color: var(--accent); border-bottom-color: var(--accent);
+  color: var(--color-primary); border-bottom-color: var(--color-primary);
+  font-weight: 500;
 }
 .auth-form { text-align: left; }
 .field { margin-bottom: 12px; }
 .field input {
   width: 100%; padding: 10px 12px;
-  border: 1px solid #e0dbd0; border-radius: 2px;
-  font-size: 13px; color: var(--text); outline: none;
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  font-size: 13px; color: var(--color-text); outline: none;
+  background: rgba(255,255,255,0.8);
+  transition: border-color 0.2s;
 }
-.field input:focus { border-color: var(--accent); }
-.field input::placeholder { color: #c0b8a8; }
-.error { color: #c04040; font-size: 12px; margin-bottom: 8px; }
+.field input:focus { border-color: var(--color-primary); }
+.field input::placeholder { color: var(--color-text-muted); }
+.error { color: var(--color-danger); font-size: 12px; margin-bottom: 8px; }
 .btn-submit {
   width: 100%; margin-top: 8px; padding: 10px 0;
-  background: var(--accent); color: #fff; border: none;
-  border-radius: 2px; font-size: 14px; cursor: pointer;
+  background: var(--color-primary); color: #fff; border: none;
+  border-radius: var(--radius); font-size: 14px; cursor: pointer;
   font-family: var(--font-serif); letter-spacing: 2px;
+  transition: background 0.2s;
 }
-.btn-submit:hover { opacity: 0.9; }
+.btn-submit:hover { background: var(--color-primary-hover); }
 .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .auth-wrapper { padding: 20px 12px; align-items: flex-start; padding-top: 60px; }
+  .logo-text { font-size: 16px; }
+  .auth-tabs button { font-size: 12px; padding: 6px 0; }
+}
 </style>
