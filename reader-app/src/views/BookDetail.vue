@@ -45,18 +45,65 @@ function formatDate(dateStr) {
 </script>
 
 <style scoped>
-.detail-page { padding: 28px 36px; }
-.detail-card { display: flex; gap: 28px; background: #fff; border: 1px solid var(--card-border); padding: 24px; }
-.detail-cover { width: 260px; height: 360px; background: #f8f5ee; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.detail-page { padding: 24px 32px; }
+.detail-card {
+  display: flex;
+  gap: 28px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.detail-cover {
+  width: 260px;
+  height: 360px;
+  background: linear-gradient(135deg, #f5f1ea, #ede6d8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
 .detail-cover img { width: 100%; height: 100%; object-fit: cover; }
 .cover-placeholder { font-size: 64px; color: #d0c8b4; }
 .detail-info { flex: 1; }
-.detail-title { font-size: 24px; font-family: var(--font-serif); color: var(--text); font-weight: 600; letter-spacing: 2px; margin-bottom: 20px; }
+.detail-title {
+  font-size: 24px;
+  font-family: var(--font-serif);
+  color: var(--color-text);
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
 .detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
-.meta-item { font-size: 13px; color: var(--text-secondary); }
-.meta-label { color: var(--text-muted); margin-right: 8px; font-size: 12px; }
-.detail-desc-title { font-size: 14px; font-family: var(--font-serif); color: var(--text); margin-bottom: 8px; font-weight: 600; }
-.detail-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
-.back-btn { margin-top: 20px; padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 2px; cursor: pointer; font-size: 13px; }
-.loading-text { text-align: center; padding: 60px; color: var(--text-muted); }
+.meta-item { font-size: 13px; color: var(--color-text-secondary); }
+.meta-label { color: var(--color-text-muted); margin-right: 8px; font-size: 12px; }
+.detail-desc-title {
+  font-size: 14px;
+  font-family: var(--font-serif);
+  color: var(--color-text);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.detail-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+.back-btn {
+  margin-top: 20px;
+  padding: 8px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.back-btn:hover { background: var(--color-primary-hover); }
+.loading-text { text-align: center; padding: 60px; color: var(--color-text-muted); }
+
+@media (max-width: 768px) {
+  .detail-page { padding: 16px; }
+  .detail-card { flex-direction: column; }
+  .detail-cover { width: 100%; height: auto; aspect-ratio: 2/3; max-height: 400px; margin: 0 auto; }
+}
 </style>

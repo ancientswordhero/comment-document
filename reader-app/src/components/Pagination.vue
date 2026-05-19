@@ -29,14 +29,35 @@ const displayedPages = computed(() => {
 
 <style scoped>
 .pagination {
-  text-align: center; margin-top: 20px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  text-align: center;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 .pagination button {
-  padding: 3px 9px; border: 1px solid #e0dbd0;
-  background: #fff; border-radius: 2px; font-size: 12px;
-  color: var(--text-secondary); cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.pagination button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.pagination button:disabled { color: #d0c8b4; cursor: not-allowed; }
+.pagination button:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.pagination button.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  font-weight: 500;
+}
+.pagination button:disabled {
+  color: #d0c8b4;
+  cursor: not-allowed;
+}
 </style>
