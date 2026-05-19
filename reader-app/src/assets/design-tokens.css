@@ -39,8 +39,6 @@
   --font-sans:  'Noto Sans SC', 'Microsoft YaHei', sans-serif;
 
   /* 布局 */
-  --header-padding: 10px 24px;
-  --content-padding: 0 24px;
   --grid-cols: 5;
   --grid-gap: 16px;
   --category-width: 180px;
