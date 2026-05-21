@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BookTable from '../views/BookTable.vue'
 import BookForm from '../views/BookForm.vue'
 import AdminForm from '../views/AdminForm.vue'
+import ReportManagement from '../views/ReportManagement.vue'
 
 const routes = [
   { path: '/', name: 'book-list', component: BookTable },
   { path: '/book/new', name: 'book-new', component: BookForm },
   { path: '/book/:id/edit', name: 'book-edit', component: BookForm, props: true },
-  { path: '/admins', name: 'admin-form', component: AdminForm }
+  { path: '/admins', name: 'admin-form', component: AdminForm },
+  { path: '/reports', name: 'report-list', component: ReportManagement }
 ]
 
 const router = createRouter({ history: createWebHistory(), routes })

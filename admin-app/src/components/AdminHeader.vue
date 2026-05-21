@@ -7,6 +7,8 @@
     <div class="header-right">
       <router-link class="nav-link desktop-only" to="/">图书管理</router-link>
       <span class="nav-divider desktop-only">|</span>
+      <router-link class="nav-link desktop-only" to="/reports">举报管理</router-link>
+      <span class="nav-divider desktop-only">|</span>
       <router-link class="nav-link desktop-only" to="/admins">新增管理员</router-link>
       <span class="nav-divider desktop-only">|</span>
       <span class="nav-user desktop-only">{{ username }}</span>
@@ -16,6 +18,7 @@
     </div>
     <div class="mobile-menu" v-if="menuOpen">
       <router-link class="mobile-menu-item" to="/" @click="menuOpen = false">图书管理</router-link>
+      <router-link class="mobile-menu-item" to="/reports" @click="menuOpen = false">举报管理</router-link>
       <router-link class="mobile-menu-item" to="/admins" @click="menuOpen = false">新增管理员</router-link>
       <span class="mobile-menu-item" @click="logout">退出</span>
     </div>
