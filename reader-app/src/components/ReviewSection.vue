@@ -49,6 +49,7 @@
         @delete="onDelete"
         @edit="onEdit"
         @reply="onReply"
+        @report="onReport"
       />
     </div>
 
@@ -58,12 +59,21 @@
       <button :disabled="page >= totalPages" @click="goPage(page + 1)">下一页 →</button>
     </div>
   </div>
+
+  <ReportDialog
+    v-if="reportTargetId"
+    :review-id="reportTargetId"
+    :visible="showReportDialog"
+    @close="showReportDialog = false"
+    @done="onReportDone"
+  />
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ReviewItem from './ReviewItem.vue'
+import ReportDialog from './ReportDialog.vue'
 import {
   getReviews, createReview, createReply,
   updateReview, deleteReview, toggleLike
@@ -80,6 +90,11 @@ const page = ref(1)
 const totalCount = ref(0)
 const pageSize = 10
 const postContent = ref('')
+const reportTargetId = ref(null)
+const showReportDialog = ref(false)
+
+function onReport(reviewId) { reportTargetId.value = reviewId; showReportDialog.value = true }
+function onReportDone() { showReportDialog.value = false; alert('举报已提交') }
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const currentUserId = computed(() => {
