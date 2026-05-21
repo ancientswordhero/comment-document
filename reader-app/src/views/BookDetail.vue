@@ -21,7 +21,7 @@
             class="shelf-btn"
             :class="{ active: inShelf }"
             @click="toggleShelf"
-          >{{ inShelf ? '📚 移出书架' : '📖 加入书架' }}</button>
+          >{{ inShelf ? '移出书架' : '加入书架' }}</button>
         </div>
         <div class="detail-meta">
           <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
@@ -34,9 +34,15 @@
         <button class="back-btn" @click="$router.push('/')">← 返回首页</button>
       </div>
     </div>
+
+    <ReviewSection v-if="book" :book-id="book.id" />
   </div>
 
   <div v-else class="loading-text">加载中...</div>
+
+  <Transition name="fade">
+    <div v-if="toast" class="toast">{{ toast }}</div>
+  </Transition>
 </template>
 
 <script setup>
@@ -44,11 +50,13 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getBookById } from '../api/book'
 import { addToBookshelf, removeFromBookshelf, checkBookshelf } from '../api/bookshelf'
+import ReviewSection from '../components/ReviewSection.vue'
 
 const route = useRoute()
 const book = ref(null)
 const errorMsg = ref('')
 const inShelf = ref(false)
+const toast = ref('')
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 
@@ -71,13 +79,20 @@ async function toggleShelf() {
     if (inShelf.value) {
       await removeFromBookshelf(book.value.id)
       inShelf.value = false
+      showToast('已移出书架')
     } else {
       await addToBookshelf(book.value.id)
       inShelf.value = true
+      showToast('已加入书架')
     }
   } catch (e) {
     console.error('书架操作失败:', e)
   }
+}
+
+function showToast(msg) {
+  toast.value = msg
+  setTimeout(() => { toast.value = '' }, 2000)
 }
 
 function formatDate(dateStr) {
@@ -174,6 +189,22 @@ function formatDate(dateStr) {
 }
 .back-btn:hover { background: var(--color-primary-hover); }
 .loading-text { text-align: center; padding: 60px; color: var(--color-text-muted); }
+
+.toast {
+  position: fixed;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  z-index: 1000;
+  box-shadow: var(--shadow-md);
+}
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
 @media (max-width: 768px) {
   .detail-page { padding: 16px; }
