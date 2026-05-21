@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const authApi = axios.create({
-  baseURL: 'http://localhost:8080/api/auth',
+  baseURL: '/api/auth',
   timeout: 10000
 })
 
@@ -18,7 +18,7 @@ authApi.interceptors.response.use(
     if (response.data.code !== 200) {
       return Promise.reject(new Error(response.data.message || '请求失败'))
     }
-    return response.data
+    return response.data.data
   }
 )
 

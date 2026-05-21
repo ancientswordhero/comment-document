@@ -2,6 +2,8 @@ package com.library.config;
 
 import com.library.dto.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +11,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -39,6 +45,9 @@ public class GlobalExceptionHandler {
         if (msg != null && msg.contains("用户名或密码错误")) {
             return ResponseEntity.status(401).body(ApiResponse.error(401, msg));
         }
+        if (msg != null && msg.contains("下架中")) {
+            return ResponseEntity.status(403).body(ApiResponse.error(403, msg));
+        }
         return ResponseEntity.status(500).body(ApiResponse.error(500, "服务器内部错误"));
     }
 
@@ -51,9 +60,22 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(400, msg);
     }
 
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResponse<Void> handleNoHandlerFound(NoHandlerFoundException e) {
+        return ApiResponse.error(404, "接口不存在");
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResponse<Void> handleNoResourceFound(NoResourceFoundException e) {
+        return ApiResponse.error(404, "接口不存在");
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<Void> handleOther(Exception e) {
+        log.error("Unexpected exception: {}", e.getMessage(), e);
         return ApiResponse.error(500, "服务器内部错误");
     }
 }

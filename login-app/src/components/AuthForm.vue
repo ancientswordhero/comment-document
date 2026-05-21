@@ -95,15 +95,24 @@ function validateReg() {
   return true
 }
 
+const urlParams = new URLSearchParams(window.location.search)
+const redirect = urlParams.get('redirect') || ''
+
+function buildTarget(base, token, username) {
+  let url = `${base}/?token=${token}&username=${encodeURIComponent(username)}`
+  if (redirect) url += `&redirect=${encodeURIComponent(redirect)}`
+  return url
+}
+
 async function onLogin() {
   if (!validateLogin()) return
   loggingIn.value = true
   try {
     const res = await login(loginForm.username, loginForm.password)
-    const { token, role } = res.data
+    const { token, role, username } = res
     const target = role === 'ADMIN'
-      ? `http://localhost:5174/?token=${token}`
-      : `http://localhost:5173/?token=${token}`
+      ? buildTarget('http://localhost:5178', token, username)
+      : buildTarget('http://localhost:5174', token, username)
     window.location.href = target
   } catch (e) {
     loginError.value = e.message || '登录失败'
@@ -117,8 +126,8 @@ async function onRegister() {
   registering.value = true
   try {
     const res = await register(regForm.username, regForm.password)
-    const { token } = res.data
-    window.location.href = `http://localhost:5173/?token=${token}`
+    const { token, username } = res
+    window.location.href = buildTarget('http://localhost:5174', token, username)
   } catch (e) {
     regError.value = e.message || '注册失败'
   } finally {

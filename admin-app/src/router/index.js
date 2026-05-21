@@ -12,10 +12,10 @@ const routes = [
 
 const router = createRouter({ history: createWebHistory(), routes })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (!token) {
-    window.location.href = 'http://localhost:5175'
+    window.location.href = 'http://localhost:5174'
     return
   }
   next()

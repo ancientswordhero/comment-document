@@ -1,6 +1,7 @@
 package com.library.service;
 
 import com.library.config.FileUploadConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -12,12 +13,13 @@ public class FileService {
 
     private final Path uploadPath;
 
-    public FileService() {
-        this("uploads/covers");
-    }
-
+    @Autowired
     public FileService(FileUploadConfig config) {
         this(config.getUploadDir());
+    }
+
+    public FileService() {
+        this("uploads/covers");
     }
 
     FileService(String uploadDir) {

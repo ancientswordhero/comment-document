@@ -9,6 +9,8 @@
       <span class="nav-divider desktop-only">|</span>
       <router-link class="nav-link desktop-only" to="/admins">新增管理员</router-link>
       <span class="nav-divider desktop-only">|</span>
+      <span class="nav-user desktop-only">{{ username }}</span>
+      <span class="nav-divider desktop-only">|</span>
       <span class="nav-link" @click="logout">退出</span>
       <button class="mobile-menu-btn mobile-only" @click="toggleMenu">☰</button>
     </div>
@@ -21,13 +23,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const menuOpen = ref(false)
+const username = computed(() => localStorage.getItem('username') || '管理员')
 
 function logout() {
   localStorage.removeItem('token')
-  window.location.href = 'http://localhost:5173'
+  localStorage.removeItem('username')
+  window.location.href = 'http://localhost:5174'
 }
 
 function toggleMenu() {
@@ -56,6 +60,10 @@ function toggleMenu() {
 }
 .header-right { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-text-secondary); }
 .nav-divider { color: var(--color-border); }
+.nav-user {
+  font-size: 12px; color: var(--color-text-secondary);
+  font-family: var(--font-serif);
+}
 .nav-link {
   cursor: pointer;
   padding: 5px 10px;

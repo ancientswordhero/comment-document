@@ -26,7 +26,7 @@
         <tr v-for="book in books" :key="book.id">
           <td>
             <div class="thumb">
-              <img v-if="book.coverUrl" :src="'http://localhost:8080' + book.coverUrl" :alt="book.title" />
+              <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
               <span v-else>封面</span>
             </div>
           </td>
@@ -167,7 +167,7 @@ async function onDelete(book) {
   font-size: 10px; color: var(--color-text-muted); overflow: hidden;
   border-radius: var(--radius-sm);
 }
-.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .cell-title { color: var(--color-text); font-weight: 500; }
 .cell-isbn { color: var(--color-text-muted); font-size: 11px; }
 .status-tag {

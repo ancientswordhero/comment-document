@@ -38,6 +38,11 @@
           <textarea v-model="form.description" class="textarea"
             placeholder="请输入图书简介（支持HTML标签）" rows="5"></textarea>
         </div>
+        <div class="field full">
+          <label>图书内容</label>
+          <textarea v-model="form.content" class="textarea content-editor"
+            placeholder="请输入图书内容（支持HTML标签，待后续添加）" rows="12"></textarea>
+        </div>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" @click="$router.push('/')">取消</button>
@@ -62,7 +67,7 @@ const fileInput = ref(null)
 const previewUrl = ref(null)
 const saving = ref(false)
 const form = reactive({
-  title: '', author: '', isbn: '', categoryId: null, coverUrl: '', description: ''
+  title: '', author: '', isbn: '', categoryId: null, coverUrl: '', description: '', content: ''
 })
 const errors = reactive({ title: '', author: '', isbn: '' })
 
@@ -84,7 +89,8 @@ onMounted(async () => {
       form.categoryId = b.categoryId
       form.coverUrl = b.coverUrl || ''
       form.description = b.description || ''
-      if (b.coverUrl) previewUrl.value = 'http://localhost:8080' + b.coverUrl
+      form.content = b.content || ''
+      if (b.coverUrl) previewUrl.value = b.coverUrl
     } catch (err) {
       console.error('获取图书详情失败:', err)
     }
@@ -108,7 +114,7 @@ async function onFileChange(e) {
   try {
     const res = await uploadCover(file)
     form.coverUrl = res
-    previewUrl.value = 'http://localhost:8080' + res
+    previewUrl.value = res
   } catch (err) {
     console.error('上传封面失败:', err)
   }
@@ -128,7 +134,7 @@ async function onSubmit() {
   try {
     const data = {
       title: form.title, author: form.author, isbn: form.isbn,
-      categoryId: form.categoryId, coverUrl: form.coverUrl, description: form.description
+      categoryId: form.categoryId, coverUrl: form.coverUrl, description: form.description, content: form.content
     }
     if (isEdit.value) { await updateBook(route.params.id, data) }
     else { await createBook(data) }
@@ -173,6 +179,7 @@ async function onSubmit() {
   border-radius: var(--radius); font-size: 12px; color: var(--color-text); outline: none;
   resize: vertical; font-family: var(--font-sans);
 }
+.content-editor { min-height: 200px; }
 .textarea:focus { border-color: var(--color-primary); }
 .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 .btn-cancel {

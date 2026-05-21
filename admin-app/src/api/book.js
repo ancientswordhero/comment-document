@@ -1,43 +1,35 @@
-import api from './index'
-import axios from 'axios'
-
-const readerApi = axios.create({
-  baseURL: 'http://localhost:8080/api',
-  timeout: 10000
-})
+import { adminApi, publicApi } from './index'
 
 export function getCategories() {
-  return readerApi.get('/categories').then(r => r.data)
+  return publicApi.get('/categories')
 }
 
 export function getBooks(params) {
-  return api.get('/books', { params })
+  return adminApi.get('/books', { params })
 }
 
 export function getBookById(id) {
-  return api.get(`/books/${id}`)
+  return adminApi.get(`/books/${id}`)
 }
 
 export function createBook(data) {
-  return api.post('/books', data)
+  return adminApi.post('/books', data)
 }
 
 export function updateBook(id, data) {
-  return api.put(`/books/${id}`, data)
+  return adminApi.put(`/books/${id}`, data)
 }
 
 export function deleteBook(id) {
-  return api.delete(`/books/${id}`)
+  return adminApi.delete(`/books/${id}`)
 }
 
 export function toggleStatus(id) {
-  return api.put(`/books/${id}/status`)
+  return adminApi.put(`/books/${id}/status`)
 }
 
 export function uploadCover(file) {
   const form = new FormData()
   form.append('file', file)
-  return api.post('/upload/cover', form, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
+  return adminApi.post('/upload/cover', form)
 }

@@ -7,8 +7,8 @@ INSERT IGNORE INTO categories (name, parent_id, sort_order) VALUES ('哲学', NU
 INSERT IGNORE INTO categories (name, parent_id, sort_order) VALUES ('科技', NULL, 4);
 INSERT IGNORE INTO categories (name, parent_id, sort_order) VALUES ('艺术', NULL, 5);
 
-INSERT IGNORE INTO users (username, password, role) VALUES
-('admin', '$2a$10$supWXh3kyPUq7nJxoYpko.ryZbAUkEFuq.a/vN0/XhAa.AKNBlNDu', 'ADMIN');
+INSERT IGNORE INTO users (id, username, password, role) VALUES
+(1, 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMye.IjzqAKL9xL5jvMFVdNJHvGCgTq/VEq', 'ADMIN');
 
 INSERT IGNORE INTO books (title, author, isbn, category_id, description, status) VALUES
 ('红楼梦', '曹雪芹', '978-7-02-000220-9', 2, '<p>中国古典四大名著之一，以贾宝玉、林黛玉的爱情悲剧为主线。</p>', 1);

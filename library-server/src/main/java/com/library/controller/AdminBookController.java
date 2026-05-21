@@ -34,6 +34,11 @@ public class AdminBookController {
         return ApiResponse.success(bookService.createBook(request));
     }
 
+    @GetMapping("/books/{id}")
+    public ApiResponse<BookResponse> getBookById(@PathVariable Long id) {
+        return ApiResponse.success(bookService.getBookByIdForAdmin(id));
+    }
+
     @PutMapping("/books/{id}")
     public ApiResponse<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
         return ApiResponse.success(bookService.updateBook(id, request));

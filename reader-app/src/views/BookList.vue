@@ -1,6 +1,7 @@
 <template>
   <div class="home-layout">
     <BannerHeader />
+    <div class="header-divider" />
     <div class="home-body">
       <CategoryNav
         :categories="categories"
@@ -13,7 +14,7 @@
         <div v-if="loading" class="loading-text">加载中...</div>
         <div v-else-if="books.length === 0" class="empty-text">暂无图书</div>
         <div v-else class="book-grid">
-          <BookCard v-for="book in books" :key="book.id" :book="book" />
+          <BookCard v-for="book in books" :key="book.id" :book="book" @select="onBookSelect" />
         </div>
         <Pagination
           v-if="total > 0"
@@ -27,12 +28,15 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import BannerHeader from '../components/BannerHeader.vue'
 import CategoryNav from '../components/CategoryNav.vue'
 import BookCard from '../components/BookCard.vue'
 import Pagination from '../components/Pagination.vue'
 import { getBooks, getCategories } from '../api/book'
 import { useSearchState } from '../composables/useSearch'
+
+const router = useRouter()
 
 const books = ref([])
 const categories = ref([])
@@ -99,25 +103,65 @@ function onPageChange(p) {
   page.value = p
   fetchBooks()
 }
+
+function onBookSelect(book) {
+  if (!localStorage.getItem('token')) {
+    alert('请登录后查看完整图书信息')
+    if (confirm('是否前往登录？')) {
+      window.location.href = `http://localhost:5176?redirect=${encodeURIComponent(`/book/${book.id}`)}`
+    }
+    return
+  }
+  router.push(`/book/${book.id}`)
+}
 </script>
 
 <style scoped>
 .home-layout { padding-top: 0; }
-.home-body { display: flex; gap: 24px; padding: 20px var(--content-padding); }
-.home-main { flex: 1; }
+
+.header-divider {
+  position: relative;
+  z-index: 5;
+  height: 6px;
+  margin-top: -2px;
+  background: linear-gradient(
+    180deg,
+    var(--color-border) 0%,
+    var(--color-accent-light) 40%,
+    var(--color-bg) 100%
+  );
+}
+
+.home-body {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  gap: 24px;
+  padding: 0 var(--content-padding) 32px;
+  min-height: calc(100vh - 300px);
+}
+.home-main { 
+  flex: 1; 
+  margin-top: 0;
+}
 .book-grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-cols), 1fr);
   gap: var(--grid-gap);
+  margin-top: 24px;
+  align-items: start;
 }
 .loading-text, .empty-text { text-align: center; padding: 40px; color: var(--color-text-muted); }
 
 @media (max-width: 768px) {
-  .home-body { flex-direction: column; gap: 12px; padding: 12px var(--content-padding); }
-  .book-grid { gap: 10px; }
+  .home-body { flex-direction: column; gap: 20px; padding: 0 var(--content-padding) 20px; }
+  .home-main { margin-top: 0; }
+  .book-grid { gap: 12px; margin-top: 16px; }
 }
 
 @media (max-width: 480px) {
-  .home-body { padding: 8px var(--content-padding); }
+  .home-body { padding: 0 var(--content-padding) 16px; gap: 16px; }
+  .home-main { margin-top: 0; }
+  .book-grid { margin-top: 12px; }
 }
 </style>

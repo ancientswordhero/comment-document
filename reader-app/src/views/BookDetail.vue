@@ -1,12 +1,28 @@
 <template>
-  <div class="detail-page" v-if="book">
+  <div v-if="errorMsg" class="error-page">
+    <div class="error-card">
+      <div class="error-icon">📕</div>
+      <p class="error-text">{{ errorMsg }}</p>
+      <button class="back-btn" @click="$router.push('/')">← 返回首页</button>
+    </div>
+  </div>
+
+  <div class="detail-page" v-else-if="book">
     <div class="detail-card">
       <div class="detail-cover">
-        <img v-if="book.coverUrl" :src="coverSrc" :alt="book.title" />
+        <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
         <span v-else class="cover-placeholder">📖</span>
       </div>
       <div class="detail-info">
-        <h1 class="detail-title">{{ book.title }}</h1>
+        <div class="detail-title-row">
+          <h1 class="detail-title">{{ book.title }}</h1>
+          <button
+            v-if="isLoggedIn"
+            class="shelf-btn"
+            :class="{ active: inShelf }"
+            @click="toggleShelf"
+          >{{ inShelf ? '📚 移出书架' : '📖 加入书架' }}</button>
+        </div>
         <div class="detail-meta">
           <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
           <div class="meta-item"><span class="meta-label">ISBN</span>{{ book.isbn }}</div>
@@ -19,24 +35,50 @@
       </div>
     </div>
   </div>
+
   <div v-else class="loading-text">加载中...</div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getBookById } from '../api/book'
+import { addToBookshelf, removeFromBookshelf, checkBookshelf } from '../api/bookshelf'
 
 const route = useRoute()
 const book = ref(null)
-const coverSrc = computed(() =>
-  book.value?.coverUrl ? `http://localhost:8080${book.value.coverUrl}` : null
-)
+const errorMsg = ref('')
+const inShelf = ref(false)
+
+const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 
 onMounted(async () => {
-  const res = await getBookById(route.params.id)
-  book.value = res.data
+  try {
+    book.value = await getBookById(route.params.id)
+    if (isLoggedIn.value && book.value) {
+      const data = await checkBookshelf(book.value.id)
+      inShelf.value = data.inBookshelf
+    }
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '加载失败'
+    errorMsg.value = msg
+  }
 })
+
+async function toggleShelf() {
+  if (!book.value) return
+  try {
+    if (inShelf.value) {
+      await removeFromBookshelf(book.value.id)
+      inShelf.value = false
+    } else {
+      await addToBookshelf(book.value.id)
+      inShelf.value = true
+    }
+  } catch (e) {
+    console.error('书架操作失败:', e)
+  }
+}
 
 function formatDate(dateStr) {
   if (!dateStr) return '-'
@@ -68,13 +110,34 @@ function formatDate(dateStr) {
 .detail-cover img { width: 100%; height: 100%; object-fit: cover; }
 .cover-placeholder { font-size: 64px; color: #d0c8b4; }
 .detail-info { flex: 1; }
+.detail-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
 .detail-title {
   font-size: 24px;
   font-family: var(--font-serif);
   color: var(--color-text);
   font-weight: 600;
   letter-spacing: 2px;
-  margin-bottom: 20px;
+}
+.shelf-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-serif);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.shelf-btn:hover { background: var(--color-accent-light); }
+.shelf-btn.active {
+  background: var(--color-accent-light);
 }
 .detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
 .meta-item { font-size: 13px; color: var(--color-text-secondary); }
@@ -87,6 +150,17 @@ function formatDate(dateStr) {
   font-weight: 600;
 }
 .detail-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+
+/* 错误页面 */
+.error-page { padding: 60px 32px; text-align: center; }
+.error-card {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 16px;
+  background: var(--color-card-bg); border: 1px solid var(--color-card-border);
+  border-radius: var(--radius); padding: 40px 48px;
+}
+.error-icon { font-size: 48px; }
+.error-text { font-size: 15px; color: var(--color-text-secondary); font-family: var(--font-serif); }
+
 .back-btn {
   margin-top: 20px;
   padding: 8px 20px;

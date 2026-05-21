@@ -26,7 +26,7 @@ public class JwtFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         String path = req.getRequestURI();
 
-        boolean needsAuth = path.equals("/api/auth/me");
+        boolean needsAuth = path.equals("/api/auth/me") || path.startsWith("/api/bookshelf");
         boolean needsAdmin = path.startsWith("/api/admin/");
 
         if (!needsAuth && !needsAdmin) {

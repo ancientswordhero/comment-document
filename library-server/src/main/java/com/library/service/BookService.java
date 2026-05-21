@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -24,17 +25,41 @@ public class BookService {
 
     public PageResult<BookResponse> getBooks(String keyword, Long categoryId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryId, 1, pageable);
+
+        List<Long> categoryIds = null;
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            if (category != null) {
+                if (category.getParentId() == null) {
+                    List<Category> children = categoryRepository.findByParentIdOrderBySortOrder(categoryId);
+                    categoryIds = children.stream().map(Category::getId).collect(Collectors.toList());
+                    categoryIds.add(categoryId);
+                } else {
+                    categoryIds = List.of(categoryId);
+                }
+            }
+        }
+
+        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryIds, 1, pageable);
         return buildPageResult(bookPage);
     }
 
     public PageResult<BookResponse> getAdminBooks(String keyword, Long categoryId, Integer status, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryId, status, pageable);
+        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryId != null ? List.of(categoryId) : null, status, pageable);
         return buildPageResult(bookPage);
     }
 
     public BookResponse getBookById(Long id) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("图书不存在: " + id));
+        if (book.getStatus() != null && book.getStatus() == 0) {
+            throw new RuntimeException("该图书暂时无法查看：下架中");
+        }
+        return toResponse(book);
+    }
+
+    public BookResponse getBookByIdForAdmin(Long id) {
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("图书不存在: " + id));
         return toResponse(book);
@@ -48,6 +73,7 @@ public class BookService {
             .categoryId(req.getCategoryId())
             .coverUrl(req.getCoverUrl())
             .description(req.getDescription())
+            .content(req.getContent())
             .status(1)
             .build();
         book = bookRepository.save(book);
@@ -63,6 +89,7 @@ public class BookService {
         book.setCategoryId(req.getCategoryId());
         book.setCoverUrl(req.getCoverUrl());
         book.setDescription(req.getDescription());
+        book.setContent(req.getContent());
         book = bookRepository.save(book);
         return toResponse(book);
     }
@@ -110,6 +137,7 @@ public class BookService {
             .categoryName(categoryName)
             .coverUrl(book.getCoverUrl())
             .description(book.getDescription())
+            .content(book.getContent())
             .status(book.getStatus())
             .createdAt(book.getCreatedAt())
             .updatedAt(book.getUpdatedAt())

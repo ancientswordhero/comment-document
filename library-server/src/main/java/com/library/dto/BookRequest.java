@@ -20,6 +20,7 @@ public class BookRequest {
     private Long categoryId;
     private String coverUrl;
     private String description;
+    private String content;
     private Integer status;
 
     public BookRequest() {}
@@ -36,6 +37,8 @@ public class BookRequest {
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
     public Integer getStatus() { return status; }
     public void setStatus(Integer status) { this.status = status; }
 }

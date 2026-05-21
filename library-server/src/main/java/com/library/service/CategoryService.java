@@ -18,11 +18,19 @@ public class CategoryService {
 
     public List<CategoryResponse> getCategoryTree() {
         List<Category> all = categoryRepository.findAll();
-        Map<Long, List<Category>> childrenMap = all.stream()
+        
+        // 按名称去重，保留第一个出现的分类
+        Map<String, Category> uniqueByName = new LinkedHashMap<>();
+        for (Category cat : all) {
+            uniqueByName.putIfAbsent(cat.getName(), cat);
+        }
+        List<Category> uniqueCategories = new ArrayList<>(uniqueByName.values());
+        
+        Map<Long, List<Category>> childrenMap = uniqueCategories.stream()
             .filter(c -> c.getParentId() != null)
             .collect(Collectors.groupingBy(Category::getParentId));
 
-        return all.stream()
+        return uniqueCategories.stream()
             .filter(c -> c.getParentId() == null)
             .sorted(Comparator.comparingInt(Category::getSortOrder))
             .map(c -> buildResponse(c, childrenMap))
