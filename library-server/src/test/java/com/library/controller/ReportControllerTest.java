@@ -62,26 +62,30 @@ class ReportControllerTest {
         PageResult<NotificationResponse> page = PageResult.<NotificationResponse>builder()
             .records(List.of(n)).total(1).page(1).size(20).build();
         when(notificationService.getNotifications(5L, 1, 20)).thenReturn(page);
-        mvc.perform(get("/api/notifications").requestAttr("userId", 5L))
+        mvc.perform(get("/api/notifications")
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk()).andExpect(jsonPath("$.data.records[0].title").value("测试"));
     }
 
     @Test
     void shouldGetUnreadCount() throws Exception {
         when(notificationService.getUnreadCount(5L)).thenReturn(3);
-        mvc.perform(get("/api/notifications/unread-count").requestAttr("userId", 5L))
+        mvc.perform(get("/api/notifications/unread-count")
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk()).andExpect(jsonPath("$.data").value(3));
     }
 
     @Test
     void shouldMarkAsRead() throws Exception {
-        mvc.perform(put("/api/notifications/1/read").requestAttr("userId", 5L))
+        mvc.perform(put("/api/notifications/1/read")
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk()).andExpect(jsonPath("$.code").value(200));
     }
 
     @Test
     void shouldMarkAllAsRead() throws Exception {
-        mvc.perform(put("/api/notifications/read-all").requestAttr("userId", 5L))
+        mvc.perform(put("/api/notifications/read-all")
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk()).andExpect(jsonPath("$.code").value(200));
     }
 

@@ -1,9 +1,11 @@
 package com.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.library.config.FileUploadConfig;
 import com.library.config.JwtUtil;
 import com.library.config.JwtFilter;
 import com.library.config.SecurityConfig;
+import com.library.config.WebConfig;
 import com.library.dto.*;
 import com.library.entity.User;
 import com.library.service.*;
@@ -24,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminBookController.class)
-@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class})
+@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class, WebConfig.class, FileUploadConfig.class})
 class AdminBookControllerTest {
 
     @Autowired MockMvc mvc;

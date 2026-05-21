@@ -67,7 +67,7 @@ class ReviewControllerTest {
         when(reviewService.createReview(eq(10L), eq(5L), any())).thenReturn(resp);
 
         mvc.perform(post("/api/books/10/reviews")
-                .requestAttr("userId", 5L)
+                .header("Authorization", "Bearer " + userToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
             .andExpect(status().isOk())

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
-@Import({com.library.config.JwtUtil.class, com.library.config.JwtFilter.class, com.library.config.SecurityConfig.class})
+@Import({com.library.config.JwtUtil.class, com.library.config.JwtFilter.class, com.library.config.SecurityConfig.class, com.library.config.WebConfig.class, com.library.config.FileUploadConfig.class})
 class AuthControllerTest {
 
     @Autowired MockMvc mvc;

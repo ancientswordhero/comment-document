@@ -1,8 +1,10 @@
 package com.library.controller;
 
+import com.library.config.FileUploadConfig;
 import com.library.config.JwtFilter;
 import com.library.config.JwtUtil;
 import com.library.config.SecurityConfig;
+import com.library.config.WebConfig;
 import com.library.dto.*;
 import com.library.service.*;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
-@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class})
+@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class, WebConfig.class, FileUploadConfig.class})
 class BookControllerTest {
 
     @Autowired MockMvc mvc;
