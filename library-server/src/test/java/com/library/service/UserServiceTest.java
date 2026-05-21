@@ -5,6 +5,7 @@ import com.library.dto.LoginRequest;
 import com.library.dto.LoginResponse;
 import com.library.dto.RegisterRequest;
 import com.library.entity.User;
+import com.library.repository.UserBookRepository;
 import com.library.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock UserRepository userRepository;
+    @Mock UserBookRepository userBookRepository;
     @Mock JwtUtil jwtUtil;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @InjectMocks UserService userService;
@@ -91,7 +93,7 @@ class UserServiceTest {
 
         assertThatThrownBy(() -> userService.login(req))
             .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("用户名或密码错误");
+            .hasMessageContaining("密码错误");
     }
 
     @Test
@@ -103,7 +105,7 @@ class UserServiceTest {
 
         assertThatThrownBy(() -> userService.login(req))
             .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("用户名或密码错误");
+            .hasMessageContaining("该用户不存在");
     }
 
     @Test

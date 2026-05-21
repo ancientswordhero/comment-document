@@ -7,7 +7,9 @@ import com.library.config.JwtUtil;
 import com.library.config.SecurityConfig;
 import com.library.config.WebConfig;
 import com.library.dto.*;
+import com.library.entity.User;
 import com.library.service.ReviewService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,7 +29,19 @@ class ReviewControllerTest {
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
+    @Autowired JwtUtil jwtUtil;
     @MockBean ReviewService reviewService;
+
+    private String userToken;
+    private String adminToken;
+
+    @BeforeEach
+    void setUp() {
+        User testUser = User.builder().id(5L).username("testuser").role("USER").build();
+        User testAdmin = User.builder().id(1L).username("admin").role("ADMIN").build();
+        userToken = jwtUtil.generateToken(testUser);
+        adminToken = jwtUtil.generateToken(testAdmin);
+    }
 
     @Test
     void shouldListReviews() throws Exception {
@@ -68,7 +82,7 @@ class ReviewControllerTest {
         when(reviewService.createReply(eq(1L), eq(5L), any())).thenReturn(resp);
 
         mvc.perform(post("/api/reviews/1/reply")
-                .requestAttr("userId", 5L)
+                .header("Authorization", "Bearer " + userToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
             .andExpect(status().isOk())
@@ -83,7 +97,7 @@ class ReviewControllerTest {
         when(reviewService.updateReview(eq(1L), eq(5L), eq(false), any())).thenReturn(resp);
 
         mvc.perform(put("/api/reviews/1")
-                .requestAttr("userId", 5L)
+                .header("Authorization", "Bearer " + userToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
             .andExpect(status().isOk())
@@ -93,7 +107,7 @@ class ReviewControllerTest {
     @Test
     void shouldDeleteReview() throws Exception {
         mvc.perform(delete("/api/reviews/1")
-                .requestAttr("userId", 5L))
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value(200));
     }
@@ -103,7 +117,7 @@ class ReviewControllerTest {
         when(reviewService.toggleLike(1L, 5L)).thenReturn(true);
 
         mvc.perform(post("/api/reviews/1/like")
-                .requestAttr("userId", 5L))
+                .header("Authorization", "Bearer " + userToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").value(true));
     }
