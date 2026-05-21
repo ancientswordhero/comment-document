@@ -17,9 +17,16 @@
         <template v-if="isLoggedIn">
           <span class="nav-item" @click="$router.push('/bookshelf')">我的书架</span>
           <span class="nav-sep">|</span>
+          <span class="nav-item" @click="$router.push('/inbox')" style="position:relative">
+            收件箱
+            <span v-if="unreadCount > 0" class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+          </span>
+          <span class="nav-sep">|</span>
           <span class="nav-user">{{ username }}</span>
           <span class="nav-sep">|</span>
           <span class="nav-item logout" @click="onLogout">退出</span>
+          <span class="nav-sep">|</span>
+          <span class="nav-item danger" @click="onDeleteAccount">注销账号</span>
         </template>
         <a v-else href="http://localhost:5176" class="nav-admin">读者/管理登录</a>
       </div>
@@ -62,12 +69,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { setSearchKeyword } from '../composables/useSearch'
+import { deleteAccount } from '../api/auth'
+import { getUnreadCount } from '../api/report'
 import bannerBg from '../assets/banner-bg.jpg'
 import characterSrc from '../assets/banner-character.png'
 
 const searchKeywords = ref('')
+const unreadCount = ref(0)
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const username = computed(() => localStorage.getItem('username') || '读者')
@@ -78,11 +88,30 @@ function onSearch() {
 }
 
 function onLogout() {
-  if (!confirm('确定要注销登录吗？')) return
+  if (!confirm('确定要退出登录吗？')) return
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   window.location.href = 'http://localhost:5174'
 }
+
+async function onDeleteAccount() {
+  if (!confirm('确定要注销账号吗？此操作不可撤销，您的所有数据将被清除。')) return
+  try {
+    await deleteAccount()
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    window.location.href = 'http://localhost:5174'
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.message || '注销失败，请重试'
+    alert(msg)
+  }
+}
+
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    try { unreadCount.value = await getUnreadCount() } catch { /* ignore */ }
+  }
+})
 </script>
 
 <style scoped>
@@ -161,6 +190,8 @@ function onLogout() {
   cursor: pointer; transition: color 0.2s;
 }
 .nav-item.logout:hover { color: #ff6b6b; }
+.nav-item.danger { font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer; transition: color 0.2s; }
+.nav-item.danger:hover { color: #ff6b6b; }
 
 /* ---- 横幅主体 ---- */
 .banner {
@@ -299,5 +330,11 @@ function onLogout() {
   .banner-tagline { display: none; }
   .banner-nav { padding: 6px 12px; }
   .nav-logo-text { font-size: 11px; }
+}
+.badge {
+  position: absolute; top: -6px; right: -10px;
+  background: var(--color-danger, #c04040); color: #fff;
+  font-size: 10px; padding: 1px 5px; border-radius: 10px;
+  min-width: 16px; text-align: center; line-height: 16px;
 }
 </style>

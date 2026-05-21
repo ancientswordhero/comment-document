@@ -21,6 +21,7 @@
           @click="$emit('like', review.id)"
         >赞 {{ review.likeCount }}</span>
         <span class="meta-action" @click="showReplyInput = !showReplyInput">回复</span>
+        <span v-if="!isOwn" class="meta-action" @click.stop="$emit('report', review.id)">举报</span>
         <template v-if="isOwn && canEdit">
           <span class="meta-action" @click="startEdit">编辑</span>
           <span class="meta-action meta-danger" @click="$emit('delete', review.id)">删除</span>
@@ -50,6 +51,7 @@
         @delete="$emit('delete', $event)"
         @edit="$emit('edit', $event[0], $event[1])"
         @reply="$emit('reply', $event[0], $event[1])"
+        @report="$emit('report', $event)"
       />
     </div>
   </div>
@@ -64,7 +66,7 @@ const props = defineProps({
   currentUserId: { type: Number, default: null }
 })
 
-const emit = defineEmits(['like', 'delete', 'edit', 'reply'])
+const emit = defineEmits(['like', 'delete', 'edit', 'reply', 'report'])
 
 const showReplyInput = ref(false)
 const replyContent = ref('')
