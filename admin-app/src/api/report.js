@@ -7,3 +7,7 @@ export function getReports(params) {
 export function resolveReport(id, data) {
   return adminApi.put(`/reports/${id}/resolve`, data)
 }
+
+export function getPendingCount() {
+  return adminApi.get('/reports/pending-count')
+}
