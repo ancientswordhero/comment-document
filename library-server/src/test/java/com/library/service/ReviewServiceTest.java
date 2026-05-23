@@ -27,6 +27,7 @@ class ReviewServiceTest {
     @Mock ReviewRepository reviewRepository;
     @Mock ReviewLikeRepository reviewLikeRepository;
     @Mock UserRepository userRepository;
+    @Mock NotificationService notificationService;
     @InjectMocks ReviewService reviewService;
 
     @Test
@@ -164,7 +165,7 @@ class ReviewServiceTest {
 
     @Test
     void shouldToggleLike() {
-        Review review = Review.builder().id(1L).likeCount(5).build();
+        Review review = Review.builder().id(1L).userId(10L).likeCount(5).build();
         when(reviewRepository.findById(1L)).thenReturn(Optional.of(review));
         when(reviewLikeRepository.findByReviewIdAndUserId(1L, 10L))
             .thenReturn(Optional.empty());
@@ -178,7 +179,7 @@ class ReviewServiceTest {
 
     @Test
     void shouldUntoggleLike() {
-        Review review = Review.builder().id(1L).likeCount(5).build();
+        Review review = Review.builder().id(1L).userId(10L).likeCount(5).build();
         when(reviewRepository.findById(1L)).thenReturn(Optional.of(review));
         when(reviewLikeRepository.findByReviewIdAndUserId(1L, 10L))
             .thenReturn(Optional.of(new com.library.entity.ReviewLike(1L, 10L)));

@@ -26,8 +26,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getNotifications, markAsRead, markAllAsRead } from '../api/report'
 
+const router = useRouter()
 const notifications = ref([])
 const loading = ref(false)
 const page = ref(1)
@@ -45,7 +47,14 @@ async function fetchNotifications() {
   } finally { loading.value = false }
 }
 
-async function onClick(n) { if (!n.read) { await markAsRead(n.id); n.read = true } }
+async function onClick(n) {
+  if (!n.read) { await markAsRead(n.id); n.read = true }
+  if (n.bookId && n.reviewId) {
+    router.push({ path: `/book/${n.bookId}`, query: { reviewId: n.reviewId } })
+  } else if (n.bookId) {
+    router.push(`/book/${n.bookId}`)
+  }
+}
 async function onReadAll() { await markAllAsRead(); notifications.value.forEach(n => n.read = true) }
 function goPage(p) { page.value = p; fetchNotifications() }
 

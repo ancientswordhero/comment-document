@@ -23,6 +23,12 @@ public class Notification {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "book_id")
+    private Long bookId;
+
+    @Column(name = "review_id")
+    private Long reviewId;
+
     @Column(name = "is_read")
     private int isRead;
 
@@ -30,8 +36,9 @@ public class Notification {
     private LocalDateTime createdAt;
 
     public Notification() {}
-    public Notification(Long userId, String type, String title, String content) {
+    public Notification(Long userId, String type, String title, String content, Long bookId, Long reviewId) {
         this.userId = userId; this.type = type; this.title = title; this.content = content;
+        this.bookId = bookId; this.reviewId = reviewId;
         this.isRead = 0;
     }
 
@@ -47,6 +54,10 @@ public class Notification {
     public void setTitle(String title) { this.title = title; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+    public Long getBookId() { return bookId; }
+    public void setBookId(Long bookId) { this.bookId = bookId; }
+    public Long getReviewId() { return reviewId; }
+    public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
     public int getIsRead() { return isRead; }
     public void setIsRead(int isRead) { this.isRead = isRead; }
     public LocalDateTime getCreatedAt() { return createdAt; }

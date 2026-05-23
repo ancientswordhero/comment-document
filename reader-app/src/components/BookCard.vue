@@ -3,13 +3,6 @@
     <div class="book-cover">
       <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
       <span v-else class="cover-placeholder">📖</span>
-      <button
-        v-if="isLoggedIn"
-        class="shelf-toggle"
-        :class="{ active: inShelf }"
-        :title="inShelf ? '移出书架' : '加入书架'"
-        @click.stop="toggleShelf"
-      >{{ inShelf ? '📚' : '📖' }}</button>
     </div>
     <div class="book-title">{{ book.title }}</div>
     <div class="book-author">{{ book.author }}</div>
@@ -18,37 +11,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { addToBookshelf, removeFromBookshelf, checkBookshelf } from '../api/bookshelf'
-
-const props = defineProps({ book: { type: Object, required: true } })
+defineProps({ book: { type: Object, required: true } })
 defineEmits(['select'])
-
-const isLoggedIn = computed(() => !!localStorage.getItem('token'))
-const inShelf = ref(false)
-
-watch(() => props.book.id, async (id) => {
-  if (isLoggedIn.value && id) {
-    try {
-      const data = await checkBookshelf(id)
-      inShelf.value = data.inBookshelf
-    } catch (e) { /* ignore */ }
-  }
-}, { immediate: true })
-
-async function toggleShelf() {
-  try {
-    if (inShelf.value) {
-      await removeFromBookshelf(props.book.id)
-      inShelf.value = false
-    } else {
-      await addToBookshelf(props.book.id)
-      inShelf.value = true
-    }
-  } catch (e) {
-    console.error('书架操作失败:', e)
-  }
-}
 </script>
 
 <style scoped>
@@ -89,25 +53,6 @@ async function toggleShelf() {
   font-size: 28px;
   color: #d0c8b4;
 }
-.shelf-toggle {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: rgba(255,255,255,0.85);
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s, background 0.2s;
-}
-.book-cover:hover .shelf-toggle { opacity: 1; }
-.shelf-toggle.active { opacity: 1; background: var(--color-accent-light); }
 .book-title {
   font-weight: 500;
   font-size: 12px;

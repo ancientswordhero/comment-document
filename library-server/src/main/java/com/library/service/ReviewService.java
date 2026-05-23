@@ -21,13 +21,16 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public ReviewService(ReviewRepository reviewRepository,
                          ReviewLikeRepository reviewLikeRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         NotificationService notificationService) {
         this.reviewRepository = reviewRepository;
         this.reviewLikeRepository = reviewLikeRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public PageResult<ReviewResponse> getReviews(Long bookId, String sort,
@@ -105,6 +108,18 @@ public class ReviewService {
         reply = reviewRepository.save(reply);
 
         reviewRepository.incrementReplyCount(rootId);
+
+        if (!parent.getUserId().equals(userId)) {
+            String replierName = userRepository.findById(userId)
+                .map(User::getUsername).orElse("未知用户");
+            String snippet = req.getContent().length() > 30
+                ? req.getContent().substring(0, 30) + "..." : req.getContent();
+            notificationService.createNotification(parent.getUserId(), "reply",
+                replierName + " 回复了你的书评",
+                "回复内容：「" + snippet + "」",
+                parent.getBookId(), parentId);
+        }
+
         return toResponse(reply, Collections.emptyMap(), Collections.emptySet(), new HashMap<>());
     }
 
@@ -142,7 +157,7 @@ public class ReviewService {
 
     @Transactional
     public boolean toggleLike(Long reviewId, Long userId) {
-        reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new EntityNotFoundException("书评不存在: " + reviewId));
 
         var existing = reviewLikeRepository.findByReviewIdAndUserId(reviewId, userId);
@@ -153,6 +168,18 @@ public class ReviewService {
         } else {
             reviewLikeRepository.save(new com.library.entity.ReviewLike(reviewId, userId));
             reviewRepository.incrementLikeCount(reviewId);
+
+            if (!review.getUserId().equals(userId)) {
+                String likerName = userRepository.findById(userId)
+                    .map(User::getUsername).orElse("未知用户");
+                String snippet = review.getContent().length() > 30
+                    ? review.getContent().substring(0, 30) + "..." : review.getContent();
+                notificationService.createNotification(review.getUserId(), "like",
+                    likerName + " 赞了你的书评",
+                    "书评内容：「" + snippet + "」",
+                    review.getBookId(), reviewId);
+            }
+
             return true;
         }
     }

@@ -35,4 +35,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     void decrementReplyCount(@Param("id") Long id);
 
     void deleteAllByBookId(Long bookId);
+
+    @Query("SELECT COALESCE(SUM(r.likeCount), 0) FROM Review r WHERE r.userId = :userId")
+    int sumLikeCountByUserId(@Param("userId") Long userId);
 }

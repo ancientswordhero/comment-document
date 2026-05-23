@@ -2,7 +2,7 @@
   <div :class="['review-item', { 'is-reply': isReply }]">
     <div class="review-body">
       <div class="review-header">
-        <span class="review-username">{{ review.username }}</span>
+        <span class="review-username" @click.stop="$emit('view-user', review.userId)">{{ review.username }}</span>
         <span v-if="isOwn" class="review-me-tag">(我)</span>
       </div>
       <div class="review-content" v-if="!editing">{{ review.content }}</div>
@@ -40,19 +40,28 @@
       </div>
     </div>
 
-    <div v-if="replies && replies.length" class="replies-list">
+    <div v-if="review.replies && review.replies.length" class="replies-list">
       <ReviewItem
-        v-for="reply in replies"
+        v-for="reply in displayReplies"
+        :id="'review-' + reply.id"
         :key="reply.id"
         :review="reply"
         :is-reply="true"
         :current-user-id="currentUserId"
         @like="$emit('like', $event)"
         @delete="$emit('delete', $event)"
-        @edit="$emit('edit', $event[0], $event[1])"
-        @reply="$emit('reply', $event[0], $event[1])"
+        @edit="onEdit"
+        @reply="onReply"
         @report="$emit('report', $event)"
+        @view-user="$emit('view-user', $event)"
       />
+      <div
+        v-if="review.replies.length > 3 && !showAllReplies"
+        class="show-all-replies"
+        @click="showAllReplies = true"
+      >
+        查看全部 {{ review.replies.length }} 条回复
+      </div>
     </div>
   </div>
 </template>
@@ -66,12 +75,21 @@ const props = defineProps({
   currentUserId: { type: Number, default: null }
 })
 
-const emit = defineEmits(['like', 'delete', 'edit', 'reply', 'report'])
+const emit = defineEmits(['like', 'delete', 'edit', 'reply', 'report', 'view-user'])
 
 const showReplyInput = ref(false)
 const replyContent = ref('')
 const editing = ref(false)
 const editContent = ref('')
+const showAllReplies = ref(false)
+
+const sortedReplies = computed(() =>
+  [...props.review.replies].sort((a, b) => b.likeCount - a.likeCount)
+)
+
+const displayReplies = computed(() =>
+  showAllReplies.value ? sortedReplies.value : sortedReplies.value.slice(0, 3)
+)
 
 const isOwn = computed(() =>
   props.currentUserId && props.review.userId === props.currentUserId
@@ -116,6 +134,14 @@ function doReply() {
   replyContent.value = ''
   showReplyInput.value = false
 }
+
+function onReply(id, content) {
+  emit('reply', id, content)
+}
+
+function onEdit(id, content) {
+  emit('edit', id, content)
+}
 </script>
 
 <style scoped>
@@ -132,7 +158,10 @@ function doReply() {
   font-size: 13px;
   font-weight: 500;
   color: var(--color-text, #4a3d2f);
+  cursor: pointer;
+  transition: color 0.2s;
 }
+.review-username:hover { color: var(--color-primary, #c9a96e); }
 .review-me-tag {
   font-size: 11px;
   color: var(--color-text-muted, #a09880);
@@ -226,4 +255,12 @@ function doReply() {
   cursor: pointer;
 }
 .replies-list { margin-top: 4px; }
+.show-all-replies {
+  font-size: 12px;
+  color: var(--color-primary, #c9a96e);
+  cursor: pointer;
+  padding: 6px 0 0 8px;
+  transition: opacity 0.2s;
+}
+.show-all-replies:hover { opacity: 0.7; }
 </style>

@@ -36,4 +36,11 @@ public class AuthController {
     public ApiResponse<LoginResponse> createAdmin(@Valid @RequestBody RegisterRequest request) {
         return ApiResponse.success(userService.createAdmin(request));
     }
+
+    @DeleteMapping("/me")
+    public ApiResponse<Void> deleteAccount(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        userService.deleteAccount(userId);
+        return ApiResponse.success(null);
+    }
 }

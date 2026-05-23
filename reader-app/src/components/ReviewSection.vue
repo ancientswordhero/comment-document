@@ -42,6 +42,7 @@
     <div v-else class="review-list">
       <ReviewItem
         v-for="review in reviews"
+        :id="'review-' + review.id"
         :key="review.id"
         :review="review"
         :current-user-id="currentUserId"
@@ -50,6 +51,7 @@
         @edit="onEdit"
         @reply="onReply"
         @report="onReport"
+        @view-user="onViewUser"
       />
     </div>
 
@@ -67,19 +69,30 @@
     @close="showReportDialog = false"
     @done="onReportDone"
   />
+  <UserProfileDialog
+    v-if="viewUserId"
+    :user-id="viewUserId"
+    :visible="showUserDialog"
+    @close="showUserDialog = false"
+  />
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { getUserIdFromToken } from '../utils/jwt'
 import ReviewItem from './ReviewItem.vue'
 import ReportDialog from './ReportDialog.vue'
+import UserProfileDialog from './UserProfileDialog.vue'
 import {
   getReviews, createReview, createReply,
   updateReview, deleteReview, toggleLike
 } from '../api/review'
 
-const props = defineProps({ bookId: { type: [Number, String], required: true } })
+const props = defineProps({
+  bookId: { type: [Number, String], required: true },
+  highlightReviewId: { type: Number, default: null }
+})
 const router = useRouter()
 
 const reviews = ref([])
@@ -92,17 +105,19 @@ const pageSize = 10
 const postContent = ref('')
 const reportTargetId = ref(null)
 const showReportDialog = ref(false)
+const viewUserId = ref(null)
+const showUserDialog = ref(false)
 
 function onReport(reviewId) { reportTargetId.value = reviewId; showReportDialog.value = true }
 function onReportDone() { showReportDialog.value = false; alert('举报已提交') }
+function onViewUser(userId) { viewUserId.value = userId; showUserDialog.value = true }
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const currentUserId = computed(() => {
   const token = localStorage.getItem('token')
   if (!token) return null
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    return Number(payload.sub)
+    return getUserIdFromToken(token)
   } catch { return null }
 })
 
@@ -116,6 +131,15 @@ async function fetchReviews() {
     const data = await getReviews(props.bookId, { sort: sort.value, page: page.value, size: pageSize })
     reviews.value = data.records
     totalCount.value = data.total
+    if (props.highlightReviewId) {
+      await nextTick()
+      const el = document.getElementById('review-' + props.highlightReviewId)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.classList.add('highlight-flash')
+        setTimeout(() => el.classList.remove('highlight-flash'), 2000)
+      }
+    }
   } finally {
     loading.value = false
   }
@@ -153,7 +177,21 @@ async function onDelete(reviewId) {
 
 async function onLike(reviewId) {
   await toggleLike(reviewId)
-  await fetchReviews()
+  toggleLikeLocal(reviews.value, reviewId)
+}
+
+function toggleLikeLocal(list, id) {
+  for (const r of list) {
+    if (r.id === id) {
+      r.liked = !r.liked
+      r.likeCount += r.liked ? 1 : -1
+      return true
+    }
+    if (r.replies && r.replies.length) {
+      if (toggleLikeLocal(r.replies, id)) return true
+    }
+  }
+  return false
 }
 
 function changeSort(newSort) {
@@ -310,5 +348,13 @@ function goLogin() {
 .page-info {
   font-size: 13px;
   color: var(--color-text-muted, #a09880);
+}
+:deep(.highlight-flash) {
+  animation: highlightPulse 2s ease-out;
+  border-radius: var(--radius, 8px);
+}
+@keyframes highlightPulse {
+  0% { background: rgba(201, 169, 110, 0.3); }
+  100% { background: transparent; }
 }
 </style>

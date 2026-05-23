@@ -36,6 +36,21 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(409, "数据冲突");
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalState(IllegalStateException e) {
+        return ResponseEntity.status(409).body(ApiResponse.error(409, e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException e) {
+        return ResponseEntity.status(400).body(ApiResponse.error(400, e.getMessage()));
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSecurity(SecurityException e) {
+        return ResponseEntity.status(403).body(ApiResponse.error(403, e.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntime(RuntimeException e) {
         String msg = e.getMessage();

@@ -43,14 +43,15 @@ public class NotificationService {
     }
 
     @Transactional
-    public void createNotification(Long userId, String type, String title, String content) {
-        notificationRepository.save(new Notification(userId, type, title, content));
+    public void createNotification(Long userId, String type, String title, String content, Long bookId, Long reviewId) {
+        notificationRepository.save(new Notification(userId, type, title, content, bookId, reviewId));
     }
 
     private NotificationResponse toResponse(Notification n) {
         NotificationResponse r = new NotificationResponse();
         r.setId(n.getId()); r.setType(n.getType()); r.setTitle(n.getTitle());
-        r.setContent(n.getContent()); r.setRead(n.getIsRead() == 1); r.setCreatedAt(n.getCreatedAt());
+        r.setContent(n.getContent()); r.setBookId(n.getBookId()); r.setReviewId(n.getReviewId());
+        r.setRead(n.getIsRead() == 1); r.setCreatedAt(n.getCreatedAt());
         return r;
     }
 }

@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <ReviewSection v-if="book" :book-id="book.id" />
+    <ReviewSection v-if="book" :book-id="book.id" :highlight-review-id="highlightReviewId" />
   </div>
 
   <div v-else class="loading-text">加载中...</div>
@@ -57,6 +57,7 @@ const book = ref(null)
 const errorMsg = ref('')
 const inShelf = ref(false)
 const toast = ref('')
+const highlightReviewId = ref(Number(route.query.reviewId) || null)
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 

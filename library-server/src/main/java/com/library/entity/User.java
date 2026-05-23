@@ -20,6 +20,9 @@ public class User {
     @Column(nullable = false, length = 20)
     private String role;
 
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -41,6 +44,8 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 

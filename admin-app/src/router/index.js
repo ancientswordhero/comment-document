@@ -17,7 +17,7 @@ const router = createRouter({ history: createWebHistory(), routes })
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   if (!token) {
-    window.location.href = 'http://localhost:5174'
+    window.location.href = 'http://localhost:5176'
     return
   }
   next()

@@ -30,6 +30,7 @@ public class JwtFilter implements Filter {
                 || path.startsWith("/api/bookshelf")
                 || (path.startsWith("/api/reviews") && !"GET".equalsIgnoreCase(req.getMethod()))
                 || (path.matches("/api/books/\\d+/reviews") && !"GET".equalsIgnoreCase(req.getMethod()))
+                || (path.startsWith("/api/users") && !"GET".equalsIgnoreCase(req.getMethod()))
                 || path.startsWith("/api/notifications");
         boolean needsAdmin = path.startsWith("/api/admin/");
 

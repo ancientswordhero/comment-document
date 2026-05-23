@@ -7,6 +7,8 @@ public class NotificationResponse {
     private String type;
     private String title;
     private String content;
+    private Long bookId;
+    private Long reviewId;
     private boolean isRead;
     private LocalDateTime createdAt;
 
@@ -18,6 +20,10 @@ public class NotificationResponse {
     public void setTitle(String title) { this.title = title; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+    public Long getBookId() { return bookId; }
+    public void setBookId(Long bookId) { this.bookId = bookId; }
+    public Long getReviewId() { return reviewId; }
+    public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
     public boolean isRead() { return isRead; }
     public void setRead(boolean read) { isRead = read; }
     public LocalDateTime getCreatedAt() { return createdAt; }

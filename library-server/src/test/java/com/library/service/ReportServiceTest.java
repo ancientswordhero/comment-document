@@ -82,7 +82,7 @@ class ReportServiceTest {
 
         verify(reviewRepository).delete(review);
         verify(reportRepository).save(argThat(r -> "deleted".equals(r.getStatus())));
-        verify(notificationService, times(2)).createNotification(anyLong(), anyString(), anyString(), anyString());
+        verify(notificationService, times(2)).createNotification(anyLong(), anyString(), anyString(), anyString(), anyLong(), anyLong());
     }
 
     @Test
@@ -99,7 +99,7 @@ class ReportServiceTest {
 
         verify(reviewRepository, never()).delete(any());
         verify(reportRepository).save(argThat(r -> "dismissed".equals(r.getStatus())));
-        verify(notificationService, times(2)).createNotification(anyLong(), anyString(), anyString(), anyString());
+        verify(notificationService, times(2)).createNotification(anyLong(), anyString(), anyString(), anyString(), anyLong(), anyLong());
     }
 
     @Test

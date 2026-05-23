@@ -65,7 +65,13 @@
       "Bash(taskkill //F //IM java.exe)",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\([b['title'] for b in d['data']['records']]\\)\")",
       "Bash(mkdir -p __TRACKED_VAR__/.library/uploads/covers)",
-      "Bash(cp library-server/uploads/covers/* __TRACKED_VAR__/.library/uploads/covers/)"
+      "Bash(cp library-server/uploads/covers/* __TRACKED_VAR__/.library/uploads/covers/)",
+      "Bash(mvnw compile *)",
+      "Bash(C:/Users/36295/.claude/plugins/cache/superpowers-marketplace/superpowers/5.1.0/skills/brainstorming/scripts/start-server.sh *)",
+      "Bash(where mvnw *)",
+      "Bash(/c/Users/36295/.trae-cn/tools/maven/latest/bin/mvn compile *)",
+      "Bash(mvn test *)",
+      "Bash(dir \"C:\\\\Users\\\\36295\\\\Desktop\\\\shuhai\")"
     ]
   }
 }

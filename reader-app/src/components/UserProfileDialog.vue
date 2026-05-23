@@ -48,6 +48,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { getUserProfile, updateProfile } from '../api/user'
+import { getUserIdFromToken } from '../utils/jwt'
 
 const props = defineProps({ userId: Number, visible: Boolean })
 const emit = defineEmits(['close'])
@@ -61,7 +62,7 @@ const saving = ref(false)
 const currentUserId = computed(() => {
   const token = localStorage.getItem('token')
   if (!token) return null
-  try { return Number(JSON.parse(atob(token.split('.')[1])).sub) } catch { return null }
+  try { return getUserIdFromToken(token) } catch { return null }
 })
 
 const isOwn = computed(() => currentUserId.value === props.userId)
@@ -69,9 +70,10 @@ const isOwn = computed(() => currentUserId.value === props.userId)
 watch(() => props.visible, async (v) => {
   if (v && props.userId) {
     editing.value = false
+    profile.value = null
     try { profile.value = await getUserProfile(props.userId) } catch { profile.value = null }
   }
-})
+}, { immediate: true })
 
 function startEdit() {
   editName.value = profile.value.username

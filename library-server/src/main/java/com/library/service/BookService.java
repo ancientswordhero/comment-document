@@ -46,7 +46,22 @@ public class BookService {
 
     public PageResult<BookResponse> getAdminBooks(String keyword, Long categoryId, Integer status, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryId != null ? List.of(categoryId) : null, status, pageable);
+
+        List<Long> categoryIds = null;
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            if (category != null) {
+                if (category.getParentId() == null) {
+                    List<Category> children = categoryRepository.findByParentIdOrderBySortOrder(categoryId);
+                    categoryIds = children.stream().map(Category::getId).collect(Collectors.toList());
+                    categoryIds.add(categoryId);
+                } else {
+                    categoryIds = List.of(categoryId);
+                }
+            }
+        }
+
+        Page<Book> bookPage = bookRepository.findWithFilters(keyword, categoryIds, status, pageable);
         return buildPageResult(bookPage);
     }
 
