@@ -7,7 +7,10 @@
     <div class="header-right">
       <router-link class="nav-link desktop-only" to="/">图书管理</router-link>
       <span class="nav-divider desktop-only">|</span>
-      <router-link class="nav-link desktop-only" to="/reports">举报管理</router-link>
+      <router-link class="nav-link desktop-only" to="/reports" style="position:relative">
+        举报管理
+        <span v-if="pendingCount > 0" class="badge">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
+      </router-link>
       <span class="nav-divider desktop-only">|</span>
       <router-link class="nav-link desktop-only" to="/admins">新增管理员</router-link>
       <span class="nav-divider desktop-only">|</span>
@@ -18,7 +21,10 @@
     </div>
     <div class="mobile-menu" v-if="menuOpen">
       <router-link class="mobile-menu-item" to="/" @click="menuOpen = false">图书管理</router-link>
-      <router-link class="mobile-menu-item" to="/reports" @click="menuOpen = false">举报管理</router-link>
+      <router-link class="mobile-menu-item" to="/reports" @click="menuOpen = false" style="position:relative">
+        举报管理
+        <span v-if="pendingCount > 0" class="badge-mobile">{{ pendingCount > 99 ? '99+' : pendingCount }}</span>
+      </router-link>
       <router-link class="mobile-menu-item" to="/admins" @click="menuOpen = false">新增管理员</router-link>
       <span class="mobile-menu-item" @click="logout">退出</span>
     </div>
@@ -26,10 +32,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { getPendingCount } from '../api/report'
 
 const menuOpen = ref(false)
+const pendingCount = ref(0)
+let pollingTimer = null
+
 const username = computed(() => localStorage.getItem('username') || '管理员')
+
+async function fetchPendingCount() {
+  try {
+    const data = await getPendingCount()
+    pendingCount.value = data.count || 0
+  } catch { /* ignore */ }
+}
 
 function logout() {
   localStorage.removeItem('token')
@@ -40,6 +57,15 @@ function logout() {
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
+
+onMounted(() => {
+  fetchPendingCount()
+  pollingTimer = setInterval(fetchPendingCount, 30000)
+})
+
+onUnmounted(() => {
+  if (pollingTimer) clearInterval(pollingTimer)
+})
 </script>
 
 <style scoped>
@@ -109,5 +135,18 @@ function toggleMenu() {
 
 @media (max-width: 480px) {
   .logo-text { display: none; }
+}
+.badge {
+  position: absolute; top: -6px; right: -10px;
+  background: var(--color-danger, #c04040); color: #fff;
+  font-size: 10px; padding: 1px 5px; border-radius: 10px;
+  min-width: 16px; text-align: center; line-height: 16px;
+}
+.badge-mobile {
+  background: var(--color-danger, #c04040); color: #fff;
+  font-size: 10px; padding: 1px 5px; border-radius: 10px;
+  min-width: 16px; text-align: center; line-height: 16px;
+  margin-left: 6px;
+  vertical-align: middle;
 }
 </style>
