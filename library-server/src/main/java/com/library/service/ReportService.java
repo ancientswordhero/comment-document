@@ -51,6 +51,10 @@ public class ReportService {
         reportRepository.save(report);
     }
 
+    public long getPendingCount() {
+        return reportRepository.countByStatus("pending");
+    }
+
     public PageResult<ReportResponse> getReports(String status, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         Page<Report> reportPage = (status != null && !status.isEmpty())
@@ -82,18 +86,22 @@ public class ReportService {
             report.setStatus("deleted");
             notificationService.createNotification(review.getUserId(), "report_result",
                 "你的书评被举报，已被管理员删除",
-                "你在《" + bookTitle + "》中的书评「" + reviewSnippet + "」被举报「" + reasonLabel + "」，管理员审核后已删除该评论。");
+                "你在《" + bookTitle + "》中的书评「" + reviewSnippet + "」被举报「" + reasonLabel + "」，管理员审核后已删除该评论。",
+                review.getBookId(), review.getId());
             notificationService.createNotification(report.getReporterId(), "report_result",
                 "你举报的书评已被删除",
-                "你在《" + bookTitle + "》中举报的书评「" + reviewSnippet + "」管理员审核后已删除处理。");
+                "你在《" + bookTitle + "》中举报的书评「" + reviewSnippet + "」管理员审核后已删除处理。",
+                review.getBookId(), review.getId());
         } else if ("dismiss".equals(req.getAction())) {
             report.setStatus("dismissed");
             notificationService.createNotification(review.getUserId(), "report_result",
                 "你的书评被举报，举报已被驳回",
-                "你在《" + bookTitle + "》中的书评「" + reviewSnippet + "」被举报「" + reasonLabel + "」，管理员审核后驳回了举报。");
+                "你在《" + bookTitle + "》中的书评「" + reviewSnippet + "」被举报「" + reasonLabel + "」，管理员审核后驳回了举报。",
+                review.getBookId(), review.getId());
             notificationService.createNotification(report.getReporterId(), "report_result",
                 "你举报的书评举报被驳回",
-                "你在《" + bookTitle + "》中举报的书评「" + reviewSnippet + "」管理员审核后驳回了举报。");
+                "你在《" + bookTitle + "》中举报的书评「" + reviewSnippet + "」管理员审核后驳回了举报。",
+                review.getBookId(), review.getId());
         } else {
             throw new IllegalArgumentException("无效的处理方式: " + req.getAction());
         }
