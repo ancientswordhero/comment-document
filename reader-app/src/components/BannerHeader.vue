@@ -77,7 +77,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { setSearchKeyword } from '../composables/useSearch'
 import { getUserIdFromToken } from '../utils/jwt'
 import { deleteAccount } from '../api/auth'
@@ -91,7 +90,7 @@ const unreadCount = ref(0)
 const showProfile = ref(false)
 const profileUserId = ref(null)
 
-const router = useRouter()
+
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const username = computed(() => localStorage.getItem('username') || '读者')
@@ -116,7 +115,7 @@ function onLogout() {
   if (!confirm('确定要退出登录吗？')) return
   localStorage.removeItem('token')
   localStorage.removeItem('username')
-  router.push('/')
+  window.location.href = '/'
 }
 
 async function onDeleteAccount() {
