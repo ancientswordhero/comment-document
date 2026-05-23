@@ -22,7 +22,7 @@
             <span v-if="unreadCount > 0" class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
           </span>
           <span class="nav-sep">|</span>
-          <span class="nav-user">{{ username }}</span>
+          <span class="nav-user" @click="onViewSelf" title="查看个人主页">{{ username }}</span>
           <span class="nav-sep">|</span>
           <span class="nav-item logout" @click="onLogout">退出</span>
           <span class="nav-sep">|</span>
@@ -65,22 +65,47 @@
         <div class="banner-tagline">万卷古今消永日 · 一窗昏晓送流年</div>
       </div>
     </div>
+
+    <UserProfileDialog
+      v-if="profileUserId"
+      :user-id="profileUserId"
+      :visible="showProfile"
+      @close="showProfile = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { setSearchKeyword } from '../composables/useSearch'
+import { getUserIdFromToken } from '../utils/jwt'
 import { deleteAccount } from '../api/auth'
 import { getUnreadCount } from '../api/report'
+import UserProfileDialog from './UserProfileDialog.vue'
 import bannerBg from '../assets/banner-bg.jpg'
 import characterSrc from '../assets/banner-character.png'
 
 const searchKeywords = ref('')
 const unreadCount = ref(0)
+const showProfile = ref(false)
+const profileUserId = ref(null)
+
+const router = useRouter()
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const username = computed(() => localStorage.getItem('username') || '读者')
+const currentUserId = computed(() => {
+  const token = localStorage.getItem('token')
+  if (!token) return null
+  try { return getUserIdFromToken(token) } catch { return null }
+})
+
+function onViewSelf() {
+  if (!currentUserId.value) return
+  profileUserId.value = currentUserId.value
+  showProfile.value = true
+}
 
 function onSearch() {
   const keyword = searchKeywords.value.trim()
@@ -91,7 +116,7 @@ function onLogout() {
   if (!confirm('确定要退出登录吗？')) return
   localStorage.removeItem('token')
   localStorage.removeItem('username')
-  window.location.href = 'http://localhost:5174'
+  router.push('/')
 }
 
 async function onDeleteAccount() {
@@ -100,7 +125,7 @@ async function onDeleteAccount() {
     await deleteAccount()
     localStorage.removeItem('token')
     localStorage.removeItem('username')
-    window.location.href = 'http://localhost:5174'
+    window.location.href = 'http://localhost:5176'
   } catch (e) {
     const msg = e?.response?.data?.message || e?.message || '注销失败，请重试'
     alert(msg)
@@ -184,7 +209,10 @@ onMounted(async () => {
 .nav-user {
   font-size: 12px; color: rgba(255,255,255,0.8);
   font-family: var(--font-serif);
+  cursor: pointer;
+  transition: color 0.2s;
 }
+.nav-user:hover { color: var(--color-primary, #c9a96e); }
 .nav-item.logout {
   font-size: 12px; color: rgba(255,255,255,0.6);
   cursor: pointer; transition: color 0.2s;
