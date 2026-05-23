@@ -30,7 +30,7 @@ function setupInterceptors(api, isAdmin = false) {
       const msg = error.response?.data?.message || '网络错误'
       if (isAdmin && (error.response?.status === 401 || error.response?.status === 403)) {
         localStorage.removeItem('token')
-        window.location.href = 'http://localhost:5176'
+        window.location.href = 'http://localhost:5174'
       }
       console.error(msg)
       return Promise.reject(error)
