@@ -4,6 +4,7 @@ import com.library.dto.*;
 import com.library.service.ReportService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +14,12 @@ public class AdminReportController {
     private final ReportService reportService;
 
     public AdminReportController(ReportService reportService) { this.reportService = reportService; }
+
+    @GetMapping("/reports/pending-count")
+    public ApiResponse<Map<String, Long>> pendingCount() {
+        long count = reportService.getPendingCount();
+        return ApiResponse.success(Map.of("count", count));
+    }
 
     @GetMapping("/reports")
     public ApiResponse<PageResult<ReportResponse>> listReports(
