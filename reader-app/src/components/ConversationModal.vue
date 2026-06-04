@@ -91,7 +91,7 @@ const newReplyContent = ref('')
 const editingId = ref(null)
 const editContent = ref('')
 
-const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+const isLoggedIn = computed(() => props.currentUserId != null)
 
 function flattenThread(root, threadStart) {
   const result = [root]
@@ -118,9 +118,16 @@ const flatMessages = computed(() =>
   flattenThread(props.rootReview, props.threadReply)
 )
 
+const usernameMap = computed(() => {
+  const map = {}
+  for (const m of flatMessages.value) {
+    map[m.id] = m.username
+  }
+  return map
+})
+
 function getParentUsername(parentId) {
-  const parent = flatMessages.value.find(m => m.id === parentId)
-  return parent ? parent.username : '未知用户'
+  return usernameMap.value[parentId] || '未知用户'
 }
 
 watch(() => props.visible, async (v) => {
@@ -200,7 +207,7 @@ function goLogin() {
   justify-content: center;
 }
 .conv-modal {
-  background: #fff;
+  background: var(--color-card-bg, #fff);
   border-radius: 12px;
   width: 600px;
   max-width: 95vw;
@@ -214,17 +221,17 @@ function goLogin() {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #e8e4dc;
+  border-bottom: 1px solid var(--color-border, #e8e4dc);
   flex-shrink: 0;
 }
 .conv-title {
   font-size: 16px;
   font-weight: 600;
-  color: #4a3d2f;
+  color: var(--color-text, #4a3d2f);
 }
 .conv-close {
   font-size: 22px;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   cursor: pointer;
   line-height: 1;
 }
@@ -247,34 +254,34 @@ function goLogin() {
 }
 .conv-msg-user {
   font-weight: 500;
-  color: #4a3d2f;
+  color: var(--color-text, #4a3d2f);
   cursor: pointer;
 }
 .conv-msg-user:hover { color: #c9a96e; }
 .conv-me-tag {
   font-size: 11px;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   margin-left: 2px;
 }
 .conv-msg-time {
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   margin-left: 8px;
 }
 .conv-msg-content {
   font-size: 13px;
-  color: #4a3d2f;
+  color: var(--color-text, #4a3d2f);
   line-height: 1.7;
   margin: 4px 0;
 }
 .conv-reply-prefix {
-  color: #c9a96e;
+  color: var(--color-primary, #c9a96e);
   font-size: 12px;
 }
 .conv-msg-actions {
   display: flex;
   gap: 14px;
   font-size: 12px;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   margin-top: 2px;
 }
 .conv-action {
@@ -283,13 +290,13 @@ function goLogin() {
 }
 .conv-action:hover { color: #c9a96e; }
 .conv-action.liked {
-  color: #c9a96e;
+  color: var(--color-primary, #c9a96e);
   font-weight: 600;
 }
-.conv-action-danger:hover { color: #c04040; }
+.conv-action-danger:hover { color: var(--color-danger, #c04040); }
 .conv-edited-tag {
   font-size: 11px;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   margin-top: 2px;
 }
 .conv-edit-area {
@@ -305,7 +312,7 @@ function goLogin() {
   resize: vertical;
   outline: none;
 }
-.conv-edit-input:focus { border-color: #c9a96e; }
+.conv-edit-input:focus { border-color: var(--color-primary, #c9a96e); }
 .conv-edit-actions {
   display: flex;
   gap: 8px;
@@ -325,7 +332,7 @@ function goLogin() {
   resize: vertical;
   outline: none;
 }
-.conv-reply-input:focus { border-color: #c9a96e; }
+.conv-reply-input:focus { border-color: var(--color-primary, #c9a96e); }
 .conv-reply-actions {
   display: flex;
   gap: 8px;
@@ -334,7 +341,7 @@ function goLogin() {
 }
 .conv-footer {
   padding: 12px 20px;
-  border-top: 1px solid #e8e4dc;
+  border-top: 1px solid var(--color-border, #e8e4dc);
   flex-shrink: 0;
 }
 .conv-footer-input {
@@ -347,7 +354,7 @@ function goLogin() {
   resize: vertical;
   outline: none;
 }
-.conv-footer-input:focus { border-color: #c9a96e; }
+.conv-footer-input:focus { border-color: var(--color-primary, #c9a96e); }
 .conv-footer-actions {
   display: flex;
   justify-content: flex-end;
@@ -355,14 +362,14 @@ function goLogin() {
 }
 .conv-footer-login {
   padding: 12px 20px;
-  border-top: 1px solid #e8e4dc;
+  border-top: 1px solid var(--color-border, #e8e4dc);
   text-align: center;
   font-size: 13px;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   flex-shrink: 0;
 }
 .conv-footer-login a {
-  color: #c9a96e;
+  color: var(--color-primary, #c9a96e);
   cursor: pointer;
 }
 .reply-target-tag {
@@ -374,7 +381,7 @@ function goLogin() {
 }
 .reply-target-label { color: #8b8070; }
 .reply-target-username {
-  color: #c9a96e;
+  color: var(--color-primary, #c9a96e);
   font-weight: 500;
   cursor: pointer;
 }
@@ -382,15 +389,15 @@ function goLogin() {
 .reply-target-close {
   margin-left: auto;
   cursor: pointer;
-  color: #a09880;
+  color: var(--color-text-muted, #a09880);
   font-size: 16px;
   line-height: 1;
 }
 .reply-target-close:hover { color: #8b8070; }
 .btn-cancel {
   padding: 4px 12px;
-  background: #fafaf7;
-  color: #8b8070;
+  background: var(--color-bg, #fafaf7);
+  color: var(--color-text-secondary, #8b8070);
   border: 1px solid #e0dbd0;
   border-radius: 6px;
   font-size: 12px;
@@ -398,7 +405,7 @@ function goLogin() {
 }
 .btn-save {
   padding: 4px 12px;
-  background: #c9a96e;
+  background: var(--color-primary, #c9a96e);
   color: #fff;
   border: none;
   border-radius: 6px;
