@@ -68,6 +68,24 @@
         查看全部 {{ review.replies.length }} 条回复
       </div>
     </div>
+
+    <div
+      v-if="!isReply && review.replies && review.replies.length"
+      class="conversation-entries"
+    >
+      <div
+        v-for="reply in review.replies"
+        :key="'conv-' + reply.id"
+      >
+        <div
+          v-if="getThreadTotal(reply) >= 6"
+          class="view-conversation"
+          @click="$emit('view-conversation', review, reply)"
+        >
+          查看完整对话（{{ getThreadTotal(reply) }}条）&rarr;
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,13 +98,29 @@ const props = defineProps({
   currentUserId: { type: Number, default: null }
 })
 
-const emit = defineEmits(['like', 'delete', 'edit', 'reply', 'report', 'view-user'])
+const emit = defineEmits(['like', 'delete', 'edit', 'reply', 'report', 'view-user', 'view-conversation'])
 
 const showReplyInput = ref(false)
 const replyContent = ref('')
 const editing = ref(false)
 const editContent = ref('')
 const showAllReplies = ref(false)
+
+const conversationModals = ref({})
+
+function countDescendants(reply) {
+  if (!reply.replies || reply.replies.length === 0) return 0
+  let count = reply.replies.length
+  for (const child of reply.replies) {
+    count += countDescendants(child)
+  }
+  return count
+}
+
+function getThreadTotal(reply) {
+  // 根评论(1) + 该二层回复(1) + 所有子孙
+  return 2 + countDescendants(reply)
+}
 
 const sortedReplies = computed(() =>
   [...props.review.replies].sort((a, b) => b.likeCount - a.likeCount)
@@ -295,5 +329,18 @@ function onEdit(id, content) {
 }
 .reply-target-close:hover {
   color: var(--color-text-secondary, #8b8070);
+}
+.conversation-entries {
+  margin-top: 2px;
+}
+.view-conversation {
+  font-size: 12px;
+  color: var(--color-primary, #c9a96e);
+  cursor: pointer;
+  padding: 4px 0 2px 8px;
+  transition: opacity 0.2s;
+}
+.view-conversation:hover {
+  opacity: 0.7;
 }
 </style>
