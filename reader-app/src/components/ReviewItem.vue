@@ -73,18 +73,15 @@
       v-if="!isReply && review.replies && review.replies.length"
       class="conversation-entries"
     >
-      <div
-        v-for="reply in review.replies"
-        :key="'conv-' + reply.id"
-      >
+      <template v-for="reply in review.replies" :key="'conv-' + reply.id">
         <div
-          v-if="getThreadTotal(reply) >= 6"
+          v-if="threadTotals[reply.id] >= 6"
           class="view-conversation"
           @click="$emit('view-conversation', review, reply)"
         >
-          查看完整对话（{{ getThreadTotal(reply) }}条）&rarr;
+          查看完整对话（{{ threadTotals[reply.id] }}条）&rarr;
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -106,8 +103,6 @@ const editing = ref(false)
 const editContent = ref('')
 const showAllReplies = ref(false)
 
-const conversationModals = ref({})
-
 function countDescendants(reply) {
   if (!reply.replies || reply.replies.length === 0) return 0
   let count = reply.replies.length
@@ -121,6 +116,15 @@ function getThreadTotal(reply) {
   // 根评论(1) + 该二层回复(1) + 所有子孙
   return 2 + countDescendants(reply)
 }
+
+const threadTotals = computed(() => {
+  if (!props.review.replies) return {}
+  const map = {}
+  for (const reply of props.review.replies) {
+    map[reply.id] = getThreadTotal(reply)
+  }
+  return map
+})
 
 const sortedReplies = computed(() =>
   [...props.review.replies].sort((a, b) => b.likeCount - a.likeCount)
