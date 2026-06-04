@@ -33,6 +33,11 @@
     </div>
 
     <div v-if="showReplyInput" class="reply-input-area">
+      <div class="reply-target-tag">
+        <span class="reply-target-label">回复</span>
+        <span class="reply-target-username" @click.stop="$emit('view-user', review.userId)">@{{ review.username }}</span>
+        <span class="reply-target-close" @click="showReplyInput = false; replyContent = ''">&times;</span>
+      </div>
       <textarea v-model="replyContent" class="reply-input" rows="2" placeholder="写下你的回复..."></textarea>
       <div class="reply-input-actions">
         <button class="btn-cancel" @click="showReplyInput = false; replyContent = ''">取消</button>
@@ -263,4 +268,32 @@ function onEdit(id, content) {
   transition: opacity 0.2s;
 }
 .show-all-replies:hover { opacity: 0.7; }
+.reply-target-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.reply-target-label {
+  color: var(--color-text-secondary, #8b8070);
+}
+.reply-target-username {
+  color: var(--color-primary, #c9a96e);
+  font-weight: 500;
+  cursor: pointer;
+}
+.reply-target-username:hover {
+  text-decoration: underline;
+}
+.reply-target-close {
+  margin-left: auto;
+  cursor: pointer;
+  color: var(--color-text-muted, #a09880);
+  font-size: 16px;
+  line-height: 1;
+}
+.reply-target-close:hover {
+  color: var(--color-text-secondary, #8b8070);
+}
 </style>
