@@ -159,7 +159,13 @@ async function onConvReply(parentId, content) {
 
 async function onConvLike(reviewId) {
   await toggleLike(reviewId)
-  toggleLikeLocal([convRootReview.value], reviewId)
+  await fetchReviews()
+  const updatedRoot = reviews.value.find(r => r.id === convRootReview.value.id)
+  if (updatedRoot) {
+    convRootReview.value = updatedRoot
+    const updatedThread = updatedRoot.replies.find(r => r.id === convThreadReply.value.id)
+    if (updatedThread) convThreadReply.value = updatedThread
+  }
 }
 
 async function onConvDelete(reviewId) {

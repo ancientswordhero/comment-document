@@ -135,6 +135,8 @@ watch(() => props.visible, async (v) => {
     replyingTo.value = null
     replyContent.value = ''
     newReplyContent.value = ''
+    editingId.value = null
+    editContent.value = ''
     await nextTick()
     if (bodyRef.value) {
       bodyRef.value.scrollTop = bodyRef.value.scrollHeight
