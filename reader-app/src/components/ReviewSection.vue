@@ -52,6 +52,7 @@
         @reply="onReply"
         @report="onReport"
         @view-user="onViewUser"
+        @view-conversation="onViewConversation"
       />
     </div>
 
@@ -75,6 +76,21 @@
     :visible="showUserDialog"
     @close="showUserDialog = false"
   />
+  <ConversationModal
+    v-if="convRootReview && convThreadReply"
+    :visible="convVisible"
+    :root-review="convRootReview"
+    :thread-reply="convThreadReply"
+    :book-id="Number(bookId)"
+    :current-user-id="currentUserId"
+    @close="onConvClose"
+    @reply="onConvReply"
+    @like="onConvLike"
+    @delete="onConvDelete"
+    @edit="onConvEdit"
+    @report="onConvReport"
+    @view-user="onConvViewUser"
+  />
 </template>
 
 <script setup>
@@ -84,6 +100,7 @@ import { getUserIdFromToken } from '../utils/jwt'
 import ReviewItem from './ReviewItem.vue'
 import ReportDialog from './ReportDialog.vue'
 import UserProfileDialog from './UserProfileDialog.vue'
+import ConversationModal from './ConversationModal.vue'
 import {
   getReviews, createReview, createReply,
   updateReview, deleteReview, toggleLike
@@ -107,10 +124,93 @@ const reportTargetId = ref(null)
 const showReportDialog = ref(false)
 const viewUserId = ref(null)
 const showUserDialog = ref(false)
+const convVisible = ref(false)
+const convRootReview = ref(null)
+const convThreadReply = ref(null)
 
 function onReport(reviewId) { reportTargetId.value = reviewId; showReportDialog.value = true }
 function onReportDone() { showReportDialog.value = false; alert('举报已提交') }
 function onViewUser(userId) { viewUserId.value = userId; showUserDialog.value = true }
+
+function onViewConversation(rootReview, threadReply) {
+  convRootReview.value = rootReview
+  convThreadReply.value = threadReply
+  convVisible.value = true
+}
+
+function onConvClose() {
+  convVisible.value = false
+  convRootReview.value = null
+  convThreadReply.value = null
+}
+
+async function onConvReply(parentId, content) {
+  await createReply(parentId, { content })
+  await fetchReviews()
+  const updatedRoot = reviews.value.find(r => r.id === convRootReview.value.id)
+  if (updatedRoot) {
+    convRootReview.value = updatedRoot
+    const updatedThread = updatedRoot.replies.find(r => r.id === convThreadReply.value.id)
+    if (updatedThread) {
+      convThreadReply.value = updatedThread
+    }
+  }
+}
+
+async function onConvLike(reviewId) {
+  await toggleLike(reviewId)
+  toggleLikeLocal([convRootReview.value], reviewId)
+}
+
+async function onConvDelete(reviewId) {
+  if (!confirm('确定删除这条评论吗？')) return
+  await deleteReview(reviewId)
+  await fetchReviews()
+  const updatedRoot = reviews.value.find(r => r.id === convRootReview.value.id)
+  if (updatedRoot) {
+    convRootReview.value = updatedRoot
+    const updatedThread = updatedRoot.replies.find(r => r.id === convThreadReply.value.id)
+    if (updatedThread) {
+      function countAll(reply) {
+        if (!reply.replies || reply.replies.length === 0) return 0
+        let c = reply.replies.length
+        reply.replies.forEach(r => { c += countAll(r) })
+        return c
+      }
+      const total = 2 + countAll(updatedThread)
+      if (total < 6) {
+        convVisible.value = false
+      } else {
+        convThreadReply.value = updatedThread
+      }
+    } else {
+      convVisible.value = false
+    }
+  } else {
+    convVisible.value = false
+  }
+}
+
+async function onConvEdit(reviewId, content) {
+  await updateReview(reviewId, { content })
+  await fetchReviews()
+  const updatedRoot = reviews.value.find(r => r.id === convRootReview.value.id)
+  if (updatedRoot) {
+    convRootReview.value = updatedRoot
+    const updatedThread = updatedRoot.replies.find(r => r.id === convThreadReply.value.id)
+    if (updatedThread) convThreadReply.value = updatedThread
+  }
+}
+
+function onConvReport(reviewId) {
+  convVisible.value = false
+  onReport(reviewId)
+}
+
+function onConvViewUser(userId) {
+  viewUserId.value = userId
+  showUserDialog.value = true
+}
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const currentUserId = computed(() => {
