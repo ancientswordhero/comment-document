@@ -48,15 +48,17 @@ public class ReviewService {
         List<Long> reviewIds = reviewPage.getContent().stream()
             .map(Review::getId).collect(Collectors.toList());
 
-        Map<Long, List<Review>> repliesMap = new HashMap<>();
+        Map<Long, List<Review>> childrenMap = new HashMap<>();
         for (Long id : reviewIds) {
-            List<Review> replies = reviewRepository.findByRootIdOrderByCreatedAtAsc(id);
-            repliesMap.put(id, replies);
+            List<Review> allReplies = reviewRepository.findByRootIdOrderByCreatedAtAsc(id);
+            for (Review r : allReplies) {
+                childrenMap.computeIfAbsent(r.getParentId(), k -> new ArrayList<>()).add(r);
+            }
         }
 
         Set<Long> allReviewIds = new HashSet<>(reviewIds);
-        for (List<Review> replies : repliesMap.values()) {
-            for (Review r : replies) {
+        for (List<Review> children : childrenMap.values()) {
+            for (Review r : children) {
                 allReviewIds.add(r.getId());
             }
         }
@@ -72,7 +74,7 @@ public class ReviewService {
         final Set<Long> finalLikedIds = likedIds;
 
         List<ReviewResponse> records = reviewPage.getContent().stream()
-            .map(r -> toResponse(r, repliesMap, finalLikedIds, usernameCache))
+            .map(r -> toResponse(r, childrenMap, finalLikedIds, usernameCache))
             .collect(Collectors.toList());
 
         return PageResult.<ReviewResponse>builder()
@@ -185,19 +187,16 @@ public class ReviewService {
     }
 
     private ReviewResponse toResponse(Review review,
-                                       Map<Long, List<Review>> repliesMap,
+                                       Map<Long, List<Review>> childrenMap,
                                        Set<Long> likedIds,
                                        Map<Long, String> usernameCache) {
         String username = usernameCache.computeIfAbsent(review.getUserId(), uid ->
             userRepository.findById(uid).map(User::getUsername).orElse("未知用户"));
 
-        List<ReviewResponse> replies = List.of();
-        if (review.getParentId() == null) {
-            List<Review> childReplies = repliesMap.getOrDefault(review.getId(), List.of());
-            replies = childReplies.stream()
-                .map(r -> toResponse(r, Collections.emptyMap(), likedIds, usernameCache))
-                .collect(Collectors.toList());
-        }
+        List<ReviewResponse> replies = childrenMap.getOrDefault(review.getId(), List.of())
+            .stream()
+            .map(r -> toResponse(r, childrenMap, likedIds, usernameCache))
+            .collect(Collectors.toList());
 
         return ReviewResponse.builder()
             .id(review.getId())
