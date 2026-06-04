@@ -190,4 +190,41 @@ class ReviewServiceTest {
         verify(reviewLikeRepository).delete(any());
         verify(reviewRepository).decrementLikeCount(1L);
     }
+
+    @Test
+    void shouldNestRepliesRecursively() {
+        // Setup: root review with one direct reply that has its own child reply
+        Review root = Review.builder().id(1L).bookId(10L).userId(1L)
+            .content("根评论").likeCount(0).replyCount(2).build();
+        Review reply1 = Review.builder().id(2L).bookId(10L).userId(2L)
+            .parentId(1L).rootId(1L).content("回复1").likeCount(1).replyCount(0)
+            .createdAt(LocalDateTime.now().minusHours(1)).build();
+        Review reply2 = Review.builder().id(3L).bookId(10L).userId(3L)
+            .parentId(2L).rootId(1L).content("回复1的回复").likeCount(0).replyCount(0)
+            .createdAt(LocalDateTime.now()).build();
+
+        Page<Review> page = new PageImpl<>(List.of(root));
+        when(reviewRepository.findByBookIdAndParentIdIsNull(eq(10L), any(Pageable.class)))
+            .thenReturn(page);
+        when(reviewRepository.findByRootIdOrderByCreatedAtAsc(1L))
+            .thenReturn(List.of(reply1, reply2));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(
+            new User(1L, "楼主", "pw", "READER", null)));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(
+            new User(2L, "回复者", "pw", "READER", null)));
+        when(userRepository.findById(3L)).thenReturn(Optional.of(
+            new User(3L, "子回复者", "pw", "READER", null)));
+
+        PageResult<ReviewResponse> result = reviewService.getReviews(10L, "time", 1, 10, null);
+
+        assertThat(result.getRecords()).hasSize(1);
+        ReviewResponse rootResp = result.getRecords().get(0);
+        // 根评论有1条直接回复
+        assertThat(rootResp.getReplies()).hasSize(1);
+        ReviewResponse directReply = rootResp.getReplies().get(0);
+        assertThat(directReply.getContent()).isEqualTo("回复1");
+        // 该回复有1条子回复（递归嵌套）
+        assertThat(directReply.getReplies()).hasSize(1);
+        assertThat(directReply.getReplies().get(0).getContent()).isEqualTo("回复1的回复");
+    }
 }
