@@ -28,10 +28,10 @@
         <div class="field full">
           <label>封面图片</label>
           <div class="upload-zone" @click="triggerUpload">
-            <img v-if="previewUrl" :src="previewUrl" class="preview-img" />
+            <img v-if="coverPreviewUrl" :src="coverPreviewUrl" class="preview-img" />
             <span v-else>点击上传封面图片</span>
           </div>
-          <input ref="fileInput" type="file" accept="image/*" hidden @change="onFileChange" />
+          <input ref="fileInput" type="file" accept=".jpg,.jpeg,.png" hidden @change="onFileChange" />
         </div>
         <div class="field full">
           <label>简介</label>
@@ -85,7 +85,7 @@
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getBookById, createBook, updateBook, uploadCover, getCategories } from '../api/book'
+import { getBookById, createBook, updateBook, getCategories } from '../api/book'
 import { flattenCategories } from '../utils/category.js'
 
 const route = useRoute()
@@ -93,12 +93,13 @@ const router = useRouter()
 const isEdit = computed(() => !!route.params.id)
 const flatCategories = ref([])
 const fileInput = ref(null)
-const previewUrl = ref(null)
+const coverFile = ref(null)
+const coverPreviewUrl = ref(null)
 const epubFile = ref(null)
 const submitting = ref(false)
 const uploadPercent = ref(0)
 const form = reactive({
-  title: '', author: '', isbn: '', categoryId: null, coverUrl: '', description: '', content: ''
+  title: '', author: '', isbn: '', categoryId: null, description: '', content: ''
 })
 const errors = reactive({ title: '', author: '', isbn: '' })
 
@@ -118,10 +119,8 @@ onMounted(async () => {
       form.author = b.author
       form.isbn = b.isbn
       form.categoryId = b.categoryId
-      form.coverUrl = b.coverUrl || ''
       form.description = b.description || ''
       form.content = b.content || ''
-      if (b.coverUrl) previewUrl.value = b.coverUrl
     } catch (err) {
       console.error('获取图书详情失败:', err)
     }
@@ -130,16 +129,15 @@ onMounted(async () => {
 
 function triggerUpload() { fileInput.value?.click() }
 
-async function onFileChange(e) {
+function onFileChange(e) {
   const file = e.target.files[0]
   if (!file) return
-  try {
-    const res = await uploadCover(file)
-    form.coverUrl = res
-    previewUrl.value = res
-  } catch (err) {
-    console.error('上传封面失败:', err)
+  if (!['image/jpeg', 'image/png'].includes(file.type)) {
+    alert('封面仅支持 JPEG 或 PNG 格式')
+    return
   }
+  coverFile.value = file
+  coverPreviewUrl.value = URL.createObjectURL(file)
 }
 
 function validate() {
@@ -176,7 +174,7 @@ async function save() {
     fd.append('author', form.author || '')
     fd.append('isbn', form.isbn)
     if (form.categoryId) fd.append('categoryId', form.categoryId)
-    if (form.coverUrl) fd.append('coverUrl', form.coverUrl)
+    if (coverFile.value) fd.append('cover', coverFile.value)
     if (form.description) fd.append('description', form.description)
 
     const onProgress = (e) => {

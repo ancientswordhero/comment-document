@@ -26,7 +26,7 @@
         <tr v-for="book in books" :key="book.id">
           <td>
             <div class="thumb">
-              <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
+              <img v-if="book.hasCover" :src="`/api/books/${book.id}/cover`" :alt="book.title" />
               <span v-else>封面</span>
             </div>
           </td>

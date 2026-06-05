@@ -33,9 +33,3 @@ export function deleteBook(id) {
 export function toggleStatus(id) {
   return adminApi.put(`/books/${id}/status`)
 }
-
-export function uploadCover(file) {
-  const form = new FormData()
-  form.append('file', file)
-  return adminApi.post('/upload/cover', form)
-}
