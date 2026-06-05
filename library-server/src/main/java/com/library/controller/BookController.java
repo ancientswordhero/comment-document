@@ -2,6 +2,7 @@ package com.library.controller;
 
 import com.library.dto.*;
 import com.library.service.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,5 +34,13 @@ public class BookController {
     @GetMapping("/categories")
     public ApiResponse<java.util.List<CategoryResponse>> getCategories() {
         return ApiResponse.success(categoryService.getCategoryTree());
+    }
+
+    @GetMapping("/books/{id}/epub")
+    public ResponseEntity<byte[]> getEpub(@PathVariable Long id) {
+        byte[] data = bookService.getEpubData(id);
+        return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.valueOf("application/epub+zip"))
+                .body(data);
     }
 }
