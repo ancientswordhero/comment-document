@@ -82,12 +82,12 @@ public class BookService {
         return toResponse(book);
     }
 
-    public BookResponse createBook(MultipartFile file, BookRequest req) {
+    public BookResponse createBook(MultipartFile epubFile, MultipartFile coverFile, BookRequest req) {
         String title = req.getTitle();
         String author = req.getAuthor();
         byte[] data = null;
         try {
-            data = file.getBytes();
+            data = epubFile.getBytes();
             if (title == null || title.isBlank()) {
                 title = extractEpubMetadata(data, "dc:title");
             }
@@ -103,32 +103,66 @@ public class BookService {
             .author(author != null ? author : "未知作者")
             .isbn(req.getIsbn())
             .categoryId(req.getCategoryId())
-            .coverUrl(req.getCoverUrl())
             .description(req.getDescription())
             .epubData(data)
             .status(1)
             .build();
+
+        if (coverFile != null && !coverFile.isEmpty()) {
+            try {
+                book.setCoverData(coverFile.getBytes());
+            } catch (Exception e) {
+                throw new RuntimeException("封面文件读取失败", e);
+            }
+        }
+
         book = bookRepository.save(book);
+
+        if (book.getEpubData() != null) {
+            backupToFile(book.getEpubData(), "epub", book.getId() + ".epub");
+        }
+        if (book.getCoverData() != null) {
+            String ext = imageExtension(coverFile != null ? coverFile.getContentType() : null);
+            backupToFile(book.getCoverData(), "covers", book.getId() + ext);
+        }
+
         return toResponse(book);
     }
 
-    public BookResponse updateBook(Long id, MultipartFile file, BookRequest req) {
+    public BookResponse updateBook(Long id, MultipartFile epubFile, MultipartFile coverFile, BookRequest req) {
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("图书不存在: " + id));
         book.setTitle(req.getTitle());
         book.setAuthor(req.getAuthor());
         book.setIsbn(req.getIsbn());
         book.setCategoryId(req.getCategoryId());
-        book.setCoverUrl(req.getCoverUrl());
         book.setDescription(req.getDescription());
-        if (file != null && !file.isEmpty()) {
+        if (epubFile != null && !epubFile.isEmpty()) {
             try {
-                book.setEpubData(file.getBytes());
+                book.setEpubData(epubFile.getBytes());
             } catch (Exception e) {
                 throw new RuntimeException("EPUB文件读取失败", e);
             }
         }
+
+        if (coverFile != null && !coverFile.isEmpty()) {
+            try {
+                book.setCoverData(coverFile.getBytes());
+            } catch (Exception e) {
+                throw new RuntimeException("封面文件读取失败", e);
+            }
+        }
+
         book = bookRepository.save(book);
+
+        if (book.getEpubData() != null) {
+            backupToFile(book.getEpubData(), "epub", book.getId() + ".epub");
+        }
+        if (book.getCoverData() != null) {
+            String ext = imageExtension(coverFile != null ? coverFile.getContentType() : null);
+            backupToFile(book.getCoverData(), "covers", book.getId() + ext);
+        }
+
         return toResponse(book);
     }
 

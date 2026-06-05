@@ -67,7 +67,7 @@ public class BookshelfService {
                 .isbn(book.getIsbn())
                 .categoryId(book.getCategoryId())
                 .categoryName(categoryName)
-                .coverUrl(book.getCoverUrl())
+                .hasCover(book.getCoverData() != null)
                 .description(book.getDescription())
                 .hasEpub(book.getEpubData() != null)
                 .status(book.getStatus())
