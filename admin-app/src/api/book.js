@@ -12,15 +12,17 @@ export function getBookById(id) {
   return adminApi.get(`/books/${id}`)
 }
 
-export function createBook(formData) {
+export function createBook(formData, onProgress) {
   return adminApi.post('/books', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: onProgress
   })
 }
 
-export function updateBook(id, formData) {
+export function updateBook(id, formData, onProgress) {
   return adminApi.put(`/books/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: onProgress
   })
 }
 

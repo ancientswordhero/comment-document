@@ -66,6 +66,12 @@
           </div>
         </div>
       </div>
+      <div v-if="submitting && uploadPercent > 0" class="upload-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ width: uploadPercent + '%' }"></div>
+        </div>
+        <span class="progress-text">{{ uploadPercent }}%</span>
+      </div>
       <div class="form-actions">
         <button class="btn-cancel" @click="$router.push('/')">取消</button>
         <button class="btn-save" @click="save" :disabled="submitting">
@@ -90,6 +96,7 @@ const fileInput = ref(null)
 const previewUrl = ref(null)
 const epubFile = ref(null)
 const submitting = ref(false)
+const uploadPercent = ref(0)
 const form = reactive({
   title: '', author: '', isbn: '', categoryId: null, coverUrl: '', description: '', content: ''
 })
@@ -168,20 +175,25 @@ async function save() {
     fd.append('title', form.title || '')
     fd.append('author', form.author || '')
     fd.append('isbn', form.isbn)
-    fd.append('categoryId', form.categoryId || '')
-    fd.append('coverUrl', form.coverUrl || '')
-    fd.append('description', form.description || '')
+    if (form.categoryId) fd.append('categoryId', form.categoryId)
+    if (form.coverUrl) fd.append('coverUrl', form.coverUrl)
+    if (form.description) fd.append('description', form.description)
+
+    const onProgress = (e) => {
+      if (e.total) uploadPercent.value = Math.round((e.loaded / e.total) * 100)
+    }
 
     if (isEdit.value) {
-      await updateBook(route.params.id, fd)
+      await updateBook(route.params.id, fd, onProgress)
     } else {
-      await createBook(fd)
+      await createBook(fd, onProgress)
     }
     router.push('/books')
   } catch (e) {
     alert(e?.response?.data?.message || e?.message || '保存失败')
   } finally {
     submitting.value = false
+    uploadPercent.value = 0
   }
 }
 </script>
@@ -258,6 +270,31 @@ async function save() {
 .epub-file-size { color: #a09880; margin-left: 8px; font-size: 12px; }
 .epub-file-remove { margin-left: 12px; cursor: pointer; color: #c04040; }
 .required { color: #c04040; }
+.upload-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e8e4dc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary, #c9a96e);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.progress-text {
+  font-size: 13px;
+  color: var(--color-text-secondary, #8b8070);
+  min-width: 40px;
+  text-align: right;
+}
 
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
