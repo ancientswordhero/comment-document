@@ -2,7 +2,8 @@ package com.library.controller;
 
 import com.library.dto.*;
 import com.library.service.*;
-import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -30,8 +31,22 @@ public class AdminBookController {
     }
 
     @PostMapping("/books")
-    public ApiResponse<BookResponse> createBook(@Valid @RequestBody BookRequest request) {
-        return ApiResponse.success(bookService.createBook(request));
+    public ApiResponse<BookResponse> createBook(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "title", required = false) String title,
+            @RequestPart(value = "author", required = false) String author,
+            @RequestPart("isbn") String isbn,
+            @RequestPart(value = "categoryId", required = false) Long categoryId,
+            @RequestPart(value = "coverUrl", required = false) String coverUrl,
+            @RequestPart(value = "description", required = false) String description) {
+        BookRequest req = new BookRequest();
+        req.setTitle(title);
+        req.setAuthor(author);
+        req.setIsbn(isbn);
+        if (categoryId != null) req.setCategoryId(categoryId);
+        if (coverUrl != null) req.setCoverUrl(coverUrl);
+        if (description != null) req.setDescription(description);
+        return ApiResponse.success(bookService.createBook(file, req));
     }
 
     @GetMapping("/books/{id}")
@@ -40,8 +55,31 @@ public class AdminBookController {
     }
 
     @PutMapping("/books/{id}")
-    public ApiResponse<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest request) {
-        return ApiResponse.success(bookService.updateBook(id, request));
+    public ApiResponse<BookResponse> updateBook(
+            @PathVariable Long id,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("title") String title,
+            @RequestPart("author") String author,
+            @RequestPart("isbn") String isbn,
+            @RequestPart(value = "categoryId", required = false) Long categoryId,
+            @RequestPart(value = "coverUrl", required = false) String coverUrl,
+            @RequestPart(value = "description", required = false) String description) {
+        BookRequest req = new BookRequest();
+        req.setTitle(title);
+        req.setAuthor(author);
+        req.setIsbn(isbn);
+        if (categoryId != null) req.setCategoryId(categoryId);
+        if (coverUrl != null) req.setCoverUrl(coverUrl);
+        if (description != null) req.setDescription(description);
+        return ApiResponse.success(bookService.updateBook(id, file, req));
+    }
+
+    @GetMapping("/books/{id}/epub")
+    public ResponseEntity<byte[]> getEpub(@PathVariable Long id) {
+        byte[] data = bookService.getEpubData(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("application/epub+zip"))
+                .body(data);
     }
 
     @DeleteMapping("/books/{id}")
