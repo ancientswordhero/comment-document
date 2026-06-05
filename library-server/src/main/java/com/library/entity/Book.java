@@ -31,6 +31,10 @@ public class Book {
 
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] coverData;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] epubData;
 
     @Column(nullable = false)
@@ -45,8 +49,8 @@ public class Book {
     public Book() {}
 
     public Book(Long id, String title, String author, String isbn, Long categoryId,
-                String coverUrl, String description, byte[] epubData, Integer status,
-                LocalDateTime createdAt, LocalDateTime updatedAt) {
+                String coverUrl, String description, byte[] epubData, byte[] coverData,
+                Integer status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -55,6 +59,7 @@ public class Book {
         this.coverUrl = coverUrl;
         this.description = description;
         this.epubData = epubData;
+        this.coverData = coverData;
         this.status = status != null ? status : 1;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -74,6 +79,8 @@ public class Book {
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public byte[] getCoverData() { return coverData; }
+    public void setCoverData(byte[] coverData) { this.coverData = coverData; }
     public byte[] getEpubData() { return epubData; }
     public void setEpubData(byte[] epubData) { this.epubData = epubData; }
     public Integer getStatus() { return status; }
@@ -105,6 +112,7 @@ public class Book {
         private String coverUrl;
         private String description;
         private byte[] epubData;
+        private byte[] coverData;
         private Integer status = 1;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -117,12 +125,13 @@ public class Book {
         public Builder coverUrl(String coverUrl) { this.coverUrl = coverUrl; return this; }
         public Builder description(String description) { this.description = description; return this; }
         public Builder epubData(byte[] epubData) { this.epubData = epubData; return this; }
+        public Builder coverData(byte[] coverData) { this.coverData = coverData; return this; }
         public Builder status(Integer status) { this.status = status; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
         public Book build() {
             return new Book(id, title, author, isbn, categoryId, coverUrl, description,
-                epubData, status, createdAt, updatedAt);
+                epubData, coverData, status, createdAt, updatedAt);
         }
     }
 }
