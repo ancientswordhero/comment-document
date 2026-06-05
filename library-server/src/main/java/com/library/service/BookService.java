@@ -182,7 +182,7 @@ public class BookService {
             .isbn(book.getIsbn())
             .categoryId(book.getCategoryId())
             .categoryName(categoryName)
-            .coverUrl(book.getCoverUrl())
+            .hasCover(book.getCoverData() != null)
             .description(book.getDescription())
             .hasEpub(book.getEpubData() != null)
             .status(book.getStatus())
@@ -215,5 +215,31 @@ public class BookService {
             }
         } catch (Exception ignored) { }
         return null;
+    }
+
+    public byte[] getCoverData(Long id) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("图书不存在: " + id));
+        if (book.getCoverData() == null) {
+            throw new jakarta.persistence.EntityNotFoundException("该图书无封面");
+        }
+        return book.getCoverData();
+    }
+
+    private void backupToFile(byte[] data, String subdir, String filename) {
+        try {
+            java.nio.file.Path dir = java.nio.file.Paths.get("shuhai", subdir);
+            java.nio.file.Files.createDirectories(dir);
+            java.nio.file.Files.write(dir.resolve(filename), data,
+                java.nio.file.StandardOpenOption.CREATE,
+                java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (java.io.IOException e) {
+            // 备份失败不影响主流程
+        }
+    }
+
+    private String imageExtension(String contentType) {
+        if (contentType != null && contentType.contains("png")) return ".png";
+        return ".jpg";
     }
 }
