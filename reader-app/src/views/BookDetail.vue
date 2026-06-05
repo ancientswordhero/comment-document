@@ -23,6 +23,11 @@
             @click="toggleShelf"
           >{{ inShelf ? '移出书架' : '加入书架' }}</button>
         </div>
+        <button
+          v-if="book && book.hasEpub"
+          class="btn-read"
+          @click="$router.push(`/book/${book.id}/read`)"
+        >开始阅读</button>
         <div class="detail-meta">
           <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
           <div class="meta-item"><span class="meta-label">ISBN</span>{{ book.isbn }}</div>
@@ -185,6 +190,25 @@ function showToast(msg) {
   transition: background 0.2s;
 }
 .back-btn:hover { background: var(--color-primary-hover); }
+
+.btn-read {
+  display: inline-block;
+  padding: 10px 32px;
+  background: var(--color-primary, #c9a96e);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  letter-spacing: 2px;
+  transition: background 0.2s;
+  margin-top: 12px;
+}
+.btn-read:hover {
+  background: var(--color-primary-hover, #b8944d);
+}
+
 .loading-text { text-align: center; padding: 60px; color: var(--color-text-muted); }
 
 .toast {
