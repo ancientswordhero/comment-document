@@ -15,9 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByRootIdOrderByCreatedAtAsc(Long rootId);
 
-    @Query("SELECT COUNT(r) FROM Review r WHERE r.parentId = :parentId")
-    int countReplies(@Param("parentId") Long parentId);
-
     @Modifying
     @Query("UPDATE Review r SET r.likeCount = r.likeCount + 1 WHERE r.id = :id")
     void incrementLikeCount(@Param("id") Long id);
@@ -29,12 +26,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Modifying
     @Query("UPDATE Review r SET r.replyCount = r.replyCount + 1 WHERE r.id = :id")
     void incrementReplyCount(@Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE Review r SET r.replyCount = r.replyCount - 1 WHERE r.id = :id AND r.replyCount > 0")
-    void decrementReplyCount(@Param("id") Long id);
-
-    void deleteAllByBookId(Long bookId);
 
     @Query("SELECT COALESCE(SUM(r.likeCount), 0) FROM Review r WHERE r.userId = :userId")
     int sumLikeCountByUserId(@Param("userId") Long userId);

@@ -57,9 +57,6 @@ public class GlobalExceptionHandler {
         if (msg != null && msg.contains("用户名已存在")) {
             return ResponseEntity.status(409).body(ApiResponse.error(409, msg));
         }
-        if (msg != null && msg.contains("用户名或密码错误")) {
-            return ResponseEntity.status(401).body(ApiResponse.error(401, msg));
-        }
         if (msg != null && msg.contains("下架中")) {
             return ResponseEntity.status(403).body(ApiResponse.error(403, msg));
         }

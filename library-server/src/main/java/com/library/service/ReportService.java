@@ -75,7 +75,6 @@ public class ReportService {
         }
         Review review = reviewRepository.findById(report.getReviewId())
             .orElseThrow(() -> new EntityNotFoundException("书评不存在"));
-        String reporterName = userRepository.findById(report.getReporterId()).map(User::getUsername).orElse("未知用户");
         String reviewAuthorName = userRepository.findById(review.getUserId()).map(User::getUsername).orElse("未知用户");
         String bookTitle = bookRepository.findById(review.getBookId()).map(b -> b.getTitle()).orElse("未知图书");
         String reasonLabel = reasonLabel(report.getReason());

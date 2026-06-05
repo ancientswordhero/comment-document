@@ -21,7 +21,6 @@ public class BookRequest {
     private String coverUrl;
     private String description;
     private String content;
-    private Integer status;
 
     public BookRequest() {}
 
@@ -39,6 +38,4 @@ public class BookRequest {
     public void setDescription(String description) { this.description = description; }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
-    public Integer getStatus() { return status; }
-    public void setStatus(Integer status) { this.status = status; }
 }

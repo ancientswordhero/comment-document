@@ -18,10 +18,6 @@ public class FileService {
         this(config.getUploadDir());
     }
 
-    public FileService() {
-        this("uploads/covers");
-    }
-
     FileService(String uploadDir) {
         this.uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         try {

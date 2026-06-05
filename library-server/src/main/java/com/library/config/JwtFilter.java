@@ -57,7 +57,6 @@ public class JwtFilter implements Filter {
         }
 
         req.setAttribute("userId", jwtUtil.getUserId(token));
-        req.setAttribute("username", jwtUtil.getUsername(token));
         req.setAttribute("role", jwtUtil.getRole(token));
         chain.doFilter(request, response);
     }
