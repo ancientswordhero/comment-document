@@ -12,12 +12,16 @@ export function getBookById(id) {
   return adminApi.get(`/books/${id}`)
 }
 
-export function createBook(data) {
-  return adminApi.post('/books', data)
+export function createBook(formData) {
+  return adminApi.post('/books', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }
 
-export function updateBook(id, data) {
-  return adminApi.put(`/books/${id}`, data)
+export function updateBook(id, formData) {
+  return adminApi.put(`/books/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }
 
 export function deleteBook(id) {
