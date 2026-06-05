@@ -37,28 +37,6 @@ public class DataMigrationRunner implements ApplicationRunner {
                     // skip failed backup
                 }
             }
-
-            String coverUrl = book.getCoverUrl();
-            if (coverUrl != null && !coverUrl.isBlank()) {
-                try {
-                    Path srcPath = Paths.get(coverUrl.substring(1));
-                    if (Files.exists(srcPath)) {
-                        byte[] data = Files.readAllBytes(srcPath);
-                        book.setCoverData(data);
-                        bookRepository.save(book);
-
-                        Path dir = Paths.get("shuhai", "covers");
-                        Files.createDirectories(dir);
-                        String ext = coverUrl.contains(".")
-                            ? coverUrl.substring(coverUrl.lastIndexOf("."))
-                            : ".jpg";
-                        Files.write(dir.resolve(book.getId() + ext), data,
-                            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                    }
-                } catch (IOException e) {
-                    // skip failed migration
-                }
-            }
         }
 
         try {

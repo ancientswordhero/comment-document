@@ -23,9 +23,6 @@ public class Book {
     @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "cover_url", length = 500)
-    private String coverUrl;
-
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -49,14 +46,13 @@ public class Book {
     public Book() {}
 
     public Book(Long id, String title, String author, String isbn, Long categoryId,
-                String coverUrl, String description, byte[] epubData, byte[] coverData,
+                String description, byte[] epubData, byte[] coverData,
                 Integer status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.categoryId = categoryId;
-        this.coverUrl = coverUrl;
         this.description = description;
         this.epubData = epubData;
         this.coverData = coverData;
@@ -75,8 +71,6 @@ public class Book {
     public void setIsbn(String isbn) { this.isbn = isbn; }
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
-    public String getCoverUrl() { return coverUrl; }
-    public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public byte[] getCoverData() { return coverData; }
@@ -109,7 +103,6 @@ public class Book {
         private String author;
         private String isbn;
         private Long categoryId;
-        private String coverUrl;
         private String description;
         private byte[] epubData;
         private byte[] coverData;
@@ -122,7 +115,6 @@ public class Book {
         public Builder author(String author) { this.author = author; return this; }
         public Builder isbn(String isbn) { this.isbn = isbn; return this; }
         public Builder categoryId(Long categoryId) { this.categoryId = categoryId; return this; }
-        public Builder coverUrl(String coverUrl) { this.coverUrl = coverUrl; return this; }
         public Builder description(String description) { this.description = description; return this; }
         public Builder epubData(byte[] epubData) { this.epubData = epubData; return this; }
         public Builder coverData(byte[] coverData) { this.coverData = coverData; return this; }
@@ -130,7 +122,7 @@ public class Book {
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
         public Book build() {
-            return new Book(id, title, author, isbn, categoryId, coverUrl, description,
+            return new Book(id, title, author, isbn, categoryId, description,
                 epubData, coverData, status, createdAt, updatedAt);
         }
     }

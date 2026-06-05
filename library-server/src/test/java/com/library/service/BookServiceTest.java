@@ -46,7 +46,7 @@ class BookServiceTest {
     @Test
     void shouldReturnBookById() {
         Book book = Book.builder().id(1L).title("三体").author("刘慈欣")
-            .isbn("978-7-53").categoryId(3L).status(1).coverUrl("/uploads/covers/a.jpg")
+            .isbn("978-7-53").categoryId(3L).status(1)
             .description("<p>科幻经典</p>").build();
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(categoryRepository.findById(3L)).thenReturn(Optional.of(
