@@ -22,6 +22,13 @@ api.interceptors.response.use(
   },
   error => {
     const msg = error.response?.data?.message || '网络错误'
+    if (error.response?.status === 401) {
+      alert(msg)
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
+      window.location.href = 'http://localhost:5176'
+      return Promise.reject(error)
+    }
     console.error(msg)
     return Promise.reject(error)
   }
