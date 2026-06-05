@@ -1,6 +1,6 @@
 package com.library.controller;
 
-import com.library.config.FileUploadConfig;
+
 import com.library.config.JwtFilter;
 import com.library.config.JwtUtil;
 import com.library.config.SecurityConfig;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
-@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class, WebConfig.class, FileUploadConfig.class})
+@Import({JwtUtil.class, JwtFilter.class, SecurityConfig.class, WebConfig.class})
 class BookControllerTest {
 
     @Autowired MockMvc mvc;
