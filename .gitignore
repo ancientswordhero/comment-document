@@ -23,7 +23,7 @@ Thumbs.db
 *.log
 
 # Uploaded files (runtime)
-uploads/
+shuhai/
 
 # Node
 node_modules/
