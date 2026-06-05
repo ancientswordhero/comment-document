@@ -18,7 +18,6 @@ public class BookRequest {
     private String isbn;
 
     private Long categoryId;
-    private String coverUrl;
     private String description;
 
     public BookRequest() {}
@@ -31,8 +30,6 @@ public class BookRequest {
     public void setIsbn(String isbn) { this.isbn = isbn; }
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
-    public String getCoverUrl() { return coverUrl; }
-    public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 }
