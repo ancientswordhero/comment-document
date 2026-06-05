@@ -30,8 +30,8 @@ public class Book {
     private String description;
 
     @Lob
-    @Column
-    private String content;
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] epubData;
 
     @Column(nullable = false)
     private Integer status = 1;
@@ -45,7 +45,7 @@ public class Book {
     public Book() {}
 
     public Book(Long id, String title, String author, String isbn, Long categoryId,
-                String coverUrl, String description, String content, Integer status,
+                String coverUrl, String description, byte[] epubData, Integer status,
                 LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
@@ -54,7 +54,7 @@ public class Book {
         this.categoryId = categoryId;
         this.coverUrl = coverUrl;
         this.description = description;
-        this.content = content;
+        this.epubData = epubData;
         this.status = status != null ? status : 1;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -74,8 +74,8 @@ public class Book {
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public byte[] getEpubData() { return epubData; }
+    public void setEpubData(byte[] epubData) { this.epubData = epubData; }
     public Integer getStatus() { return status; }
     public void setStatus(Integer status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
@@ -104,7 +104,7 @@ public class Book {
         private Long categoryId;
         private String coverUrl;
         private String description;
-        private String content;
+        private byte[] epubData;
         private Integer status = 1;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -116,13 +116,13 @@ public class Book {
         public Builder categoryId(Long categoryId) { this.categoryId = categoryId; return this; }
         public Builder coverUrl(String coverUrl) { this.coverUrl = coverUrl; return this; }
         public Builder description(String description) { this.description = description; return this; }
-        public Builder content(String content) { this.content = content; return this; }
+        public Builder epubData(byte[] epubData) { this.epubData = epubData; return this; }
         public Builder status(Integer status) { this.status = status; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
         public Book build() {
             return new Book(id, title, author, isbn, categoryId, coverUrl, description,
-                content, status, createdAt, updatedAt);
+                epubData, status, createdAt, updatedAt);
         }
     }
 }

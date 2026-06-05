@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,7 +89,7 @@ public class BookService {
             .categoryId(req.getCategoryId())
             .coverUrl(req.getCoverUrl())
             .description(req.getDescription())
-            .content(req.getContent())
+            .epubData(req.getContent() != null ? req.getContent().getBytes(StandardCharsets.UTF_8) : null)
             .status(1)
             .build();
         book = bookRepository.save(book);
@@ -104,7 +105,7 @@ public class BookService {
         book.setCategoryId(req.getCategoryId());
         book.setCoverUrl(req.getCoverUrl());
         book.setDescription(req.getDescription());
-        book.setContent(req.getContent());
+        book.setEpubData(req.getContent() != null ? req.getContent().getBytes(StandardCharsets.UTF_8) : null);
         book = bookRepository.save(book);
         return toResponse(book);
     }
@@ -152,7 +153,7 @@ public class BookService {
             .categoryName(categoryName)
             .coverUrl(book.getCoverUrl())
             .description(book.getDescription())
-            .content(book.getContent())
+            .content(book.getEpubData() != null ? new String(book.getEpubData(), StandardCharsets.UTF_8) : null)
             .status(book.getStatus())
             .createdAt(book.getCreatedAt())
             .updatedAt(book.getUpdatedAt())

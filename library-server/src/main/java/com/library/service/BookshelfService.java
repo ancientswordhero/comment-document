@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ public class BookshelfService {
                 .categoryName(categoryName)
                 .coverUrl(book.getCoverUrl())
                 .description(book.getDescription())
-                .content(book.getContent())
+                .content(book.getEpubData() != null ? new String(book.getEpubData(), StandardCharsets.UTF_8) : null)
                 .status(book.getStatus())
                 .createdAt(book.getCreatedAt())
                 .updatedAt(book.getUpdatedAt())
