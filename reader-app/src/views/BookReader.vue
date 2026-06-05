@@ -56,9 +56,12 @@ onMounted(async () => {
         label: item.label,
         href: item.href
       }))
+      if (nav.toc.length > 0) {
+        rendition.display(nav.toc[0].href)
+      } else {
+        rendition.display()
+      }
     })
-
-    rendition.display()
 
     rendition.on('relocated', (loc) => {
       currentPage.value = loc.current + 1
