@@ -32,7 +32,6 @@ class AdminBookControllerTest {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
     @MockBean BookService bookService;
-    @MockBean FileService fileService;
 
     private String adminToken;
 
@@ -60,28 +59,35 @@ class AdminBookControllerTest {
 
     @Test
     void shouldCreateBook() throws Exception {
-        BookRequest req = new BookRequest();
-        req.setTitle("新书"); req.setAuthor("作者"); req.setIsbn("978-0");
         BookResponse resp = BookResponse.builder().id(1L).title("新书").build();
         when(bookService.createBook(any(), any(), any(BookRequest.class))).thenReturn(resp);
 
-        mvc.perform(withAuth(post("/api/admin/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req))))
+        MockMultipartFile epubFile = new MockMultipartFile("file", "test.epub",
+                "application/epub+zip", "test".getBytes());
+
+        mvc.perform(withAuth(multipart("/api/admin/books")
+                .file(epubFile)
+                .param("title", "新书")
+                .param("author", "作者")
+                .param("isbn", "978-0")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.title").value("新书"));
     }
 
     @Test
     void shouldUpdateBook() throws Exception {
-        BookRequest req = new BookRequest();
-        req.setTitle("更新"); req.setAuthor("作者"); req.setIsbn("978-0");
         BookResponse resp = BookResponse.builder().id(1L).title("更新").build();
         when(bookService.updateBook(eq(1L), any(), any(), any(BookRequest.class))).thenReturn(resp);
 
-        mvc.perform(withAuth(put("/api/admin/books/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req))))
+        MockMultipartFile epubFile = new MockMultipartFile("file", "test.epub",
+                "application/epub+zip", "test".getBytes());
+
+        mvc.perform(withAuth(multipart("/api/admin/books/1")
+                .file(epubFile)
+                .param("title", "更新")
+                .param("author", "作者")
+                .param("isbn", "978-0")
+                .with(request -> { request.setMethod("PUT"); return request; })))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.title").value("更新"));
     }
@@ -103,14 +109,4 @@ class AdminBookControllerTest {
             .andExpect(jsonPath("$.data.status").value(0));
     }
 
-    @Test
-    void shouldUploadCover() throws Exception {
-        when(fileService.store(any())).thenReturn("/uploads/covers/test.jpg");
-
-        mvc.perform(multipart("/api/admin/upload/cover")
-                .file(new MockMultipartFile("file", "cover.jpg", "image/jpeg", "test".getBytes()))
-                .header("Authorization", "Bearer " + adminToken))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data").value("/uploads/covers/test.jpg"));
-    }
 }

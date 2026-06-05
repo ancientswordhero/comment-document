@@ -1,23 +1,20 @@
 package com.library.controller;
 
 import com.library.dto.*;
-import com.library.service.*;
+import com.library.service.BookService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminBookController {
 
     private final BookService bookService;
-    private final FileService fileService;
 
-    public AdminBookController(BookService bookService, FileService fileService) {
+    public AdminBookController(BookService bookService) {
         this.bookService = bookService;
-        this.fileService = fileService;
     }
 
     @GetMapping("/books")
@@ -87,11 +84,5 @@ public class AdminBookController {
     @PutMapping("/books/{id}/status")
     public ApiResponse<BookResponse> toggleStatus(@PathVariable Long id) {
         return ApiResponse.success(bookService.toggleStatus(id));
-    }
-
-    @PostMapping("/upload/cover")
-    public ApiResponse<String> uploadCover(@RequestParam("file") MultipartFile file) throws IOException {
-        String path = fileService.store(file);
-        return ApiResponse.success(path);
     }
 }
