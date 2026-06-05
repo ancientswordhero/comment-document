@@ -37,16 +37,14 @@ public class AdminBookController {
             @RequestParam(value = "author", required = false) String author,
             @RequestParam("isbn") String isbn,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam(value = "coverUrl", required = false) String coverUrl,
             @RequestParam(value = "description", required = false) String description) {
         BookRequest req = new BookRequest();
         req.setTitle(title);
         req.setAuthor(author);
         req.setIsbn(isbn);
         if (categoryId != null) req.setCategoryId(categoryId);
-        if (coverUrl != null) req.setCoverUrl(coverUrl);
         if (description != null) req.setDescription(description);
-        return ApiResponse.success(bookService.createBook(file, req));
+        return ApiResponse.success(bookService.createBook(file, null, req));
     }
 
     @GetMapping("/books/{id}")
@@ -62,16 +60,14 @@ public class AdminBookController {
             @RequestParam("author") String author,
             @RequestParam("isbn") String isbn,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam(value = "coverUrl", required = false) String coverUrl,
             @RequestParam(value = "description", required = false) String description) {
         BookRequest req = new BookRequest();
         req.setTitle(title);
         req.setAuthor(author);
         req.setIsbn(isbn);
         if (categoryId != null) req.setCategoryId(categoryId);
-        if (coverUrl != null) req.setCoverUrl(coverUrl);
         if (description != null) req.setDescription(description);
-        return ApiResponse.success(bookService.updateBook(id, file, req));
+        return ApiResponse.success(bookService.updateBook(id, file, null, req));
     }
 
     @GetMapping("/books/{id}/epub")

@@ -63,7 +63,7 @@ class AdminBookControllerTest {
         BookRequest req = new BookRequest();
         req.setTitle("新书"); req.setAuthor("作者"); req.setIsbn("978-0");
         BookResponse resp = BookResponse.builder().id(1L).title("新书").build();
-        when(bookService.createBook(any(BookRequest.class))).thenReturn(resp);
+        when(bookService.createBook(any(), any(), any(BookRequest.class))).thenReturn(resp);
 
         mvc.perform(withAuth(post("/api/admin/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -77,7 +77,7 @@ class AdminBookControllerTest {
         BookRequest req = new BookRequest();
         req.setTitle("更新"); req.setAuthor("作者"); req.setIsbn("978-0");
         BookResponse resp = BookResponse.builder().id(1L).title("更新").build();
-        when(bookService.updateBook(eq(1L), any(BookRequest.class))).thenReturn(resp);
+        when(bookService.updateBook(eq(1L), any(), any(), any(BookRequest.class))).thenReturn(resp);
 
         mvc.perform(withAuth(put("/api/admin/books/1")
                 .contentType(MediaType.APPLICATION_JSON)

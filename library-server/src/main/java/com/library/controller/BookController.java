@@ -36,6 +36,14 @@ public class BookController {
         return ApiResponse.success(categoryService.getCategoryTree());
     }
 
+    @GetMapping("/books/{id}/cover")
+    public ResponseEntity<byte[]> getCover(@PathVariable Long id) {
+        byte[] data = bookService.getCoverData(id);
+        return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.IMAGE_JPEG)
+                .body(data);
+    }
+
     @GetMapping("/books/{id}/epub")
     public ResponseEntity<byte[]> getEpub(@PathVariable Long id) {
         byte[] data = bookService.getEpubData(id);

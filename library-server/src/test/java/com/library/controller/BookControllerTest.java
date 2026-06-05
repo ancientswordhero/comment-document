@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -59,5 +61,25 @@ class BookControllerTest {
         mvc.perform(get("/api/categories"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[0].name").value("文学"));
+    }
+
+    @Test
+    void getCover_shouldReturnCoverImage() throws Exception {
+        byte[] coverBytes = "fake-image-data".getBytes();
+        when(bookService.getCoverData(1L)).thenReturn(coverBytes);
+
+        mvc.perform(get("/api/books/1/cover"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.IMAGE_JPEG))
+            .andExpect(content().bytes(coverBytes));
+    }
+
+    @Test
+    void getCover_shouldReturn404_whenNoCover() throws Exception {
+        when(bookService.getCoverData(1L))
+            .thenThrow(new EntityNotFoundException("该图书无封面"));
+
+        mvc.perform(get("/api/books/1/cover"))
+            .andExpect(status().isNotFound());
     }
 }

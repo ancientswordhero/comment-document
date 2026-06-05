@@ -70,7 +70,7 @@ class BookServiceTest {
             return b;
         });
 
-        BookResponse result = bookService.createBook(req);
+        BookResponse result = bookService.createBook(null, null, req);
 
         assertThat(result.getId()).isEqualTo(10L);
         assertThat(result.getTitle()).isEqualTo("新书");
@@ -86,7 +86,7 @@ class BookServiceTest {
         when(bookRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(bookRepository.save(any(Book.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        BookResponse result = bookService.updateBook(1L, req);
+        BookResponse result = bookService.updateBook(1L, null, null, req);
 
         assertThat(result.getTitle()).isEqualTo("新名");
         assertThat(result.getAuthor()).isEqualTo("新作者");
