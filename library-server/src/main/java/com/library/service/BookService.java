@@ -89,7 +89,6 @@ public class BookService {
             .categoryId(req.getCategoryId())
             .coverUrl(req.getCoverUrl())
             .description(req.getDescription())
-            .epubData(req.getContent() != null ? req.getContent().getBytes(StandardCharsets.UTF_8) : null)
             .status(1)
             .build();
         book = bookRepository.save(book);
@@ -105,7 +104,6 @@ public class BookService {
         book.setCategoryId(req.getCategoryId());
         book.setCoverUrl(req.getCoverUrl());
         book.setDescription(req.getDescription());
-        book.setEpubData(req.getContent() != null ? req.getContent().getBytes(StandardCharsets.UTF_8) : null);
         book = bookRepository.save(book);
         return toResponse(book);
     }
@@ -153,7 +151,7 @@ public class BookService {
             .categoryName(categoryName)
             .coverUrl(book.getCoverUrl())
             .description(book.getDescription())
-            .content(book.getEpubData() != null ? new String(book.getEpubData(), StandardCharsets.UTF_8) : null)
+            .hasEpub(book.getEpubData() != null)
             .status(book.getStatus())
             .createdAt(book.getCreatedAt())
             .updatedAt(book.getUpdatedAt())

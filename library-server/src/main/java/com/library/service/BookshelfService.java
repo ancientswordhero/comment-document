@@ -69,7 +69,7 @@ public class BookshelfService {
                 .categoryName(categoryName)
                 .coverUrl(book.getCoverUrl())
                 .description(book.getDescription())
-                .content(book.getEpubData() != null ? new String(book.getEpubData(), StandardCharsets.UTF_8) : null)
+                .hasEpub(book.getEpubData() != null)
                 .status(book.getStatus())
                 .createdAt(book.getCreatedAt())
                 .updatedAt(book.getUpdatedAt())

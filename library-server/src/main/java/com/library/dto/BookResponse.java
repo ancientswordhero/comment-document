@@ -11,7 +11,7 @@ public class BookResponse {
     private String categoryName;
     private String coverUrl;
     private String description;
-    private String content;
+    private boolean hasEpub;
     private Integer status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -19,7 +19,7 @@ public class BookResponse {
     public BookResponse() {}
 
     public BookResponse(Long id, String title, String author, String isbn, Long categoryId,
-                        String categoryName, String coverUrl, String description, String content,
+                        String categoryName, String coverUrl, String description, boolean hasEpub,
                         Integer status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.title = title;
@@ -29,7 +29,7 @@ public class BookResponse {
         this.categoryName = categoryName;
         this.coverUrl = coverUrl;
         this.description = description;
-        this.content = content;
+        this.hasEpub = hasEpub;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -51,8 +51,8 @@ public class BookResponse {
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public boolean isHasEpub() { return hasEpub; }
+    public void setHasEpub(boolean hasEpub) { this.hasEpub = hasEpub; }
     public Integer getStatus() { return status; }
     public void setStatus(Integer status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
@@ -71,7 +71,7 @@ public class BookResponse {
         private String categoryName;
         private String coverUrl;
         private String description;
-        private String content;
+        private boolean hasEpub;
         private Integer status;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -84,13 +84,13 @@ public class BookResponse {
         public Builder categoryName(String categoryName) { this.categoryName = categoryName; return this; }
         public Builder coverUrl(String coverUrl) { this.coverUrl = coverUrl; return this; }
         public Builder description(String description) { this.description = description; return this; }
-        public Builder content(String content) { this.content = content; return this; }
+        public Builder hasEpub(boolean hasEpub) { this.hasEpub = hasEpub; return this; }
         public Builder status(Integer status) { this.status = status; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
         public BookResponse build() {
             return new BookResponse(id, title, author, isbn, categoryId, categoryName,
-                coverUrl, description, content, status, createdAt, updatedAt);
+                coverUrl, description, hasEpub, status, createdAt, updatedAt);
         }
     }
 }
