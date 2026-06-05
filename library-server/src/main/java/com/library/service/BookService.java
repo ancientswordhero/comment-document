@@ -7,6 +7,7 @@ import com.library.repository.BookRepository;
 import com.library.repository.CategoryRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.nio.charset.StandardCharsets;
@@ -81,21 +82,37 @@ public class BookService {
         return toResponse(book);
     }
 
-    public BookResponse createBook(BookRequest req) {
+    public BookResponse createBook(MultipartFile file, BookRequest req) {
+        String title = req.getTitle();
+        String author = req.getAuthor();
+        byte[] data = null;
+        try {
+            data = file.getBytes();
+            if (title == null || title.isBlank()) {
+                title = extractEpubMetadata(data, "dc:title");
+            }
+            if (author == null || author.isBlank()) {
+                author = extractEpubMetadata(data, "dc:creator");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("EPUB文件读取失败", e);
+        }
+
         Book book = Book.builder()
-            .title(req.getTitle())
-            .author(req.getAuthor())
+            .title(title != null ? title : "未知书名")
+            .author(author != null ? author : "未知作者")
             .isbn(req.getIsbn())
             .categoryId(req.getCategoryId())
             .coverUrl(req.getCoverUrl())
             .description(req.getDescription())
+            .epubData(data)
             .status(1)
             .build();
         book = bookRepository.save(book);
         return toResponse(book);
     }
 
-    public BookResponse updateBook(Long id, BookRequest req) {
+    public BookResponse updateBook(Long id, MultipartFile file, BookRequest req) {
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("图书不存在: " + id));
         book.setTitle(req.getTitle());
@@ -104,6 +121,13 @@ public class BookService {
         book.setCategoryId(req.getCategoryId());
         book.setCoverUrl(req.getCoverUrl());
         book.setDescription(req.getDescription());
+        if (file != null && !file.isEmpty()) {
+            try {
+                book.setEpubData(file.getBytes());
+            } catch (Exception e) {
+                throw new RuntimeException("EPUB文件读取失败", e);
+            }
+        }
         book = bookRepository.save(book);
         return toResponse(book);
     }
@@ -121,6 +145,15 @@ public class BookService {
         book.setStatus(book.getStatus() == 1 ? 0 : 1);
         book = bookRepository.save(book);
         return toResponse(book);
+    }
+
+    public byte[] getEpubData(Long id) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("图书不存在: " + id));
+        if (book.getEpubData() == null) {
+            throw new EntityNotFoundException("该图书无EPUB内容");
+        }
+        return book.getEpubData();
     }
 
     private PageResult<BookResponse> buildPageResult(Page<Book> page) {
@@ -156,5 +189,31 @@ public class BookService {
             .createdAt(book.getCreatedAt())
             .updatedAt(book.getUpdatedAt())
             .build();
+    }
+
+    private String extractEpubMetadata(byte[] epubData, String tagName) {
+        try (java.util.zip.ZipInputStream zis = new java.util.zip.ZipInputStream(
+                new java.io.ByteArrayInputStream(epubData))) {
+            java.util.zip.ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.getName().endsWith(".opf")) {
+                    StringBuilder sb = new StringBuilder();
+                    byte[] buf = new byte[4096];
+                    int len;
+                    while ((len = zis.read(buf)) > 0) {
+                        sb.append(new String(buf, 0, len, java.nio.charset.StandardCharsets.UTF_8));
+                    }
+                    String xml = sb.toString();
+                    int start = xml.indexOf("<" + tagName);
+                    if (start >= 0) {
+                        start = xml.indexOf(">", start) + 1;
+                        int end = xml.indexOf("</" + tagName, start);
+                        if (end >= 0) return xml.substring(start, end).trim();
+                    }
+                    break;
+                }
+            }
+        } catch (Exception ignored) { }
+        return null;
     }
 }
