@@ -30,6 +30,7 @@ public class AdminBookController {
     @PostMapping("/books")
     public ApiResponse<BookResponse> createBook(
             @RequestPart("file") MultipartFile file,
+            @RequestPart(value = "cover", required = false) MultipartFile cover,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "author", required = false) String author,
             @RequestParam("isbn") String isbn,
@@ -41,7 +42,7 @@ public class AdminBookController {
         req.setIsbn(isbn);
         if (categoryId != null) req.setCategoryId(categoryId);
         if (description != null) req.setDescription(description);
-        return ApiResponse.success(bookService.createBook(file, null, req));
+        return ApiResponse.success(bookService.createBook(file, cover, req));
     }
 
     @GetMapping("/books/{id}")
@@ -53,6 +54,7 @@ public class AdminBookController {
     public ApiResponse<BookResponse> updateBook(
             @PathVariable Long id,
             @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "cover", required = false) MultipartFile cover,
             @RequestParam("title") String title,
             @RequestParam("author") String author,
             @RequestParam("isbn") String isbn,
@@ -64,7 +66,7 @@ public class AdminBookController {
         req.setIsbn(isbn);
         if (categoryId != null) req.setCategoryId(categoryId);
         if (description != null) req.setDescription(description);
-        return ApiResponse.success(bookService.updateBook(id, file, null, req));
+        return ApiResponse.success(bookService.updateBook(id, file, cover, req));
     }
 
     @GetMapping("/books/{id}/epub")
