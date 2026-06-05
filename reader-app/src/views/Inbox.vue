@@ -12,7 +12,7 @@
         <div class="inbox-body">
           <div class="inbox-item-title">{{ n.title }}</div>
           <div class="inbox-item-content">{{ n.content }}</div>
-          <div class="inbox-item-time">{{ formatDate(n.createdAt) }}</div>
+          <div class="inbox-item-time">{{ formatRelativeDate(n.createdAt) }}</div>
         </div>
       </div>
     </div>
@@ -28,6 +28,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getNotifications, markAsRead, markAllAsRead } from '../api/report'
+import { formatRelativeDate } from '../utils/date.js'
 
 const router = useRouter()
 const notifications = ref([])
@@ -57,15 +58,6 @@ async function onClick(n) {
 }
 async function onReadAll() { await markAllAsRead(); notifications.value.forEach(n => n.read = true) }
 function goPage(p) { page.value = p; fetchNotifications() }
-
-function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const now = new Date(); const date = new Date(dateStr); const diff = now - date
-  const days = Math.floor(diff / 86400000)
-  if (days < 1) { const hours = Math.floor(diff / 3600000); if (hours < 1) { const mins = Math.floor(diff / 60000); return mins < 1 ? '刚刚' : `${mins}分钟前` } return `${hours}小时前` }
-  if (days < 30) return `${days}天前`
-  return date.toLocaleDateString('zh-CN')
-}
 </script>
 
 <style scoped>

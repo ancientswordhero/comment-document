@@ -27,7 +27,7 @@
           <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
           <div class="meta-item"><span class="meta-label">ISBN</span>{{ book.isbn }}</div>
           <div class="meta-item"><span class="meta-label">分类</span>{{ book.categoryName || '未分类' }}</div>
-          <div class="meta-item"><span class="meta-label">上架时间</span>{{ formatDate(book.createdAt) }}</div>
+          <div class="meta-item"><span class="meta-label">上架时间</span>{{ formatSimpleDate(book.createdAt) }}</div>
         </div>
         <div class="detail-desc-title">图书简介</div>
         <div class="detail-desc" v-html="book.description || '暂无简介'"></div>
@@ -51,6 +51,7 @@ import { useRoute } from 'vue-router'
 import { getBookById } from '../api/book'
 import { addToBookshelf, removeFromBookshelf, checkBookshelf } from '../api/bookshelf'
 import ReviewSection from '../components/ReviewSection.vue'
+import { formatSimpleDate } from '../utils/date.js'
 
 const route = useRoute()
 const book = ref(null)
@@ -94,11 +95,6 @@ async function toggleShelf() {
 function showToast(msg) {
   toast.value = msg
   setTimeout(() => { toast.value = '' }, 2000)
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '-'
-  return new Date(dateStr).toLocaleDateString('zh-CN')
 }
 </script>
 

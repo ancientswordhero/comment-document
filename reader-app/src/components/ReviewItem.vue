@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="review-meta">
-        <span>{{ formatDate(review.createdAt) }}</span>
+        <span>{{ formatRelativeDate(review.createdAt) }}</span>
         <span
           class="meta-action"
           :class="{ liked: review.liked }"
@@ -22,7 +22,7 @@
         >赞 {{ review.likeCount }}</span>
         <span class="meta-action" @click="showReplyInput = !showReplyInput">回复</span>
         <span v-if="!isOwn" class="meta-action" @click.stop="$emit('report', review.id)">举报</span>
-        <template v-if="isOwn && canEdit">
+        <template v-if="isOwn && canEditReview(review)">
           <span class="meta-action" @click="startEdit">编辑</span>
           <span class="meta-action meta-danger" @click="$emit('delete', review.id)">删除</span>
         </template>
@@ -88,6 +88,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { formatRelativeDate } from '../utils/date.js'
+import { canEditReview } from '../utils/review.js'
 
 const props = defineProps({
   review: { type: Object, required: true },
@@ -137,28 +139,6 @@ const displayReplies = computed(() =>
 const isOwn = computed(() =>
   props.currentUserId && props.review.userId === props.currentUserId
 )
-
-const canEdit = computed(() => {
-  if (!props.review.createdAt) return false
-  const created = new Date(props.review.createdAt)
-  const now = new Date()
-  return (now - created) < 3 * 60 * 1000
-})
-
-function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  const now = new Date()
-  const diff = now - date
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-  if (minutes < 1) return '刚刚'
-  if (minutes < 60) return `${minutes}分钟前`
-  if (hours < 24) return `${hours}小时前`
-  if (days < 30) return `${days}天前`
-  return date.toLocaleDateString('zh-CN')
-}
 
 function startEdit() {
   editContent.value = props.review.content

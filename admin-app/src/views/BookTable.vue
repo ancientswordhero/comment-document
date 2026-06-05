@@ -7,7 +7,7 @@
       />
       <select v-model="categoryId" class="toolbar-select" @change="search">
         <option :value="null">全部分类</option>
-        <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+        <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.displayName }}</option>
       </select>
       <select v-model="statusFilter" class="toolbar-select" @change="search">
         <option :value="null">全部状态</option>
@@ -62,6 +62,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getBooks, deleteBook, toggleStatus, getCategories } from '../api/book'
+import { flattenCategories } from '../utils/category.js'
 
 const books = ref([])
 const flatCategories = ref([])
@@ -72,15 +73,6 @@ const page = ref(1)
 const total = ref(0)
 const size = 20
 const totalPages = computed(() => Math.ceil(total.value / size))
-
-function flattenCategories(cats, prefix = '') {
-  let result = []
-  for (const cat of cats) {
-    result.push({ id: cat.id, name: prefix + cat.name })
-    if (cat.children) result.push(...flattenCategories(cat.children, '  ' + prefix))
-  }
-  return result
-}
 
 onMounted(async () => {
   try {

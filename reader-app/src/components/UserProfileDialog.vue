@@ -30,7 +30,7 @@
           ></textarea>
         </div>
         <div class="profile-footer">
-          <span class="profile-date">加入于 {{ formatDate(profile.createdAt) }}</span>
+          <span class="profile-date">加入于 {{ formatSimpleDate(profile.createdAt) }}</span>
           <template v-if="isOwn">
             <button v-if="!editing" class="btn-edit" @click="startEdit">编辑资料</button>
             <template v-else>
@@ -49,6 +49,7 @@
 import { ref, computed, watch } from 'vue'
 import { getUserProfile, updateProfile } from '../api/user'
 import { getUserIdFromToken } from '../utils/jwt'
+import { formatSimpleDate } from '../utils/date.js'
 
 const props = defineProps({ userId: Number, visible: Boolean })
 const emit = defineEmits(['close'])
@@ -88,11 +89,6 @@ async function saveProfile() {
     profile.value = await updateProfile({ username: editName.value.trim(), bio: editBio.value.trim() || null })
     editing.value = false
   } finally { saving.value = false }
-}
-
-function formatDate(d) {
-  if (!d) return ''
-  return new Date(d).toLocaleDateString('zh-CN')
 }
 </script>
 

@@ -22,7 +22,7 @@
           <label>分类</label>
           <select v-model="form.categoryId" class="input">
             <option :value="null">请选择分类</option>
-            <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+            <option v-for="cat in flatCategories" :key="cat.id" :value="cat.id">{{ cat.displayName }}</option>
           </select>
         </div>
         <div class="field full">
@@ -58,6 +58,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getBookById, createBook, updateBook, uploadCover, getCategories } from '../api/book'
+import { flattenCategories } from '../utils/category.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -96,15 +97,6 @@ onMounted(async () => {
     }
   }
 })
-
-function flattenCategories(cats, prefix = '') {
-  let result = []
-  for (const cat of cats) {
-    result.push({ id: cat.id, name: prefix + cat.name })
-    if (cat.children) result.push(...flattenCategories(cat.children, '  ' + prefix))
-  }
-  return result
-}
 
 function triggerUpload() { fileInput.value?.click() }
 

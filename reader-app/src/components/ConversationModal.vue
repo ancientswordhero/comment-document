@@ -12,7 +12,7 @@
           <div class="conv-msg-header">
             <span class="conv-msg-user" @click.stop="$emit('view-user', msg.userId)">{{ msg.username }}</span>
             <span v-if="msg.userId === currentUserId" class="conv-me-tag">(我)</span>
-            <span class="conv-msg-time">{{ formatDate(msg.createdAt) }}</span>
+            <span class="conv-msg-time">{{ formatRelativeDate(msg.createdAt) }}</span>
           </div>
           <div class="conv-msg-content">
             <span v-if="idx > 0 && msg.parentId" class="conv-reply-prefix">回复 @{{ getParentUsername(msg.parentId) }}：</span>
@@ -26,7 +26,7 @@
             >赞 {{ msg.likeCount }}</span>
             <span class="conv-action" @click="startReply(msg)">回复</span>
             <span v-if="msg.userId !== currentUserId" class="conv-action" @click="$emit('report', msg.id)">举报</span>
-            <template v-if="msg.userId === currentUserId && canEdit(msg)">
+            <template v-if="msg.userId === currentUserId && canEditReview(msg)">
               <span class="conv-action" @click="startEdit(msg)">编辑</span>
               <span class="conv-action conv-action-danger" @click="$emit('delete', msg.id)">删除</span>
             </template>
@@ -72,6 +72,8 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { formatRelativeDate } from '../utils/date.js'
+import { canEditReview } from '../utils/review.js'
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -143,26 +145,6 @@ watch(() => props.visible, async (v) => {
     }
   }
 })
-
-function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  const now = new Date()
-  const diff = now - date
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-  if (minutes < 1) return '刚刚'
-  if (minutes < 60) return `${minutes}分钟前`
-  if (hours < 24) return `${hours}小时前`
-  if (days < 30) return `${days}天前`
-  return date.toLocaleDateString('zh-CN')
-}
-
-function canEdit(msg) {
-  if (!msg.createdAt) return false
-  return (new Date() - new Date(msg.createdAt)) < 3 * 60 * 1000
-}
 
 function startReply(msg) {
   replyingTo.value = msg.id
