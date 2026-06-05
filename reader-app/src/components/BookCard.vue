@@ -1,7 +1,7 @@
 <template>
   <div class="book-card" @click="$emit('select', book)">
     <div class="book-cover">
-      <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
+      <img v-if="book.hasCover" :src="`/api/books/${book.id}/cover`" :alt="book.title" />
       <span v-else class="cover-placeholder">📖</span>
     </div>
     <div class="book-title">{{ book.title }}</div>
