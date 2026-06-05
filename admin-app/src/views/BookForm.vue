@@ -5,12 +5,12 @@
       <div class="form-grid">
         <div class="field">
           <label>书名</label>
-          <input v-model="form.title" class="input" placeholder="请输入书名" />
+          <input v-model="form.title" class="input" placeholder="留空则从 EPUB 自动提取" />
           <span class="error" v-if="errors.title">{{ errors.title }}</span>
         </div>
         <div class="field">
           <label>作者</label>
-          <input v-model="form.author" class="input" placeholder="请输入作者" />
+          <input v-model="form.author" class="input" placeholder="留空则从 EPUB 自动提取" />
           <span class="error" v-if="errors.author">{{ errors.author }}</span>
         </div>
         <div class="field">
@@ -39,15 +39,37 @@
             placeholder="请输入图书简介（支持HTML标签）" rows="5"></textarea>
         </div>
         <div class="field full">
-          <label>图书内容</label>
-          <textarea v-model="form.content" class="textarea content-editor"
-            placeholder="请输入图书内容（支持HTML标签，待后续添加）" rows="12"></textarea>
+          <label>EPUB 图书文件 <span class="required">*</span></label>
+          <div
+            class="epub-upload-zone"
+            :class="{ 'has-file': epubFile }"
+            @click="$refs.epubInput.click()"
+            @dragover.prevent
+            @drop.prevent="onDrop"
+          >
+            <input
+              ref="epubInput"
+              type="file"
+              accept=".epub"
+              style="display:none"
+              @change="onEpubSelected"
+            />
+            <template v-if="!epubFile">
+              <span class="upload-icon">+</span>
+              <span>点击或拖拽上传 EPUB 文件</span>
+            </template>
+            <template v-else>
+              <span class="epub-file-name">{{ epubFile.name }}</span>
+              <span class="epub-file-size">({{ formatSize(epubFile.size) }})</span>
+              <span class="epub-file-remove" @click.stop="epubFile = null">&times;</span>
+            </template>
+          </div>
         </div>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" @click="$router.push('/')">取消</button>
-        <button class="btn-save" @click="onSubmit" :disabled="saving">
-          {{ saving ? '保存中...' : '保存' }}
+        <button class="btn-save" @click="save" :disabled="submitting">
+          {{ submitting ? '保存中...' : '保存' }}
         </button>
       </div>
     </div>
@@ -66,7 +88,8 @@ const isEdit = computed(() => !!route.params.id)
 const flatCategories = ref([])
 const fileInput = ref(null)
 const previewUrl = ref(null)
-const saving = ref(false)
+const epubFile = ref(null)
+const submitting = ref(false)
 const form = reactive({
   title: '', author: '', isbn: '', categoryId: null, coverUrl: '', description: '', content: ''
 })
@@ -120,21 +143,45 @@ function validate() {
   return valid
 }
 
-async function onSubmit() {
-  if (!validate()) return
-  saving.value = true
+function onEpubSelected(e) {
+  const file = e.target.files[0]
+  if (file) epubFile.value = file
+}
+
+function onDrop(e) {
+  const file = e.dataTransfer.files[0]
+  if (file && file.name.endsWith('.epub')) epubFile.value = file
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+}
+
+async function save() {
+  if (!form.isbn.trim()) return alert('请输入ISBN')
+  if (!isEdit.value && !epubFile.value) return alert('请上传EPUB文件')
+  submitting.value = true
   try {
-    const data = {
-      title: form.title, author: form.author, isbn: form.isbn,
-      categoryId: form.categoryId, coverUrl: form.coverUrl, description: form.description, content: form.content
+    const fd = new FormData()
+    if (epubFile.value) fd.append('file', epubFile.value)
+    fd.append('title', form.title || '')
+    fd.append('author', form.author || '')
+    fd.append('isbn', form.isbn)
+    fd.append('categoryId', form.categoryId || '')
+    fd.append('coverUrl', form.coverUrl || '')
+    fd.append('description', form.description || '')
+
+    if (isEdit.value) {
+      await updateBook(route.params.id, fd)
+    } else {
+      await createBook(fd)
     }
-    if (isEdit.value) { await updateBook(route.params.id, data) }
-    else { await createBook(data) }
-    router.push('/')
-  } catch (err) {
-    console.error('保存失败:', err)
+    router.push('/books')
+  } catch (e) {
+    alert(e?.response?.data?.message || e?.message || '保存失败')
   } finally {
-    saving.value = false
+    submitting.value = false
   }
 }
 </script>
@@ -186,6 +233,31 @@ async function onSubmit() {
 }
 .btn-save:hover { background: var(--color-primary-hover); }
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.epub-upload-zone {
+  border: 2px dashed #d0c8b4;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  color: #a09880;
+  font-size: 13px;
+}
+.epub-upload-zone:hover,
+.epub-upload-zone.has-file {
+  border-color: #c9a96e;
+  color: #c9a96e;
+}
+.upload-icon {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+.epub-file-name { font-weight: 500; }
+.epub-file-size { color: #a09880; margin-left: 8px; font-size: 12px; }
+.epub-file-remove { margin-left: 12px; cursor: pointer; color: #c04040; }
+.required { color: #c04040; }
 
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
