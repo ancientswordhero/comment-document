@@ -23,11 +23,6 @@
             @click="toggleShelf"
           >{{ inShelf ? '移出书架' : '加入书架' }}</button>
         </div>
-        <button
-          v-if="book && book.hasEpub"
-          class="btn-read"
-          @click="$router.push(`/book/${book.id}/read`)"
-        >开始阅读</button>
         <div class="detail-meta">
           <div class="meta-item"><span class="meta-label">作者</span>{{ book.author }}</div>
           <div class="meta-item"><span class="meta-label">ISBN</span>{{ book.isbn }}</div>
@@ -36,7 +31,14 @@
         </div>
         <div class="detail-desc-title">图书简介</div>
         <div class="detail-desc" v-html="book.description || '暂无简介'"></div>
-        <button class="back-btn" @click="$router.push('/')">← 返回首页</button>
+        <div class="detail-actions">
+          <button class="back-btn" @click="$router.push('/')">← 返回首页</button>
+          <button
+            v-if="book && book.hasEpub"
+            class="back-btn btn-read"
+            @click="$router.push(`/book/${book.id}/read`)"
+          >开始阅读</button>
+        </div>
       </div>
     </div>
 
@@ -178,8 +180,12 @@ function showToast(msg) {
 .error-icon { font-size: 48px; }
 .error-text { font-size: 15px; color: var(--color-text-secondary); font-family: var(--font-serif); }
 
-.back-btn {
+.detail-actions {
+  display: flex;
+  gap: 12px;
   margin-top: 20px;
+}
+.back-btn {
   padding: 8px 20px;
   background: var(--color-primary);
   color: #fff;
@@ -190,24 +196,6 @@ function showToast(msg) {
   transition: background 0.2s;
 }
 .back-btn:hover { background: var(--color-primary-hover); }
-
-.btn-read {
-  display: inline-block;
-  padding: 10px 32px;
-  background: var(--color-primary, #c9a96e);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  font-family: var(--font-serif);
-  letter-spacing: 2px;
-  transition: background 0.2s;
-  margin-top: 12px;
-}
-.btn-read:hover {
-  background: var(--color-primary-hover, #b8944d);
-}
 
 .loading-text { text-align: center; padding: 60px; color: var(--color-text-muted); }
 

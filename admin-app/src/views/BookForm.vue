@@ -188,7 +188,7 @@ async function save() {
     } else {
       await createBook(fd, onProgress)
     }
-    router.push('/books')
+    router.push('/')
   } catch (e) {
     alert(e?.response?.data?.message || e?.message || '保存失败')
   } finally {

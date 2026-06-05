@@ -39,27 +39,34 @@ const fontSize = ref(16)
 let book = null
 let rendition = null
 
-onMounted(() => {
-  book = ePub(`/api/books/${bookId}/epub`)
-  rendition = book.renderTo(viewerRef.value, {
-    width: '100%',
-    height: 'calc(100vh - 140px)',
-    flow: 'paginated'
-  })
+onMounted(async () => {
+  try {
+    const res = await fetch(`/api/books/${bookId}/epub`)
+    if (!res.ok) throw new Error('EPUB加载失败')
+    const buf = await res.arrayBuffer()
+    book = ePub(buf)
+    rendition = book.renderTo(viewerRef.value, {
+      width: '100%',
+      height: 'calc(100vh - 140px)',
+      flow: 'paginated'
+    })
 
-  book.loaded.navigation.then(nav => {
-    chapters.value = nav.toc.map(item => ({
-      label: item.label,
-      href: item.href
-    }))
-  })
+    book.loaded.navigation.then(nav => {
+      chapters.value = nav.toc.map(item => ({
+        label: item.label,
+        href: item.href
+      }))
+    })
 
-  rendition.display()
+    rendition.display()
 
-  rendition.on('relocated', (loc) => {
-    currentPage.value = loc.current + 1
-    totalPages.value = loc.total
-  })
+    rendition.on('relocated', (loc) => {
+      currentPage.value = loc.current + 1
+      totalPages.value = loc.total
+    })
+  } catch (e) {
+    console.error(e)
+  }
 })
 
 onBeforeUnmount(() => {
