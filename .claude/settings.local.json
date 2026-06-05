@@ -71,7 +71,13 @@
       "Bash(where mvnw *)",
       "Bash(/c/Users/36295/.trae-cn/tools/maven/latest/bin/mvn compile *)",
       "Bash(mvn test *)",
-      "Bash(dir \"C:\\\\Users\\\\36295\\\\Desktop\\\\shuhai\")"
+      "Bash(dir \"C:\\\\Users\\\\36295\\\\Desktop\\\\shuhai\")",
+      "Bash(git show *)",
+      "Bash(ls library-server/mvnw*)",
+      "Bash(ls library-server/gradlew*)",
+      "Bash(which mvn *)",
+      "Bash(which gradle *)",
+      "Bash(npx vue-tsc *)"
     ]
   }
 }

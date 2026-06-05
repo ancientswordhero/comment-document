@@ -22,12 +22,6 @@ authApi.interceptors.response.use(
   }
 )
 
-export function getMe(token) {
-  return authApi.get('/me', {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-}
-
 export function createAdmin(username, password) {
   return authApi.post('/admin', { username, password })
 }
