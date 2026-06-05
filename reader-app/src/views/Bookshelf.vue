@@ -10,7 +10,7 @@
     <div v-else class="bookshelf-grid">
       <div v-for="book in books" :key="book.id" class="shelf-item">
         <div class="shelf-cover" @click="$router.push(`/book/${book.id}`)">
-          <img v-if="book.coverUrl" :src="book.coverUrl" :alt="book.title" />
+          <img v-if="book.hasCover" :src="`/api/books/${book.id}/cover`" :alt="book.title" />
           <span v-else class="cover-placeholder">📖</span>
         </div>
         <div class="shelf-info">
