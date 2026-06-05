@@ -33,12 +33,12 @@ public class AdminBookController {
     @PostMapping("/books")
     public ApiResponse<BookResponse> createBook(
             @RequestPart("file") MultipartFile file,
-            @RequestPart(value = "title", required = false) String title,
-            @RequestPart(value = "author", required = false) String author,
-            @RequestPart("isbn") String isbn,
-            @RequestPart(value = "categoryId", required = false) Long categoryId,
-            @RequestPart(value = "coverUrl", required = false) String coverUrl,
-            @RequestPart(value = "description", required = false) String description) {
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam("isbn") String isbn,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "coverUrl", required = false) String coverUrl,
+            @RequestParam(value = "description", required = false) String description) {
         BookRequest req = new BookRequest();
         req.setTitle(title);
         req.setAuthor(author);
@@ -58,12 +58,12 @@ public class AdminBookController {
     public ApiResponse<BookResponse> updateBook(
             @PathVariable Long id,
             @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart("title") String title,
-            @RequestPart("author") String author,
-            @RequestPart("isbn") String isbn,
-            @RequestPart(value = "categoryId", required = false) Long categoryId,
-            @RequestPart(value = "coverUrl", required = false) String coverUrl,
-            @RequestPart(value = "description", required = false) String description) {
+            @RequestParam("title") String title,
+            @RequestParam("author") String author,
+            @RequestParam("isbn") String isbn,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "coverUrl", required = false) String coverUrl,
+            @RequestParam(value = "description", required = false) String description) {
         BookRequest req = new BookRequest();
         req.setTitle(title);
         req.setAuthor(author);
