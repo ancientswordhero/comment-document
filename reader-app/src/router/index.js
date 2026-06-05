@@ -8,7 +8,8 @@ const routes = [
   { path: '/', name: 'home', component: BookList },
   { path: '/book/:id', name: 'book-detail', component: BookDetail, meta: { requiresAuth: true } },
   { path: '/bookshelf', name: 'bookshelf', component: Bookshelf, meta: { requiresAuth: true } },
-  { path: '/inbox', name: 'inbox', component: Inbox, meta: { requiresAuth: true } }
+  { path: '/inbox', name: 'inbox', component: Inbox, meta: { requiresAuth: true } },
+  { path: '/book/:id/read', name: 'book-reader', component: () => import('../views/BookReader.vue'), meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({ history: createWebHistory(), routes })
