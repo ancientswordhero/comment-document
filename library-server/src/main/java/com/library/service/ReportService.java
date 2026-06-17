@@ -67,7 +67,11 @@ public class ReportService {
             .reviewId(req.getReviewId()).reporterId(reporterId)
             .reason(req.getReason()).detail(req.getDetail())
             .targetType("review").status("pending").build();
-        reportRepository.save(report);
+        try {
+            reportRepository.save(report);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new IllegalStateException("您已经举报过这条书评");
+        }
     }
 
     private void createNoteReport(ReportRequest req, Long reporterId) {
@@ -86,9 +90,12 @@ public class ReportService {
             .noteId(req.getNoteId()).reporterId(reporterId)
             .reason(req.getReason()).detail(req.getDetail())
             .targetType("note").status("pending").build();
-        reportRepository.save(report);
+        try {
+            reportRepository.save(report);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new IllegalStateException("您已经举报过这条手记");
+        }
     }
-
     public long getPendingCount() {
         return reportRepository.countByStatus("pending");
     }
