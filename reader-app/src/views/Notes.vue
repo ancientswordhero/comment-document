@@ -1,6 +1,5 @@
 <template>
   <div class="notes-page">
-    <BannerHeader />
     <div class="notes-container">
       <h1 class="notes-title">书余</h1>
 
@@ -184,7 +183,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import BannerHeader from '../components/BannerHeader.vue'
+
 import Pagination from '../components/Pagination.vue'
 import UserProfileDialog from '../components/UserProfileDialog.vue'
 import { getMyNotes, getPublicNotes, publishNote, updateNote, deleteNote, replyNote, toggleLikeNote } from '../api/note'

@@ -1,6 +1,5 @@
 <template>
   <div class="guide-page">
-    <BannerHeader />
     <div class="guide-container">
       <h1 class="guide-title">凡例</h1>
 
@@ -65,7 +64,7 @@
 </template>
 
 <script setup>
-import BannerHeader from '../components/BannerHeader.vue'
+
 </script>
 
 <style scoped>

@@ -1,7 +1,5 @@
 <template>
   <div class="home-layout">
-    <BannerHeader />
-
     <div class="home-body">
       <CategoryNav
         :categories="categories"
@@ -47,7 +45,7 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import BannerHeader from '../components/BannerHeader.vue'
+
 import CategoryNav from '../components/CategoryNav.vue'
 import BookCard from '../components/BookCard.vue'
 import Pagination from '../components/Pagination.vue'

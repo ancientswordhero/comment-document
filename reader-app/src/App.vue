@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <BannerHeader />
     <main class="main-content">
       <router-view />
     </main>
@@ -10,6 +11,10 @@
     </footer>
   </div>
 </template>
+
+<script setup>
+import BannerHeader from './components/BannerHeader.vue'
+</script>
 
 <style scoped>
 .app {
