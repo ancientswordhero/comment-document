@@ -49,6 +49,7 @@
       <!-- ============================================================ -->
       <div v-if="activeTab === 'yuyin'" class="yuyin-star-viewport" ref="viewportRef"
         @mousedown="onViewportMouseDown"
+        @click="onViewportClick"
       >
         <!-- 节点画布 -->
         <div class="yuyin-canvas" ref="canvasRef" :style="canvasStyle">
@@ -97,7 +98,7 @@
         </div>
 
         <!-- 详情浮卡 -->
-        <div v-if="detailNote" class="yuyin-detail" :style="detailStyle" @mouseenter="detailHover = true" @mouseleave="detailHover = false">
+        <div v-if="detailNote" class="yuyin-detail" :style="detailStyle" @click.stop>
           <div class="detail-header">
             <span class="detail-user" @click="viewProfile(detailNote.userId)">{{ detailNote.username }}</span>
             <span class="detail-book" @click="$router.push(`/book/${detailNote.bookId}`)">《{{ detailNote.bookTitle }}》</span>
@@ -230,7 +231,6 @@ const visibleNodes = ref([])
 const visibleLinks = ref([])
 const selectedNode = ref(null)
 const detailNote = ref(null)
-const detailHover = ref(false)
 const detailStyle = ref({})
 const centerX = ref(CANVAS_W / 2)
 const centerY = ref(CANVAS_H / 2)
@@ -411,14 +411,11 @@ function onNodeEnter(node) {
 }
 
 function onNodeLeave() {
-  if (!detailHover.value) {
-    selectedNode.value = null
-  }
+  selectedNode.value = null
 }
 
 function onNodeClick(node) {
   detailNote.value = node.note
-  detailHover.value = false
   const el = viewportRef.value
   if (!el) return
   const rect = el.getBoundingClientRect()
@@ -434,6 +431,11 @@ function onNodeClick(node) {
 }
 
 // ============================================================
+// 点击视口空白处关闭详情
+function onViewportClick() {
+  detailNote.value = null
+}
+
 // 余音操作（点赞/回复/举报/查看主页）
 // ============================================================
 async function handleLike(note) {
