@@ -7,11 +7,11 @@
         <span class="nav-logo-text">云图书馆</span>
       </div>
       <div class="nav-links">
-        <span class="nav-item active">首页</span>
+        <span class="nav-item" :class="{ active: $route.path === '/' }" @click="$router.push('/')">首页</span>
         <span class="nav-sep">|</span>
-        <span class="nav-item">分类浏览</span>
+        <span class="nav-item" :class="{ active: $route.path === '/notes' }" @click="$router.push('/notes')">书余</span>
         <span class="nav-sep">|</span>
-        <span class="nav-item">最新上架</span>
+        <span class="nav-item" :class="{ active: $route.path === '/guide' }" @click="$router.push('/guide')">凡例</span>
       </div>
       <div class="nav-right">
         <template v-if="isLoggedIn">
