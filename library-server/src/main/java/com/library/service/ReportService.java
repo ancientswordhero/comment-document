@@ -77,9 +77,8 @@ public class ReportService {
 
     private void createNoteReport(ReportRequest req, Long reporterId) {
         boolean exists = reportRepository.existsByNoteIdAndReporterId(req.getNoteId(), reporterId);
-        System.err.println("[REPORT] existsByNoteIdAndReporterId(" + req.getNoteId() + "," + reporterId + ")=" + exists);
         if (exists) {
-            throw new IllegalStateException("您已经举报过这条手记");
+            throw new IllegalStateException("您已经举报过这条手记(noteId=" + req.getNoteId() + " reporterId=" + reporterId + ")");
         }
         Note note = noteRepository.findById(req.getNoteId())
             .orElseThrow(() -> new EntityNotFoundException("手记不存在: " + req.getNoteId()));
