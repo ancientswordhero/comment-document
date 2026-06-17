@@ -51,6 +51,7 @@ public class NotificationService {
         NotificationResponse r = new NotificationResponse();
         r.setId(n.getId()); r.setType(n.getType()); r.setTitle(n.getTitle());
         r.setContent(n.getContent()); r.setBookId(n.getBookId()); r.setReviewId(n.getReviewId());
+        r.setNoteId(n.getNoteId());
         r.setRead(n.getIsRead() == 1); r.setCreatedAt(n.getCreatedAt());
         return r;
     }

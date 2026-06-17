@@ -40,8 +40,8 @@
   --font-sans:  'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   /* 布局 */
-  --grid-cols: 6;
-  --grid-gap: 12px;
+  --grid-cols: 7;
+  --grid-gap: 10px;
   --category-width: 180px;
   --category-font-size: 14px;
   --category-line-height: 2;

@@ -29,6 +29,9 @@ public class Notification {
     @Column(name = "review_id")
     private Long reviewId;
 
+    @Column(name = "note_id")
+    private Long noteId;
+
     @Column(name = "is_read")
     private int isRead;
 
@@ -58,6 +61,8 @@ public class Notification {
     public void setBookId(Long bookId) { this.bookId = bookId; }
     public Long getReviewId() { return reviewId; }
     public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
+    public Long getNoteId() { return noteId; }
+    public void setNoteId(Long noteId) { this.noteId = noteId; }
     public int getIsRead() { return isRead; }
     public void setIsRead(int isRead) { this.isRead = isRead; }
     public LocalDateTime getCreatedAt() { return createdAt; }

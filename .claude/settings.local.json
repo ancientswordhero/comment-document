@@ -77,7 +77,11 @@
       "Bash(ls library-server/gradlew*)",
       "Bash(which mvn *)",
       "Bash(which gradle *)",
-      "Bash(npx vue-tsc *)"
+      "Bash(npx vue-tsc *)",
+      "Bash(mkdir -p \"C:/Users/36295/Desktop/shuhai/reader-app/public/images/autumn\")",
+      "Bash(cp \"C:/Users/36295/Desktop/autumn/images/\"*.png \"C:/Users/36295/Desktop/shuhai/reader-app/public/images/autumn/\")",
+      "Read(//c/Users/36295/**)",
+      "Bash(dir \"C:\\\\Users\\\\36295\\\\Desktop\\\\shuhai\\\\library-server\\\\mvnw*\")"
     ]
   }
 }

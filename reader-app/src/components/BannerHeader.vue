@@ -1,6 +1,6 @@
 <template>
   <div class="banner-wrapper">
-    <!-- 导航栏 -->
+    <!-- 导航栏：叠加在视差横幅上 -->
     <div class="banner-nav">
       <div class="nav-left">
         <span class="nav-logo-icon">書</span>
@@ -32,38 +32,66 @@
       </div>
     </div>
 
-    <!-- 横幅 -->
-    <div class="banner">
-      <!-- 背景图 -->
-      <div class="banner-bg-wrap">
-        <img :src="bannerBg" class="banner-bg" alt="" />
-      </div>
-
-      <!-- 渐变遮罩 -->
-      <div class="banner-mask"></div>
-
-      <!-- 左侧角色 -->
-      <div class="banner-character-wrap">
-        <img :src="characterSrc" class="banner-character" alt="" />
-      </div>
-
-      <!-- 中央内容 -->
-      <div class="banner-center">
-        <div class="banner-logo">
-          <span class="logo-icon">書</span>
-          <span class="logo-text">云图书馆</span>
-        </div>
-        <div class="banner-search">
-          <input
-            v-model="searchKeywords"
-            class="search-input"
-            placeholder="搜索书名 · 作者 · ISBN"
-            @keyup.enter="onSearch"
+    <!-- 视差横幅：纯秋天场景 -->
+    <div
+      class="fall-banner"
+      @mouseenter="onBannerEnter"
+      @mousemove="onBannerMove"
+      @mouseleave="onBannerLeave"
+    >
+      <div ref="animateBannerRef" class="animate-banner">
+        <div class="layer">
+          <img
+            src="/images/autumn/background.png"
+            data-width="3000"
+            data-height="250"
+            alt="background"
           />
-          <button type="button" class="search-btn" @click="onSearch">搜索</button>
         </div>
-        <div class="banner-tagline">万卷古今消永日 · 一窗昏晓送流年</div>
+        <div class="layer">
+          <img
+            :src="girlImgSrc"
+            data-width="3000"
+            data-height="275"
+            alt="girl"
+          />
+        </div>
+        <div class="layer">
+          <img
+            src="/images/autumn/hill.png"
+            data-width="3000"
+            data-height="250"
+            alt="hill"
+          />
+        </div>
+        <div class="layer">
+          <img
+            src="/images/autumn/foreground.png"
+            data-width="3000"
+            data-height="250"
+            alt="foreground"
+          />
+        </div>
+        <div class="layer">
+          <img
+            src="/images/autumn/fairy.png"
+            data-width="3000"
+            data-height="275"
+            alt="fairy"
+          />
+        </div>
+        <div class="layer">
+          <img
+            src="/images/autumn/leaf.png"
+            data-width="3000"
+            data-height="275"
+            alt="leaf"
+          />
+        </div>
       </div>
+
+      <!-- 渐变遮罩：底部融入页面背景 -->
+      <div class="banner-mask"></div>
     </div>
 
     <UserProfileDialog
@@ -76,21 +104,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { setSearchKeyword } from '../composables/useSearch'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { getUserIdFromToken } from '../utils/jwt'
 import { deleteAccount } from '../api/auth'
 import { getUnreadCount } from '../api/report'
 import UserProfileDialog from './UserProfileDialog.vue'
-import bannerBg from '../assets/banner-bg.jpg'
-import characterSrc from '../assets/banner-character.png'
 
-const searchKeywords = ref('')
 const unreadCount = ref(0)
 const showProfile = ref(false)
 const profileUserId = ref(null)
-
-
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 const username = computed(() => localStorage.getItem('username') || '读者')
@@ -104,11 +126,6 @@ function onViewSelf() {
   if (!currentUserId.value) return
   profileUserId.value = currentUserId.value
   showProfile.value = true
-}
-
-function onSearch() {
-  const keyword = searchKeywords.value.trim()
-  setSearchKeyword(keyword)
 }
 
 function onLogout() {
@@ -131,21 +148,162 @@ async function onDeleteAccount() {
   }
 }
 
+/* ============================================
+   视差 Banner（秋天多层视差 — bilibili 风格）
+   ============================================ */
+
+const animateBannerRef = ref(null)
+
+// 女孩眨眼
+const eyeOpen = '/images/autumn/girl-eye-open.png'
+const eyeNapping = '/images/autumn/girl-eye-napping.png'
+const eyeClosed = '/images/autumn/girl-eye-closed.png'
+const girlImgSrc = ref(eyeOpen)
+
+// 各层视差配置
+const initConfig = [
+  { aspect: 1,    blur: 4, x: 0,   y: 0,    blurEffect: (b, p) => b + p * b,        parallaxX: (x) => x },
+  { aspect: 0.6,  blur: 0, x: 0,   y: 0,    blurEffect: (b, p) => Math.abs(p * 10),  parallaxX: (x, p) => x - p * 10 },
+  { aspect: 1,    blur: 1, x: -50, y: 0,    blurEffect: (b, p) => Math.abs(b - p * 4),  parallaxX: (x, p) => x - p * 30 },
+  { aspect: 0.6,  blur: 4, x: 0,   y: 4.2,  blurEffect: (b, p) => Math.abs(b - p * 8),  parallaxX: (x, p) => x - p * 45 },
+  { aspect: 0.6,  blur: 5, x: 0,   y: -1.8, blurEffect: (b, p) => Math.abs(b - p * 8),  parallaxX: (x, p) => x - p * 95 },
+  { aspect: 0.65, blur: 6, x: 0,   y: 0,    blurEffect: (b, p) => Math.abs(b - p * 4),  parallaxX: (x, p) => x - p * 118 },
+]
+
+const breakpoint = 1658
+let endpoint = { width: 0, x: 0 }
+let blinkTimer = null
+let resizeObserver = null
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function makeBlink() {
+  await sleep(50)
+  girlImgSrc.value = eyeNapping
+  await sleep(50)
+  girlImgSrc.value = eyeClosed
+  await sleep(350)
+  girlImgSrc.value = eyeOpen
+  blinkTimer = setTimeout(makeBlink, 5000)
+}
+
+function movementTemplate(blur, x, y) {
+  return `filter: blur(${blur}px); transform: translate(${x}px, ${y}px) translateZ(0);`
+}
+
+function getInitStyle(key) {
+  const cfg = initConfig[key]
+  return movementTemplate(cfg.blur, cfg.x, cfg.y)
+}
+
+function initRects() {
+  const banner = animateBannerRef.value
+  if (!banner) return
+  const bannerWidth = banner.getBoundingClientRect().width
+  const imgs = banner.querySelectorAll('.layer img')
+
+  imgs.forEach((img, key) => {
+    const cfg = initConfig[key]
+    const originWidth = parseInt(img.dataset.width, 10)
+    const originHeight = parseInt(img.dataset.height, 10)
+
+    let width, height
+    if (bannerWidth < breakpoint) {
+      width = cfg.aspect * originWidth
+      height = cfg.aspect * originHeight
+    } else {
+      const extra = Math.floor((bannerWidth - breakpoint) / 10)
+      width = cfg.aspect * originWidth + extra * 12
+      height = cfg.aspect * originHeight + extra * 1
+    }
+
+    img.width = width
+    img.height = height
+    img.style.cssText = getInitStyle(key)
+  })
+}
+
+function applyEffect(imgs, parallax) {
+  imgs.forEach((img, key) => {
+    const cfg = initConfig[key]
+    const blur = cfg.blurEffect(cfg.blur, parallax)
+    const x = cfg.parallaxX(cfg.x, parallax)
+    img.style.cssText = movementTemplate(blur, x, cfg.y)
+  })
+}
+
+function resetEffect() {
+  endpoint = { width: 0, x: 0 }
+  const banner = animateBannerRef.value
+  if (!banner) return
+  const imgs = banner.querySelectorAll('.layer img')
+  imgs.forEach((img, key) => {
+    img.style.cssText = `transition-duration: 0.2s; ${getInitStyle(key)}`
+  })
+}
+
+function getImgs() {
+  const banner = animateBannerRef.value
+  return banner ? banner.querySelectorAll('.layer img') : []
+}
+
+function onBannerEnter(e) {
+  const banner = animateBannerRef.value
+  if (!banner) return
+  const { width } = banner.getBoundingClientRect()
+  endpoint.x = e.clientX
+  endpoint.width = width
+}
+
+function onBannerMove(e) {
+  if (endpoint.width === 0) return
+  const parallax = e.clientX - endpoint.x
+  const parallaxRatio = parallax / endpoint.width
+  applyEffect(getImgs(), parallaxRatio)
+}
+
+function onBannerLeave() {
+  resetEffect()
+}
+
 onMounted(async () => {
   if (isLoggedIn.value) {
     try { unreadCount.value = await getUnreadCount() } catch { /* ignore */ }
   }
+
+  await nextTick()
+  initRects()
+  makeBlink()
+
+  if (animateBannerRef.value) {
+    resizeObserver = new ResizeObserver(() => {
+      initRects()
+    })
+    resizeObserver.observe(animateBannerRef.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (blinkTimer) clearTimeout(blinkTimer)
+  if (resizeObserver) resizeObserver.disconnect()
 })
 </script>
 
 <style scoped>
 /* ============================================
-   BannerHeader - 哔哩哔哩风格
+   BannerHeader — 秋天视差头部
+   比例：9.375vw / min 155px（B 站规格）
    ============================================ */
 
 .banner-wrapper {
   position: relative;
-  height: 420px;
+  z-index: 0;
+  min-height: 155px;
+  height: 9.375vw;
+  min-width: 999px;
+  background-color: #f9f9f9;
 }
 
 /* ---- 导航栏 ---- */
@@ -156,10 +314,13 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 36px;
-  background: rgba(0,0,0,0.10);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: 8px 36px;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.12) 0%,
+    rgba(0,0,0,0.04) 60%,
+    transparent 100%
+  );
 }
 .nav-left {
   display: flex; align-items: center; gap: 8px;
@@ -171,33 +332,34 @@ onMounted(async () => {
   justify-content: flex-end;
 }
 .nav-logo-icon {
-  width: 26px; height: 26px;
+  width: 24px; height: 24px;
   background: var(--color-primary, #c9a96e);
   color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; border-radius: 5px;
+  font-size: 12px; border-radius: 4px;
 }
 .nav-logo-text {
-  font-size: 14px; font-weight: 600; color: #fff;
+  font-size: 13px; font-weight: 600; color: #fff;
   font-family: var(--font-serif); letter-spacing: 2px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 .nav-links {
   display: flex; align-items: center;
 }
 .nav-item {
-  font-size: 13px; color: rgba(255,255,255,0.7);
-  cursor: pointer; transition: color 0.2s; padding: 4px 10px;
+  font-size: 12px; color: rgba(255,255,255,0.75);
+  cursor: pointer; transition: color 0.2s; padding: 3px 8px;
 }
 .nav-item:hover,
 .nav-item.active { color: #fff; }
 .nav-sep {
-  margin: 0 6px; color: rgba(255,255,255,0.15); font-size: 12px;
+  margin: 0 4px; color: rgba(255,255,255,0.15); font-size: 11px;
 }
 .nav-admin {
-  padding: 5px 18px;
+  padding: 4px 16px;
   background: rgba(255,255,255,0.12);
-  color: #fff; border-radius: 16px;
-  font-size: 12px; text-decoration: none;
+  color: #fff; border-radius: 14px;
+  font-size: 11px; text-decoration: none;
   border: 1px solid rgba(255,255,255,0.15);
   transition: all 0.2s;
 }
@@ -206,158 +368,74 @@ onMounted(async () => {
   border-color: transparent;
 }
 .nav-user {
-  font-size: 12px; color: rgba(255,255,255,0.8);
+  font-size: 11px; color: rgba(255,255,255,0.8);
   font-family: var(--font-serif);
   cursor: pointer;
   transition: color 0.2s;
 }
 .nav-user:hover { color: var(--color-primary, #c9a96e); }
 .nav-item.logout {
-  font-size: 12px; color: rgba(255,255,255,0.6);
+  font-size: 11px; color: rgba(255,255,255,0.6);
   cursor: pointer; transition: color 0.2s;
 }
 .nav-item.logout:hover { color: #ff6b6b; }
-.nav-item.danger { font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer; transition: color 0.2s; }
+.nav-item.danger { font-size: 11px; color: rgba(255,255,255,0.5); cursor: pointer; transition: color 0.2s; }
 .nav-item.danger:hover { color: #ff6b6b; }
 
-/* ---- 横幅主体 ---- */
-.banner {
+/* ---- 视差横幅 ---- */
+.fall-banner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.animate-banner {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-/* 背景图 */
-.banner-bg-wrap {
+.layer {
   position: absolute;
   inset: 0;
-}
-.banner-bg {
-  width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 渐变遮罩：顶部稍暗 -> 中间透明 -> 底部融入页面背景 */
+.layer img {
+  max-width: none;
+  perspective: 1000;
+}
+
+/* 渐变遮罩：底部自然融入页面 */
 .banner-mask {
   position: absolute;
   inset: 0;
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(0,0,0,0.20) 0%,
-    transparent 35%,
-    transparent 70%,
+    transparent 0%,
+    transparent 60%,
     var(--color-bg, #fafaf7) 100%
   );
   pointer-events: none;
 }
 
-/* 角色：左侧绝对定位 */
-.banner-character-wrap {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-.banner-character {
-  display: block;
-  height: 400px;
-  width: auto;
-  filter: drop-shadow(0 0 20px rgba(0,0,0,0.12));
-}
-
-/* 中央内容 */
-.banner-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-}
-.banner-logo {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
-}
-.logo-icon {
-  width: 46px; height: 46px;
-  background: var(--color-primary, #c9a96e);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 23px; border-radius: 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
-}
-.logo-text {
-  font-weight: 700; font-size: 30px; color: #fff;
-  font-family: var(--font-serif); letter-spacing: 6px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-.banner-search {
-  display: flex; align-items: center;
-  background: #fff; border-radius: 28px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-  overflow: hidden;
-  width: 500px; max-width: 78vw;
-}
-.banner-search:focus-within {
-  box-shadow: 0 4px 28px rgba(0,0,0,0.18);
-}
-.search-input {
-  flex: 1; border: none; padding: 14px 22px;
-  font-size: 14px; color: var(--color-text, #4a3d2f);
-  outline: none; background: transparent;
-}
-.search-input::placeholder { color: var(--color-text-muted, #a09880); }
-.search-btn {
-  padding: 14px 28px;
-  background: var(--color-primary, #c9a96e);
-  color: #fff; border: none;
-  font-size: 14px; cursor: pointer;
-  font-family: var(--font-serif); letter-spacing: 2px;
-  transition: background 0.2s;
-}
-.search-btn:hover { background: var(--color-primary-hover, #b8944d); }
-.banner-tagline {
-  margin-top: 16px;
-  font-size: 13px;
-  color: #fff;
-  letter-spacing: 4px;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.4), 0 0 12px rgba(0,0,0,0.2);
-}
-
 /* ---- 响应式 ---- */
-@media (max-width: 1024px) {
-  .banner-character { height: 320px; }
-}
 @media (max-width: 768px) {
-  .banner-wrapper { height: 280px; }
-  .banner-character { height: 220px; opacity: 0.5; }
   .banner-nav { padding: 6px 16px; }
   .nav-links { display: none; }
-  .logo-text { font-size: 20px; letter-spacing: 3px; }
-  .logo-icon { width: 34px; height: 34px; font-size: 17px; }
-  .banner-search { width: 85vw; }
-  .search-input { padding: 10px 14px; font-size: 13px; }
-  .search-btn { padding: 10px 18px; font-size: 12px; }
 }
 @media (max-width: 480px) {
-  .banner-wrapper { height: 200px; }
-  .banner-character { display: none; }
-  .banner-logo { margin-bottom: 12px; }
-  .logo-text { font-size: 17px; letter-spacing: 2px; }
-  .logo-icon { width: 28px; height: 28px; font-size: 14px; }
-  .banner-search { width: 90vw; }
-  .search-input { padding: 9px 12px; font-size: 12px; }
-  .search-btn { padding: 9px 14px; font-size: 11px; }
-  .banner-tagline { display: none; }
-  .banner-nav { padding: 6px 12px; }
+  .banner-nav { padding: 4px 12px; }
   .nav-logo-text { font-size: 11px; }
 }
+
 .badge {
   position: absolute; top: -6px; right: -10px;
   background: var(--color-danger, #c04040); color: #fff;

@@ -9,6 +9,7 @@ public class NotificationResponse {
     private String content;
     private Long bookId;
     private Long reviewId;
+    private Long noteId;
     private boolean isRead;
     private LocalDateTime createdAt;
 
@@ -24,6 +25,8 @@ public class NotificationResponse {
     public void setBookId(Long bookId) { this.bookId = bookId; }
     public Long getReviewId() { return reviewId; }
     public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
+    public Long getNoteId() { return noteId; }
+    public void setNoteId(Long noteId) { this.noteId = noteId; }
     public boolean isRead() { return isRead; }
     public void setRead(boolean read) { isRead = read; }
     public LocalDateTime getCreatedAt() { return createdAt; }

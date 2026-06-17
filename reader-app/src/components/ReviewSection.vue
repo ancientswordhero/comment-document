@@ -38,6 +38,7 @@
     </div>
 
     <div v-if="loading" class="review-loading">加载中...</div>
+    <div v-else-if="error" class="review-error">{{ error }}</div>
     <div v-else-if="reviews.length === 0 && !posting" class="review-empty">暂无书评</div>
     <div v-else class="review-list">
       <ReviewItem
@@ -113,6 +114,7 @@ const props = defineProps({
 const router = useRouter()
 
 const reviews = ref([])
+const error = ref('')
 const loading = ref(false)
 const posting = ref(false)
 const sort = ref('time')
@@ -233,6 +235,7 @@ onMounted(() => fetchReviews())
 
 async function fetchReviews() {
   loading.value = true
+  error.value = ''
   try {
     const data = await getReviews(props.bookId, { sort: sort.value, page: page.value, size: pageSize })
     reviews.value = data.records
@@ -246,6 +249,8 @@ async function fetchReviews() {
         setTimeout(() => el.classList.remove('highlight-flash'), 2000)
       }
     }
+  } catch (e) {
+    error.value = e?.response?.data?.message || e?.message || '书评加载失败，请稍后重试'
   } finally {
     loading.value = false
   }
@@ -419,12 +424,13 @@ function goLogin() {
   font-weight: 600;
   border-bottom: 2px solid var(--color-primary, #c9a96e);
 }
-.review-loading, .review-empty {
+.review-loading, .review-empty, .review-error {
   text-align: center;
   padding: 40px;
   font-size: 13px;
   color: var(--color-text-muted, #a09880);
 }
+.review-error { color: var(--color-danger, #c04040); }
 .review-pagination {
   text-align: center;
   margin-top: 20px;
