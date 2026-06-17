@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reports", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"review_id", "reporter_id"})
+    @UniqueConstraint(columnNames = {"review_id", "reporter_id"}),
+    @UniqueConstraint(columnNames = {"note_id", "reporter_id"})
 })
 public class Report {
 
@@ -13,8 +14,14 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "review_id", nullable = false)
+    @Column(name = "review_id")
     private Long reviewId;
+
+    @Column(name = "note_id")
+    private Long noteId;
+
+    @Column(nullable = false, length = 20)
+    private String targetType = "review";
 
     @Column(name = "reporter_id", nullable = false)
     private Long reporterId;
@@ -48,6 +55,10 @@ public class Report {
     public void setId(Long id) { this.id = id; }
     public Long getReviewId() { return reviewId; }
     public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
+    public Long getNoteId() { return noteId; }
+    public void setNoteId(Long noteId) { this.noteId = noteId; }
+    public String getTargetType() { return targetType; }
+    public void setTargetType(String targetType) { this.targetType = targetType; }
     public Long getReporterId() { return reporterId; }
     public void setReporterId(Long reporterId) { this.reporterId = reporterId; }
     public String getReason() { return reason; }
@@ -67,24 +78,27 @@ public class Report {
 
     public static Builder builder() { return new Builder(); }
     public static class Builder {
-        private Long id, reviewId, reporterId, adminId;
-        private String reason, detail, status = "pending", adminNote;
+        private Long id, reviewId, noteId, reporterId, adminId;
+        private String reason, detail, status = "pending", targetType = "review", adminNote;
         private LocalDateTime createdAt, resolvedAt;
         public Builder id(Long v) { id = v; return this; }
         public Builder reviewId(Long v) { reviewId = v; return this; }
+        public Builder noteId(Long v) { noteId = v; return this; }
         public Builder reporterId(Long v) { reporterId = v; return this; }
         public Builder reason(String v) { reason = v; return this; }
         public Builder detail(String v) { detail = v; return this; }
         public Builder status(String v) { status = v; return this; }
+        public Builder targetType(String v) { targetType = v; return this; }
         public Builder adminId(Long v) { adminId = v; return this; }
         public Builder adminNote(String v) { adminNote = v; return this; }
         public Builder createdAt(LocalDateTime v) { createdAt = v; return this; }
         public Builder resolvedAt(LocalDateTime v) { resolvedAt = v; return this; }
         public Report build() {
             Report r = new Report();
-            r.setId(id); r.setReviewId(reviewId); r.setReporterId(reporterId);
+            r.setId(id); r.setReviewId(reviewId); r.setNoteId(noteId); r.setReporterId(reporterId);
             r.setReason(reason); r.setDetail(detail);
             r.setStatus(status != null ? status : "pending");
+            r.setTargetType(targetType != null ? targetType : "review");
             r.setAdminId(adminId); r.setAdminNote(adminNote);
             r.setCreatedAt(createdAt); r.setResolvedAt(resolvedAt);
             return r;

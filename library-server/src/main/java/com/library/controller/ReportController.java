@@ -20,4 +20,12 @@ public class ReportController {
         reportService.createReport(id, userId, request);
         return ApiResponse.success(null);
     }
+
+    @PostMapping("/api/reports")
+    public ApiResponse<Void> createReport(@Valid @RequestBody ReportRequest request,
+            HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        reportService.createReport(request, userId);
+        return ApiResponse.success(null);
+    }
 }

@@ -6,6 +6,9 @@ public class ReportResponse {
     private Long id;
     private Long reviewId;
     private String reviewContent;
+    private Long noteId;
+    private String noteContent;
+    private String targetType;
     private String bookTitle;
     private String reporterName;
     private String reviewAuthorName;
@@ -23,6 +26,12 @@ public class ReportResponse {
     public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
     public String getReviewContent() { return reviewContent; }
     public void setReviewContent(String reviewContent) { this.reviewContent = reviewContent; }
+    public Long getNoteId() { return noteId; }
+    public void setNoteId(Long noteId) { this.noteId = noteId; }
+    public String getNoteContent() { return noteContent; }
+    public void setNoteContent(String noteContent) { this.noteContent = noteContent; }
+    public String getTargetType() { return targetType; }
+    public void setTargetType(String targetType) { this.targetType = targetType; }
     public String getBookTitle() { return bookTitle; }
     public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
     public String getReporterName() { return reporterName; }
@@ -46,13 +55,17 @@ public class ReportResponse {
 
     public static Builder builder() { return new Builder(); }
     public static class Builder {
-        private Long id, reviewId, adminId;
-        private String reviewContent, bookTitle, reporterName, reviewAuthorName;
+        private Long id, reviewId, noteId, adminId;
+        private String reviewContent, noteContent, targetType;
+        private String bookTitle, reporterName, reviewAuthorName;
         private String reason, detail, status, adminNote;
         private LocalDateTime createdAt, resolvedAt;
         public Builder id(Long v) { id = v; return this; }
         public Builder reviewId(Long v) { reviewId = v; return this; }
         public Builder reviewContent(String v) { reviewContent = v; return this; }
+        public Builder noteId(Long v) { noteId = v; return this; }
+        public Builder noteContent(String v) { noteContent = v; return this; }
+        public Builder targetType(String v) { targetType = v; return this; }
         public Builder bookTitle(String v) { bookTitle = v; return this; }
         public Builder reporterName(String v) { reporterName = v; return this; }
         public Builder reviewAuthorName(String v) { reviewAuthorName = v; return this; }
@@ -66,6 +79,7 @@ public class ReportResponse {
         public ReportResponse build() {
             ReportResponse r = new ReportResponse();
             r.setId(id); r.setReviewId(reviewId); r.setReviewContent(reviewContent);
+            r.setNoteId(noteId); r.setNoteContent(noteContent); r.setTargetType(targetType);
             r.setBookTitle(bookTitle); r.setReporterName(reporterName);
             r.setReviewAuthorName(reviewAuthorName); r.setReason(reason);
             r.setDetail(detail); r.setStatus(status); r.setAdminId(adminId);
