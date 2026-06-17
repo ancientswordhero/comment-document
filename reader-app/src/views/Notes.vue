@@ -1,5 +1,5 @@
 <template>
-  <div class="notes-page" :class="{ 'yuyin-active': activeTab === 'yuyin' }">
+  <div class="notes-page">
     <div class="notes-container">
       <h1 class="notes-title">书余</h1>
 
@@ -480,17 +480,12 @@ onBeforeUnmount(() => {
    基础
    ============================================================ */
 .notes-page { min-height: 100vh; background: var(--color-bg, #fafaf7); }
-.notes-page.yuyin-active { background: #1c1814; }
 .notes-container { max-width: 100%; margin: 0 auto; padding: 32px 24px 64px; }
 .notes-title { font-family: var(--font-serif); font-size: 28px; color: var(--color-text, #4a3d2f); text-align: center; margin-bottom: 24px; letter-spacing: 6px; }
-.yuyin-active .notes-title { color: rgba(255,255,255,0.7); }
 .notes-tabs { display: flex; justify-content: center; gap: 0; margin-bottom: 28px; border-bottom: 1px solid var(--color-border, #e8e4dc); }
-.yuyin-active .notes-tabs { border-bottom-color: rgba(255,255,255,0.08); }
 .tab-btn { padding: 8px 32px; border: none; background: none; font-size: 15px; color: var(--color-text-secondary, #8b8070); cursor: pointer; font-family: var(--font-serif); border-bottom: 2px solid transparent; transition: all 0.2s; }
-.yuyin-active .tab-btn { color: rgba(255,255,255,0.35); }
 .tab-btn.active { color: var(--color-primary, #c9a96e); border-bottom-color: var(--color-primary, #c9a96e); }
 .tab-btn:hover { color: var(--color-text, #4a3d2f); }
-.yuyin-active .tab-btn:hover { color: rgba(255,255,255,0.7); }
 
 /* ============================================================
    思余
@@ -530,7 +525,7 @@ onBeforeUnmount(() => {
   min-height: 500px;
   overflow: hidden;
   cursor: grab;
-  background: radial-gradient(ellipse 60% 50% at 50% 40%, #2a2218 0%, #1c1814 40%, #0f0d0a 70%);
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, #faf7f0 0%, #f0ebe0 40%, #e8e2d4 70%);
   border-radius: 12px;
   user-select: none;
   -webkit-user-select: none;
@@ -566,14 +561,14 @@ onBeforeUnmount(() => {
 }
 .center-name {
   font-size: 14px;
-  color: rgba(255,255,255,0.8);
+  color: var(--color-text, #4a3d2f);
   font-family: var(--font-serif);
   letter-spacing: 2px;
   margin-bottom: 4px;
 }
 .center-stat {
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: var(--color-text-muted, #a09880);
 }
 
 /* 他人书余节点 */
@@ -582,21 +577,22 @@ onBeforeUnmount(() => {
   transform: translate(-50%, -50%) scale(0);
   max-width: 200px;
   padding: 12px 16px;
-  background: rgba(40,32,22,0.92);
-  border: 1px solid rgba(201,169,110,0.2);
+  background: rgba(255,255,255,0.85);
+  border: 1px solid var(--color-border, #e8e4dc);
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 .yuyin-node.entered { transform: translate(-50%, -50%) scale(1); }
 .yuyin-node:hover, .yuyin-node.selected {
   z-index: 200 !important;
   border-color: var(--color-primary, #c9a96e);
-  box-shadow: 0 0 22px rgba(201,169,110,0.25), 0 0 50px rgba(201,169,110,0.1);
+  box-shadow: 0 4px 24px rgba(201,169,110,0.2), 0 1px 4px rgba(0,0,0,0.08);
 }
 .node-quote {
   font-size: 12px;
-  color: rgba(255,255,255,0.55);
+  color: var(--color-text-muted, #a09880);
   font-style: italic;
   margin-bottom: 6px;
   line-height: 1.5;
@@ -607,7 +603,7 @@ onBeforeUnmount(() => {
 }
 .node-author {
   font-size: 11px;
-  color: rgba(201,169,110,0.8);
+  color: var(--color-primary, #c9a96e);
   font-weight: 600;
 }
 .node-type {
@@ -621,7 +617,7 @@ onBeforeUnmount(() => {
 .node-book {
   display: block;
   font-size: 10px;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-text-muted, #a09880);
   margin-top: 4px;
 }
 
@@ -631,25 +627,25 @@ onBeforeUnmount(() => {
   z-index: 300;
   width: 340px;
   padding: 18px 20px;
-  background: rgba(30,22,14,0.97);
-  border: 1px solid rgba(201,169,110,0.25);
+  background: rgba(255,255,255,0.97);
+  border: 1px solid var(--color-border, #e8e4dc);
   border-radius: 14px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
 }
 .yuyin-detail .detail-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .yuyin-detail .detail-user { font-size: 13px; font-weight: 600; color: var(--color-primary, #c9a96e); cursor: pointer; }
 .yuyin-detail .detail-user:hover { text-decoration: underline; }
-.yuyin-detail .detail-book { font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer; }
-.yuyin-detail .detail-book:hover { color: rgba(255,255,255,0.8); }
-.yuyin-detail .detail-content { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.7); margin-bottom: 12px; }
+.yuyin-detail .detail-book { font-size: 12px; color: var(--color-text-secondary, #8b8070); cursor: pointer; }
+.yuyin-detail .detail-book:hover { color: var(--color-text, #4a3d2f); }
+.yuyin-detail .detail-content { font-size: 13px; line-height: 1.7; color: var(--color-text, #4a3d2f); margin-bottom: 12px; }
 .yuyin-detail .detail-actions { display: flex; gap: 8px; }
-.yuyin-detail .detail-actions button { font-size: 11px; padding: 3px 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.55); cursor: pointer; transition: all 0.2s; }
+.yuyin-detail .detail-actions button { font-size: 11px; padding: 3px 12px; border-radius: 4px; border: 1px solid var(--color-border, #e8e4dc); background: #fff; color: var(--color-text-secondary, #8b8070); cursor: pointer; transition: all 0.2s; }
 .yuyin-detail .detail-actions button:hover { border-color: var(--color-primary, #c9a96e); color: var(--color-primary, #c9a96e); }
 
 .yuyin-loading, .yuyin-empty {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: rgba(255,255,255,0.35);
+  font-size: 14px; color: var(--color-text-muted, #a09880);
   font-family: var(--font-serif); letter-spacing: 0.1em;
 }
 
