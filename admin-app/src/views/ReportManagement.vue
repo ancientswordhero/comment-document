@@ -11,19 +11,20 @@
     </div>
     <table class="data-table" v-if="reports.length > 0">
       <thead>
-        <tr><th>书评内容</th><th>所属图书</th><th>举报人</th><th>被举报人</th><th>理由</th><th>状态</th><th>时间</th><th>操作</th></tr>
+        <tr><th>类型</th><th>被举报内容</th><th>所属图书</th><th>举报人</th><th>被举报人</th><th>理由</th><th>状态</th><th>时间</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr v-for="r in reports" :key="r.id">
-          <td class="cell-content">{{ r.reviewContent || '(已删除)' }}</td>
+          <td><span class="type-tag" :class="r.targetType === 'note' ? 'type-note' : 'type-review'">{{ r.targetType === 'note' ? '手记' : '书评' }}</span></td>
+          <td class="cell-content">{{ contentPreview(r) || '(已删除)' }}</td>
           <td>{{ r.bookTitle }}</td>
           <td>{{ r.reporterName }}</td>
-          <td>{{ r.reviewAuthorName }}</td>
+          <td>{{ r.reviewAuthorName || '—' }}</td>
           <td>{{ reasonLabel(r.reason) }}<span v-if="r.detail">: {{ r.detail }}</span></td>
           <td><span class="status-tag" :class="r.status">{{ statusLabel(r.status) }}</span></td>
           <td>{{ formatDate(r.createdAt) }}</td>
           <td class="cell-actions" v-if="r.status === 'pending'">
-            <a @click="handleResolve(r, 'delete')">删除评论</a>
+            <a @click="handleResolve(r, 'delete')">{{ r.targetType === 'note' ? '删除手记' : '删除评论' }}</a>
             <span class="sep">|</span>
             <a @click="handleResolve(r, 'dismiss')">驳回举报</a>
           </td>
@@ -76,6 +77,7 @@ function statusLabel(s) {
   const map = { pending: '待处理', deleted: '已删除', dismissed: '已驳回' }
   return map[s] || s
 }
+function contentPreview(r) { return r.noteContent || r.reviewContent || '' }
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('zh-CN') : '' }
 </script>
 
@@ -92,6 +94,9 @@ function formatDate(d) { return d ? new Date(d).toLocaleDateString('zh-CN') : ''
 .status-tag.pending { background: #fff3e0; color: #c08840; }
 .status-tag.deleted { background: #ffebee; color: #c04040; }
 .status-tag.dismissed { background: #e8f5e9; color: #5b8c5a; }
+.type-tag { padding: 2px 8px; border-radius: 2px; font-size: 11px; }
+.type-tag.type-review { background: #e3f2fd; color: #3a7db8; }
+.type-tag.type-note { background: #fef3e4; color: #b8860b; }
 .cell-actions a { cursor: pointer; color: var(--color-text-secondary); }
 .cell-actions a:hover { color: var(--color-primary); }
 .cell-actions a:first-child:hover { color: var(--color-danger); }

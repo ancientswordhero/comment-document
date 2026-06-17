@@ -50,7 +50,9 @@ async function fetchNotifications() {
 
 async function onClick(n) {
   if (!n.read) { await markAsRead(n.id); n.read = true }
-  if (n.bookId && n.reviewId) {
+  if (n.noteId) {
+    router.push('/notes')
+  } else if (n.bookId && n.reviewId) {
     router.push({ path: `/book/${n.bookId}`, query: { reviewId: n.reviewId } })
   } else if (n.bookId) {
     router.push(`/book/${n.bookId}`)
