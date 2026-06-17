@@ -89,6 +89,46 @@ let lastSelection = null
 
 let book = null
 let rendition = null
+let sandboxObserver = null
+
+/**
+ * 修复 epubjs iframe 的 sandbox 属性
+ * epubjs 默认给 iframe 加了 sandbox="allow-scripts allow-same-origin"，
+ * 这会阻止选区和点击事件跨 iframe 传递，导致 selected 事件无法触发。
+ */
+function fixIframeSandbox(container) {
+  const iframes = container.querySelectorAll('iframe')
+  iframes.forEach(iframe => {
+    // 完全移除 sandbox，让 iframe 与主文档正常通信
+    iframe.removeAttribute('sandbox')
+  })
+}
+
+/**
+ * 监听 viewer 容器中新增的 iframe，自动移除 sandbox
+ * epubjs 在翻页/换章时会动态创建新 iframe
+ */
+function startSandboxObserver() {
+  const container = viewerRef.value
+  if (!container) return
+
+  // 立即处理已有的 iframe
+  fixIframeSandbox(container)
+
+  // 监听后续新增的 iframe
+  sandboxObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeName === 'IFRAME') {
+          node.removeAttribute('sandbox')
+        } else if (node.querySelectorAll) {
+          fixIframeSandbox(node)
+        }
+      }
+    }
+  })
+  sandboxObserver.observe(container, { childList: true, subtree: true })
+}
 
 /**
  * 移除 EPUB 内容中的 res:// 协议字体引用（Sony Reader 格式）
@@ -97,11 +137,9 @@ let rendition = null
 function removeResProtocolFonts(doc) {
   if (!doc) return
 
-  // 移除 <style> 中包含 res:// 的 @font-face 规则
   const styleElements = doc.querySelectorAll('style')
   styleElements.forEach(style => {
     if (style.textContent.includes('res://')) {
-      // 移除所有引用 res:// 的 @font-face 规则
       style.textContent = style.textContent.replace(
         /@font-face\s*\{[^}]*res:\/\/[^}]*\}/gi,
         ''
@@ -109,7 +147,6 @@ function removeResProtocolFonts(doc) {
     }
   })
 
-  // 移除 <link> 中引用 res:// 的字体链接
   const linkElements = doc.querySelectorAll('link[href]')
   linkElements.forEach(link => {
     if (link.getAttribute('href').startsWith('res://')) {
@@ -135,7 +172,10 @@ onMounted(async () => {
       allowScriptedContent: true
     })
 
-    // 使用 book.ready 确保所有组件（spine/navigation/metadata等）加载完毕
+    // 启动 sandbox 修复：解决 iframe 阻止选区事件的问题
+    startSandboxObserver()
+
+    // 使用 book.ready 确保所有组件加载完毕
     book.ready.then(() => {
       const nav = book.navigation
       if (nav && nav.toc && nav.toc.length > 0) {
@@ -143,7 +183,6 @@ onMounted(async () => {
           label: item.label,
           href: item.href
         }))
-        // 尝试显示第一个章节，失败则回退到默认显示
         rendition.display(nav.toc[0].href).catch(() => {
           console.warn('无法通过 TOC href 定位章节，回退到默认起始位置')
           return rendition.display()
@@ -153,13 +192,17 @@ onMounted(async () => {
       }
     }).catch(err => {
       console.error('书籍加载失败:', err)
-      // 即使 ready 失败，也尝试显示
       rendition.display()
     })
 
-    // Listen for text selection (register after initial display)
+    // 听文本选区事件
     rendition.on('selected', (cfiRange, contents) => {
-      const selection = contents.window.getSelection()
+      // epubjs 的 contents 可能是 { document, window } 或直接是 document
+      const win = contents.window || contents.defaultView
+      const doc = contents.document || contents
+      const selection = win ? win.getSelection() : (doc.getSelection ? doc.getSelection() : null)
+      if (!selection) return
+
       const text = selection.toString().trim()
       if (!text || text.length < 1) {
         showBubble.value = false
@@ -173,12 +216,12 @@ onMounted(async () => {
       const rect = range.getBoundingClientRect()
       bubbleStyle.value = {
         left: `${rect.left + rect.width / 2 - 60}px`,
-        top: `${rect.top - 40}px`
+        top: `${rect.top - 44}px`
       }
       showBubble.value = true
     })
 
-    // Hide bubble when clicking elsewhere in the reader
+    // 点击阅读器空白处关闭浮泡
     rendition.on('click', () => {
       showBubble.value = false
     })
@@ -193,6 +236,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  if (sandboxObserver) sandboxObserver.disconnect()
   if (rendition) rendition.destroy()
   if (book) book.destroy()
 })
@@ -217,9 +261,7 @@ function onChapterChange() {
 }
 
 function onCopy() {
-  navigator.clipboard.writeText(selectedText.value).catch(() => {
-    // Fallback: clipboard API may not be available
-  })
+  navigator.clipboard.writeText(selectedText.value).catch(() => {})
   showBubble.value = false
 }
 
@@ -254,7 +296,6 @@ async function onSaveNote() {
       publish: syncToYuyin.value
     })
     showAnnotate.value = false
-    // Show highlight in reader
     if (rendition && lastSelection) {
       rendition.annotations.highlight(
         lastSelection.getRangeAt(0),
