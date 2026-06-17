@@ -176,24 +176,24 @@ public class ReportService {
         if ("delete".equals(req.getAction())) {
             noteRepository.delete(note);
             report.setStatus("deleted");
-            notificationService.createNotification(note.getUserId(), "report_result",
+            notificationService.createNoteNotification(note.getUserId(), "report_result",
                 "你的手记被举报，已被管理员删除",
                 "你在《" + bookTitle + "》中的手记「" + noteSnippet + "」被举报「" + reasonLabel + "」，管理员审核后已删除该手记。",
-                note.getBookId(), null);
-            notificationService.createNotification(report.getReporterId(), "report_result",
+                note.getBookId(), note.getId());
+            notificationService.createNoteNotification(report.getReporterId(), "report_result",
                 "你举报的手记已被删除",
                 "你在《" + bookTitle + "》中举报的手记「" + noteSnippet + "」管理员审核后已删除处理。",
-                note.getBookId(), null);
+                note.getBookId(), note.getId());
         } else if ("dismiss".equals(req.getAction())) {
             report.setStatus("dismissed");
-            notificationService.createNotification(note.getUserId(), "report_result",
+            notificationService.createNoteNotification(note.getUserId(), "report_result",
                 "你的手记被举报，举报已被驳回",
                 "你在《" + bookTitle + "》中的手记「" + noteSnippet + "」被举报「" + reasonLabel + "」，管理员审核后驳回了举报。",
-                note.getBookId(), null);
-            notificationService.createNotification(report.getReporterId(), "report_result",
+                note.getBookId(), note.getId());
+            notificationService.createNoteNotification(report.getReporterId(), "report_result",
                 "你举报的手记举报被驳回",
                 "你在《" + bookTitle + "》中举报的手记「" + noteSnippet + "」管理员审核后驳回了举报。",
-                note.getBookId(), null);
+                note.getBookId(), note.getId());
         } else {
             throw new IllegalArgumentException("无效的处理方式: " + req.getAction());
         }

@@ -263,10 +263,10 @@ public class NoteService {
                 .map(User::getUsername).orElse("未知用户");
             String snippet = req.getContent().length() > 30
                 ? req.getContent().substring(0, 30) + "..." : req.getContent();
-            notificationService.createNotification(parent.getUserId(), "note_reply",
+            notificationService.createNoteNotification(parent.getUserId(), "note_reply",
                 replierName + " 回复了你的手记",
                 "回复内容：" + snippet + "",
-                parent.getBookId(), 0L);
+                parent.getBookId(), rootId);
         }
         return toResponse(reply, Collections.emptyMap(), Collections.emptySet(),
             new HashMap<>(), new HashMap<>());

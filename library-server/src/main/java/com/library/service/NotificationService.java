@@ -47,6 +47,12 @@ public class NotificationService {
         notificationRepository.save(new Notification(userId, type, title, content, bookId, reviewId));
     }
 
+    public void createNoteNotification(Long userId, String type, String title, String content, Long bookId, Long noteId) {
+        Notification n = new Notification(userId, type, title, content, bookId, null);
+        n.setNoteId(noteId);
+        notificationRepository.save(n);
+    }
+
     private NotificationResponse toResponse(Notification n) {
         NotificationResponse r = new NotificationResponse();
         r.setId(n.getId()); r.setType(n.getType()); r.setTitle(n.getTitle());
