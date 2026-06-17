@@ -26,6 +26,10 @@
 
     <!-- 撰写浮层 -->
     <div v-if="showAnnotate" class="annotate-panel">
+      <div class="annotate-topbar">
+        <span class="annotate-topbar-title">记书余</span>
+        <button class="annotate-close" @click="onCancelAnnotate">&times;</button>
+      </div>
       <div class="annotate-header">
         <button
           :class="['annotate-tab', { active: annotateType === 'QUESTION' }]"
@@ -47,7 +51,10 @@
           <input type="checkbox" v-model="syncToYuyin" />
           <span>同步至余音</span>
         </label>
-        <button class="annotate-submit" @click="onSaveNote">留墨</button>
+        <div class="annotate-footer-btns">
+          <button class="annotate-cancel" @click="onCancelAnnotate">取消</button>
+          <button class="annotate-submit" @click="onSaveNote">留墨</button>
+        </div>
       </div>
     </div>
 
@@ -155,6 +162,26 @@ function removeResProtocolFonts(doc) {
   })
 }
 
+/**
+ * 注入划线样式到 EPUB 内容的 iframe 中
+ */
+function injectHighlightStyles(doc) {
+  if (!doc) return
+  const style = doc.createElement('style')
+  style.textContent = `
+    .epubjs-hl, [class*="epubjs-hl"] {
+      background: rgba(201,169,110,0.4) !important;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .epubjs-hl:hover, [class*="epubjs-hl"]:hover {
+      background: rgba(201,169,110,0.65) !important;
+    }
+  `
+  doc.head.appendChild(style)
+}
+
 onMounted(async () => {
   try {
     const res = await fetch(`/api/books/${bookId}/epub`)
@@ -162,8 +189,9 @@ onMounted(async () => {
     const buf = await res.arrayBuffer()
     book = ePub(buf)
 
-    // 注册内容钩子，移除 res:// 协议字体引用
+    // 注册内容钩子
     book.spine.hooks.content.register(removeResProtocolFonts)
+    book.spine.hooks.content.register(injectHighlightStyles)
 
     rendition = book.renderTo(viewerRef.value, {
       width: '100%',
@@ -270,11 +298,25 @@ function onHighlight() {
     rendition.annotations.highlight(
       lastSelection.getRangeAt(0),
       {},
-      null,
-      'highlight'
+      (e) => {
+        // 回调：应用自定义样式使划线更明显
+        e.addEventListener('click', () => {
+          // 点击已有划线可移除
+          if (confirm('要移除此划线吗？')) {
+            rendition.annotations.remove(e, 'highlight')
+          }
+        })
+      },
+      'highlight',
+      { fill: 'rgba(201,169,110,0.35)', 'fill-opacity': '0.35' }
     )
   }
   showBubble.value = false
+}
+
+function onCancelAnnotate() {
+  showAnnotate.value = false
+  annotateContent.value = ''
 }
 
 function onAnnotate() {
@@ -412,10 +454,43 @@ async function onSaveNote() {
   background: #fff;
   border-radius: 16px 16px 0 0;
   box-shadow: 0 -2px 16px rgba(0,0,0,0.1);
-  padding: 20px 24px 24px;
+  padding: 0 24px 24px;
   max-height: 60vh;
   overflow-y: auto;
 }
+.annotate-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid #f0ebe0;
+  margin-bottom: 14px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+.annotate-topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text, #4a3d2f);
+}
+.annotate-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 50%;
+  font-size: 18px;
+  color: var(--color-text-secondary, #8b8070);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.15s;
+}
+.annotate-close:hover { background: #e8e4dc; color: #4a3d2f; }
 .annotate-header {
   display: flex;
   gap: 16px;
@@ -470,6 +545,20 @@ async function onSaveNote() {
   color: var(--color-text-secondary, #8b8070);
   cursor: pointer;
 }
+.annotate-footer-btns {
+  display: flex;
+  gap: 10px;
+}
+.annotate-cancel {
+  padding: 8px 20px;
+  background: #f5f5f5;
+  border: 1px solid #e0dbd0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-secondary, #8b8070);
+  cursor: pointer;
+}
+.annotate-cancel:hover { background: #e8e4dc; }
 .annotate-submit {
   padding: 8px 28px;
   background: var(--color-primary, #c9a96e);
