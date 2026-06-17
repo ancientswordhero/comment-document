@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserBookRepository extends JpaRepository<UserBook, Long> {
+    List<UserBook> findByUserId(Long userId);
     Page<UserBook> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
     boolean existsByUserIdAndBookId(Long userId, Long bookId);
     void deleteByUserIdAndBookId(Long userId, Long bookId);
