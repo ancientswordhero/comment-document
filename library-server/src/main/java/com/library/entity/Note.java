@@ -120,20 +120,20 @@ public class Note {
         private int likeCount, replyCount;
         private LocalDateTime createdAt, updatedAt;
 
-        public Builder id(Long v) { id = v; return this; }
-        public Builder userId(Long v) { userId = v; return this; }
-        public Builder bookId(Long v) { bookId = v; return this; }
-        public Builder content(String v) { content = v; return this; }
-        public Builder selectedText(String v) { selectedText = v; return this; }
-        public Builder cfi(String v) { cfi = v; return this; }
-        public Builder type(String v) { type = v; return this; }
-        public Builder published(boolean v) { published = v; return this; }
-        public Builder parentId(Long v) { parentId = v; return this; }
-        public Builder rootId(Long v) { rootId = v; return this; }
-        public Builder likeCount(int v) { likeCount = v; return this; }
-        public Builder replyCount(int v) { replyCount = v; return this; }
-        public Builder createdAt(LocalDateTime v) { createdAt = v; return this; }
-        public Builder updatedAt(LocalDateTime v) { updatedAt = v; return this; }
+        public Builder id(Long id) { this.id = id; return this; }
+        public Builder userId(Long userId) { this.userId = userId; return this; }
+        public Builder bookId(Long bookId) { this.bookId = bookId; return this; }
+        public Builder content(String content) { this.content = content; return this; }
+        public Builder selectedText(String selectedText) { this.selectedText = selectedText; return this; }
+        public Builder cfi(String cfi) { this.cfi = cfi; return this; }
+        public Builder type(String type) { this.type = type; return this; }
+        public Builder published(boolean published) { this.published = published; return this; }
+        public Builder parentId(Long parentId) { this.parentId = parentId; return this; }
+        public Builder rootId(Long rootId) { this.rootId = rootId; return this; }
+        public Builder likeCount(int likeCount) { this.likeCount = likeCount; return this; }
+        public Builder replyCount(int replyCount) { this.replyCount = replyCount; return this; }
+        public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
         public Note build() {
             return new Note(id, userId, bookId, content, selectedText, cfi, type,
                 published, parentId, rootId, likeCount, replyCount, createdAt, updatedAt);
