@@ -38,7 +38,6 @@ public class ReportService {
 
     @Transactional
     public void createReport(ReportRequest req, Long reporterId) {
-        System.err.println("[REPORT] targetType=" + req.getTargetType() + " noteId=" + req.getNoteId() + " reviewId=" + req.getReviewId() + " reporterId=" + reporterId);
         if ("note".equals(req.getTargetType())) {
             createNoteReport(req, reporterId);
         } else {
