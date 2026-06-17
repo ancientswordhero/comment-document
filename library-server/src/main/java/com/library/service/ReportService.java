@@ -38,6 +38,7 @@ public class ReportService {
 
     @Transactional
     public void createReport(ReportRequest req, Long reporterId) {
+        System.err.println("[REPORT] targetType=" + req.getTargetType() + " noteId=" + req.getNoteId() + " reviewId=" + req.getReviewId() + " reporterId=" + reporterId);
         if ("note".equals(req.getTargetType())) {
             createNoteReport(req, reporterId);
         } else {
@@ -75,7 +76,9 @@ public class ReportService {
     }
 
     private void createNoteReport(ReportRequest req, Long reporterId) {
-        if (reportRepository.existsByNoteIdAndReporterId(req.getNoteId(), reporterId)) {
+        boolean exists = reportRepository.existsByNoteIdAndReporterId(req.getNoteId(), reporterId);
+        System.err.println("[REPORT] existsByNoteIdAndReporterId(" + req.getNoteId() + "," + reporterId + ")=" + exists);
+        if (exists) {
             throw new IllegalStateException("您已经举报过这条手记");
         }
         Note note = noteRepository.findById(req.getNoteId())

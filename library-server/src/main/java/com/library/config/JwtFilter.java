@@ -25,6 +25,7 @@ public class JwtFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String path = req.getRequestURI();
+        System.err.println("[JWT] path=" + path + " method=" + req.getMethod());
 
         boolean needsAuth = path.equals("/api/auth/me")
                 || path.startsWith("/api/bookshelf")
