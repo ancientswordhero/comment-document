@@ -74,8 +74,8 @@ class ReportServiceTest {
         when(reportRepository.findById(1L)).thenReturn(Optional.of(report));
         Review review = Review.builder().id(10L).userId(7L).content("违规内容").bookId(5L).build();
         when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
-        when(userRepository.findById(3L)).thenReturn(Optional.of(new User(3L, "举报人", "pw", "READER", null)));
         when(userRepository.findById(7L)).thenReturn(Optional.of(new User(7L, "被举报人", "pw", "READER", null)));
+        when(bookRepository.findById(5L)).thenReturn(Optional.empty());
 
         ResolveReportRequest req = new ResolveReportRequest(); req.setAction("delete");
         reportService.resolveReport(1L, 2L, req);
@@ -91,8 +91,8 @@ class ReportServiceTest {
         when(reportRepository.findById(1L)).thenReturn(Optional.of(report));
         Review review = Review.builder().id(10L).userId(7L).content("正常内容").bookId(5L).build();
         when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
-        when(userRepository.findById(3L)).thenReturn(Optional.of(new User(3L, "举报人", "pw", "READER", null)));
         when(userRepository.findById(7L)).thenReturn(Optional.of(new User(7L, "被举报人", "pw", "READER", null)));
+        when(bookRepository.findById(5L)).thenReturn(Optional.empty());
 
         ResolveReportRequest req = new ResolveReportRequest(); req.setAction("dismiss");
         reportService.resolveReport(1L, 2L, req);
