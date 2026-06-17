@@ -19,3 +19,7 @@ export function markAsRead(notificationId) {
 export function markAllAsRead() {
   return api.put('/notifications/read-all')
 }
+
+export function reportNote(noteId, data) {
+  return api.post('/reports', { ...data, noteId, targetType: 'note' })
+}
