@@ -96,46 +96,6 @@ let lastSelection = null
 
 let book = null
 let rendition = null
-let sandboxObserver = null
-
-/**
- * 修复 epubjs iframe 的 sandbox 属性
- * epubjs 默认给 iframe 加了 sandbox="allow-scripts allow-same-origin"，
- * 这会阻止选区和点击事件跨 iframe 传递，导致 selected 事件无法触发。
- */
-function fixIframeSandbox(container) {
-  const iframes = container.querySelectorAll('iframe')
-  iframes.forEach(iframe => {
-    // 完全移除 sandbox，让 iframe 与主文档正常通信
-    iframe.removeAttribute('sandbox')
-  })
-}
-
-/**
- * 监听 viewer 容器中新增的 iframe，自动移除 sandbox
- * epubjs 在翻页/换章时会动态创建新 iframe
- */
-function startSandboxObserver() {
-  const container = viewerRef.value
-  if (!container) return
-
-  // 立即处理已有的 iframe
-  fixIframeSandbox(container)
-
-  // 监听后续新增的 iframe
-  sandboxObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeName === 'IFRAME') {
-          node.removeAttribute('sandbox')
-        } else if (node.querySelectorAll) {
-          fixIframeSandbox(node)
-        }
-      }
-    }
-  })
-  sandboxObserver.observe(container, { childList: true, subtree: true })
-}
 
 /**
  * 移除 EPUB 内容中的 res:// 协议字体引用（Sony Reader 格式）
@@ -200,8 +160,11 @@ onMounted(async () => {
       allowScriptedContent: true
     })
 
-    // 启动 sandbox 修复：解决 iframe 阻止选区事件的问题
-    startSandboxObserver()
+    // 使用 rendition.hooks.render 移除 iframe sandbox
+    // epubjs 默认的 sandbox 属性阻止了选区和点击事件跨 iframe 传递
+    rendition.hooks.render.register((rendition, iframe) => {
+      iframe.removeAttribute('sandbox')
+    })
 
     // 使用 book.ready 确保所有组件加载完毕
     book.ready.then(() => {
@@ -264,7 +227,6 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  if (sandboxObserver) sandboxObserver.disconnect()
   if (rendition) rendition.destroy()
   if (book) book.destroy()
 })
