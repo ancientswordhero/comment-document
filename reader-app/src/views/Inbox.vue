@@ -29,8 +29,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getNotifications, markAsRead, markAllAsRead } from '../api/report'
 import { formatRelativeDate } from '../utils/date.js'
+import { useUnreadBadge } from '../composables/useUnreadBadge'
 
 const router = useRouter()
+const { markOneRead, markAllRead } = useUnreadBadge()
 const notifications = ref([])
 const loading = ref(false)
 const page = ref(1)
@@ -49,7 +51,7 @@ async function fetchNotifications() {
 }
 
 async function onClick(n) {
-  if (!n.read) { await markAsRead(n.id); n.read = true }
+  if (!n.read) { await markAsRead(n.id); n.read = true; markOneRead() }
   if (n.noteId) {
     router.push('/notes')
   } else if (n.bookId && n.reviewId) {
@@ -58,7 +60,11 @@ async function onClick(n) {
     router.push(`/book/${n.bookId}`)
   }
 }
-async function onReadAll() { await markAllAsRead(); notifications.value.forEach(n => n.read = true) }
+async function onReadAll() {
+  await markAllAsRead()
+  notifications.value.forEach(n => n.read = true)
+  markAllRead()
+}
 function goPage(p) { page.value = p; fetchNotifications() }
 </script>
 

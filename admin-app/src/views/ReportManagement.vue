@@ -44,7 +44,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getReports, resolveReport } from '../api/report'
+import { useAdminBadge } from '../composables/useAdminBadge'
 
+const { decrementPending } = useAdminBadge()
 const reports = ref([]); const loading = ref(false)
 const page = ref(1); const totalCount = ref(0)
 const statusFilter = ref(''); const pageSize = 10
@@ -63,7 +65,9 @@ async function fetchReports() {
 async function handleResolve(report, action) {
   const label = action === 'delete' ? '删除评论' : '驳回举报'
   if (!confirm(`确定${label}吗？`)) return
-  await resolveReport(report.id, { action }); fetchReports()
+  await resolveReport(report.id, { action })
+  await decrementPending()
+  fetchReports()
 }
 
 function search() { page.value = 1; fetchReports() }

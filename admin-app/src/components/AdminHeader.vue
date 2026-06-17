@@ -33,20 +33,13 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { getPendingCount } from '../api/report'
+import { useAdminBadge } from '../composables/useAdminBadge'
 
 const menuOpen = ref(false)
-const pendingCount = ref(0)
+const { pendingCount, fetchPendingCount } = useAdminBadge()
 let pollingTimer = null
 
 const username = computed(() => localStorage.getItem('username') || '管理员')
-
-async function fetchPendingCount() {
-  try {
-    const data = await getPendingCount()
-    pendingCount.value = data.count || 0
-  } catch { /* ignore */ }
-}
 
 function logout() {
   localStorage.removeItem('token')

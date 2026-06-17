@@ -107,10 +107,10 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { getUserIdFromToken } from '../utils/jwt'
 import { deleteAccount } from '../api/auth'
-import { getUnreadCount } from '../api/report'
+import { useUnreadBadge } from '../composables/useUnreadBadge'
 import UserProfileDialog from './UserProfileDialog.vue'
 
-const unreadCount = ref(0)
+const { unreadCount, fetchUnreadCount } = useUnreadBadge()
 const showProfile = ref(false)
 const profileUserId = ref(null)
 
@@ -270,7 +270,7 @@ function onBannerLeave() {
 
 onMounted(async () => {
   if (isLoggedIn.value) {
-    try { unreadCount.value = await getUnreadCount() } catch { /* ignore */ }
+    try { await fetchUnreadCount() } catch { /* ignore */ }
   }
 
   await nextTick()
