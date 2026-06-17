@@ -13,6 +13,44 @@
 
     <div class="reader-viewer" ref="viewerRef"></div>
 
+    <!-- 选区操作浮泡 -->
+    <div
+      v-if="showBubble"
+      class="selection-bubble"
+      :style="bubbleStyle"
+    >
+      <button @click="onCopy">复制</button>
+      <button @click="onHighlight">划线</button>
+      <button @click="onAnnotate">记书余</button>
+    </div>
+
+    <!-- 撰写浮层 -->
+    <div v-if="showAnnotate" class="annotate-panel">
+      <div class="annotate-header">
+        <button
+          :class="['annotate-tab', { active: annotateType === 'QUESTION' }]"
+          @click="annotateType = 'QUESTION'"
+        >疑问</button>
+        <button
+          :class="['annotate-tab', { active: annotateType === 'INSIGHT' }]"
+          @click="annotateType = 'INSIGHT'"
+        >心得</button>
+      </div>
+      <blockquote class="annotate-quote">"{{ selectedText }}"</blockquote>
+      <textarea
+        v-model="annotateContent"
+        class="annotate-textarea"
+        :placeholder="annotateType === 'QUESTION' ? '你哪里困惑？' : '写下你的心得...'"
+      ></textarea>
+      <div class="annotate-footer">
+        <label class="annotate-toggle">
+          <input type="checkbox" v-model="syncToYuyin" />
+          <span>同步至余音</span>
+        </label>
+        <button class="annotate-submit" @click="onSaveNote">留墨</button>
+      </div>
+    </div>
+
     <div class="reader-footer">
       <span @click="prevPage">上一页</span>
       <span v-if="totalPages > 0">{{ currentPage }} / {{ totalPages }}</span>
@@ -25,6 +63,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ePub from 'epubjs'
+import { createNote } from '../api/note'
 
 const route = useRoute()
 const bookId = route.params.id
@@ -35,6 +74,18 @@ const currentChapter = ref(0)
 const currentPage = ref(1)
 const totalPages = ref(0)
 const fontSize = ref(16)
+
+// 批注相关状态
+const showBubble = ref(false)
+const bubbleStyle = ref({})
+const selectedText = ref('')
+const selectedCfi = ref('')
+const showAnnotate = ref(false)
+const annotateType = ref('INSIGHT')
+const annotateContent = ref('')
+const syncToYuyin = ref(false)
+
+let lastSelection = null
 
 let book = null
 let rendition = null
@@ -106,6 +157,32 @@ onMounted(async () => {
       rendition.display()
     })
 
+    // Listen for text selection (register after initial display)
+    rendition.on('selected', (cfiRange, contents) => {
+      const selection = contents.window.getSelection()
+      const text = selection.toString().trim()
+      if (!text || text.length < 1) {
+        showBubble.value = false
+        return
+      }
+      selectedText.value = text
+      selectedCfi.value = cfiRange
+      lastSelection = selection
+
+      const range = selection.getRangeAt(0)
+      const rect = range.getBoundingClientRect()
+      bubbleStyle.value = {
+        left: `${rect.left + rect.width / 2 - 60}px`,
+        top: `${rect.top - 40}px`
+      }
+      showBubble.value = true
+    })
+
+    // Hide bubble when clicking elsewhere in the reader
+    rendition.on('click', () => {
+      showBubble.value = false
+    })
+
     rendition.on('relocated', (loc) => {
       currentPage.value = loc.current + 1
       totalPages.value = loc.total
@@ -136,6 +213,60 @@ function onChapterChange() {
       console.warn('章节跳转失败，尝试回退到默认位置')
       return rendition.display()
     })
+  }
+}
+
+function onCopy() {
+  navigator.clipboard.writeText(selectedText.value).catch(() => {
+    // Fallback: clipboard API may not be available
+  })
+  showBubble.value = false
+}
+
+function onHighlight() {
+  if (rendition && lastSelection) {
+    rendition.annotations.highlight(
+      lastSelection.getRangeAt(0),
+      {},
+      null,
+      'highlight'
+    )
+  }
+  showBubble.value = false
+}
+
+function onAnnotate() {
+  showBubble.value = false
+  showAnnotate.value = true
+  annotateContent.value = ''
+  annotateType.value = 'INSIGHT'
+  syncToYuyin.value = false
+}
+
+async function onSaveNote() {
+  if (!annotateContent.value.trim()) return
+  try {
+    await createNote(bookId, {
+      content: annotateContent.value.trim(),
+      selectedText: selectedText.value,
+      cfi: selectedCfi.value,
+      type: annotateType.value,
+      publish: syncToYuyin.value
+    })
+    showAnnotate.value = false
+    // Show highlight in reader
+    if (rendition && lastSelection) {
+      rendition.annotations.highlight(
+        lastSelection.getRangeAt(0),
+        {},
+        null,
+        'annotation'
+      )
+    }
+    alert('留墨成功')
+  } catch (e) {
+    const msg = e?.response?.data?.message || '保存失败'
+    alert(msg)
   }
 }
 </script>
@@ -206,4 +337,108 @@ function onChapterChange() {
   cursor: pointer;
   color: var(--color-primary, #c9a96e);
 }
+
+/* 选区操作浮泡 */
+.selection-bubble {
+  position: fixed;
+  z-index: 50;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  display: flex;
+  padding: 4px;
+  gap: 2px;
+}
+.selection-bubble button {
+  padding: 4px 12px;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: var(--color-text, #4a3d2f);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.selection-bubble button:hover { background: #f5f0e5; }
+
+/* 撰写浮层 */
+.annotate-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.1);
+  padding: 20px 24px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.annotate-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.annotate-tab {
+  padding: 4px 16px;
+  border: 1px solid #e0dbd0;
+  border-radius: 14px;
+  background: none;
+  font-size: 13px;
+  color: var(--color-text-secondary, #8b8070);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.annotate-tab.active {
+  background: var(--color-primary, #c9a96e);
+  color: #fff;
+  border-color: transparent;
+}
+.annotate-quote {
+  font-size: 13px;
+  color: var(--color-text-muted, #a09880);
+  border-left: 2px solid #e0dbd0;
+  padding-left: 10px;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.annotate-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0dbd0;
+  border-radius: 8px;
+  font-size: 14px;
+  min-height: 80px;
+  resize: vertical;
+  font-family: var(--font-sans);
+  color: var(--color-text, #4a3d2f);
+}
+.annotate-textarea:focus { outline: none; border-color: var(--color-primary, #c9a96e); }
+.annotate-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+.annotate-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-secondary, #8b8070);
+  cursor: pointer;
+}
+.annotate-submit {
+  padding: 8px 28px;
+  background: var(--color-primary, #c9a96e);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  letter-spacing: 2px;
+}
+.annotate-submit:hover { background: var(--color-primary-hover, #b8944d); }
 </style>
