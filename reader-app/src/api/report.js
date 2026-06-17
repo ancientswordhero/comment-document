@@ -21,5 +21,7 @@ export function markAllAsRead() {
 }
 
 export function reportNote(noteId, data) {
-  return api.post('/reports', { ...data, noteId, targetType: 'note' })
+  const payload = { ...data, noteId, targetType: 'note' }
+  console.log('[reportNote] sending:', JSON.stringify(payload))
+  return api.post('/reports', payload)
 }

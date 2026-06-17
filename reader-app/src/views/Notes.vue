@@ -456,7 +456,8 @@ function showReportDialog(note) { reportTarget.value = note; reportReason.value 
 async function handleReportSubmit() {
   if (!canReport.value) return
   reportSubmitting.value = true
-  try { await reportNote(reportTarget.value.id, { reason: reportReason.value, detail: reportDetail.value }); reportTarget.value = null; alert('举报已提交') } catch (e) { alert(e?.response?.data?.message || '举报失败') } finally { reportSubmitting.value = false }
+  console.log('[Notes] reportTarget:', reportTarget.value)
+  try { await reportNote(reportTarget.value.id, { reason: reportReason.value, detail: reportDetail.value }); reportTarget.value = null; alert('举报已提交') } catch (e) { console.log('[Notes] report error:', e); alert(e?.response?.data?.message || '举报失败') } finally { reportSubmitting.value = false }
 }
 
 function viewProfile(userId) { profileUserId.value = userId; showProfile.value = true }
