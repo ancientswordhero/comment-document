@@ -11,16 +11,16 @@ import java.util.List;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
-    // 思余：用户的私密手记（非回复）
-    Page<Note> findByUserIdAndParentIdIsNullAndPublishedFalseOrderByCreatedAtDesc(
+    // 思余：用户的所有手记（含已发布和未发布，非回复）
+    Page<Note> findByUserIdAndParentIdIsNullOrderByCreatedAtDesc(
         Long userId, Pageable pageable);
 
     // 某本书下用户的思余
-    List<Note> findByUserIdAndBookIdAndParentIdIsNullAndPublishedFalseOrderByCreatedAtDesc(
+    List<Note> findByUserIdAndBookIdAndParentIdIsNullOrderByCreatedAtDesc(
         Long userId, Long bookId);
 
     // 按类型筛选思余
-    Page<Note> findByUserIdAndParentIdIsNullAndPublishedFalseAndTypeOrderByCreatedAtDesc(
+    Page<Note> findByUserIdAndParentIdIsNullAndTypeOrderByCreatedAtDesc(
         Long userId, String type, Pageable pageable);
 
     // 用户已发布的手记（非回复）

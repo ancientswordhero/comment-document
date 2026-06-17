@@ -60,11 +60,11 @@ public class NoteService {
         Page<Note> notePage;
         if (type != null && !type.isEmpty()) {
             notePage = noteRepository
-                .findByUserIdAndParentIdIsNullAndPublishedFalseAndTypeOrderByCreatedAtDesc(
+                .findByUserIdAndParentIdIsNullAndTypeOrderByCreatedAtDesc(
                     userId, type, pageable);
         } else {
             notePage = noteRepository
-                .findByUserIdAndParentIdIsNullAndPublishedFalseOrderByCreatedAtDesc(
+                .findByUserIdAndParentIdIsNullOrderByCreatedAtDesc(
                     userId, pageable);
         }
         List<NoteResponse> records = notePage.getContent().stream()
@@ -78,7 +78,7 @@ public class NoteService {
 
     public List<NoteResponse> getMyNotesForBook(Long userId, Long bookId) {
         return noteRepository
-            .findByUserIdAndBookIdAndParentIdIsNullAndPublishedFalseOrderByCreatedAtDesc(
+            .findByUserIdAndBookIdAndParentIdIsNullOrderByCreatedAtDesc(
                 userId, bookId)
             .stream()
             .map(n -> toResponse(n, Collections.emptyMap(), Collections.emptySet(),

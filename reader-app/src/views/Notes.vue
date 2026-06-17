@@ -41,6 +41,7 @@
               <span :class="['note-type-tag', note.type === 'QUESTION' ? 'tag-question' : 'tag-insight']">
                 {{ note.type === 'QUESTION' ? '疑问' : '心得' }}
               </span>
+              <span v-if="note.published" class="note-published-badge">已入余音</span>
             </div>
             <blockquote v-if="note.selectedText" class="note-quote">
               "{{ note.selectedText }}"
@@ -54,6 +55,11 @@
                   class="btn-publish"
                   @click="handlePublish(note.id)"
                 >送入余音</button>
+                <button
+                  v-else
+                  class="btn-unpublish"
+                  @click="handleUnpublish(note.id)"
+                >撤回</button>
                 <button class="btn-edit" @click="showEditDialog(note)">编辑</button>
                 <button class="btn-delete" @click="handleDelete(note.id)">删除</button>
               </div>
@@ -186,7 +192,7 @@ import { ref, computed, onMounted } from 'vue'
 
 import Pagination from '../components/Pagination.vue'
 import UserProfileDialog from '../components/UserProfileDialog.vue'
-import { getMyNotes, getPublicNotes, publishNote, updateNote, deleteNote, replyNote, toggleLikeNote } from '../api/note'
+import { getMyNotes, getPublicNotes, publishNote, unpublishNote, updateNote, deleteNote, replyNote, toggleLikeNote } from '../api/note'
 import { reportNote } from '../api/report'
 import { formatDate } from '../utils/date'
 
@@ -279,6 +285,17 @@ async function handlePublish(noteId) {
     fetchMyNotes()
   } catch (e) {
     const msg = e?.response?.data?.message || '投递失败'
+    alert(msg)
+  }
+}
+
+async function handleUnpublish(noteId) {
+  if (!confirm('确定要撤回这条手记吗？撤回后余音广场将不再显示。')) return
+  try {
+    await unpublishNote(noteId)
+    fetchMyNotes()
+  } catch (e) {
+    const msg = e?.response?.data?.message || '撤回失败'
     alert(msg)
   }
 }
@@ -472,6 +489,15 @@ function viewProfile(userId) {
 .tag-question { background: #e8f4fd; color: #3a7db8; }
 .tag-insight { background: #fef3e4; color: #b8860b; }
 
+.note-published-badge {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: #e8f5e9;
+  color: #388e3c;
+  margin-left: auto;
+}
+
 .note-quote {
   font-size: 13px;
   color: var(--color-text-muted, #a09880);
@@ -518,6 +544,13 @@ function viewProfile(userId) {
 .btn-publish {
   color: var(--color-primary, #c9a96e) !important;
   border-color: var(--color-primary, #c9a96e) !important;
+}
+.btn-unpublish {
+  color: #e8a838 !important;
+  border-color: #e8a838 !important;
+}
+.btn-unpublish:hover {
+  background: #fef9f0 !important;
 }
 .btn-like.liked {
   background: var(--color-primary, #c9a96e) !important;
