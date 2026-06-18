@@ -31,8 +31,11 @@ function setupInterceptors(api, isAdmin = false) {
       if (isAdmin && (error.response?.status === 401 || error.response?.status === 403)) {
         localStorage.removeItem('token')
         window.location.href = 'http://localhost:5174'
+        return Promise.reject(error)
       }
-      console.error(msg)
+      const status = error.response?.status || 0
+      if (status >= 500) console.error(msg)
+      else console.warn(msg)
       return Promise.reject(error)
     }
   )

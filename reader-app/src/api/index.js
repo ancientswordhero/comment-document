@@ -29,7 +29,10 @@ api.interceptors.response.use(
       window.location.href = 'http://localhost:5176'
       return Promise.reject(error)
     }
-    console.error(msg)
+    // 4xx 是业务逻辑响应（校验失败、重复操作等），用 warn 而非 error
+    const status = error.response?.status || 0
+    if (status >= 500) console.error(msg)
+    else console.warn(msg)
     return Promise.reject(error)
   }
 )
