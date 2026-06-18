@@ -12,7 +12,7 @@ const props = defineProps({
   maxSpeed: { type: Number, default: 2.0 },
   minLength: { type: Number, default: 50 },
   maxLength: { type: Number, default: 150 },
-  wind: { type: Number, default: 0.25 }
+  wind: { type: Number, default: 0.12 }
 })
 
 const canvasRef = ref(null)
@@ -81,6 +81,10 @@ function update() {
 
   for (const d of drops) {
     d.y += d.speed
+    d.x += props.wind * d.speed
+    // 水平方向循环
+    if (d.x > cssW + 30) d.x = -30
+    if (d.x < -30) d.x = cssW + 30
     if (d.y > h) {
       const newLen = props.minLength + Math.random() * (props.maxLength - props.minLength)
       d.y = -newLen
