@@ -81,6 +81,9 @@ public class ReportService {
         if (reporterId == null) {
             throw new IllegalArgumentException("请先登录后再举报");
         }
+        if (reportRepository.existsByNoteIdAndReporterId(req.getNoteId(), reporterId)) {
+            throw new IllegalStateException("您已经举报过这条手记");
+        }
         Note note = noteRepository.findById(req.getNoteId())
             .orElseThrow(() -> new EntityNotFoundException("手记不存在: " + req.getNoteId()));
         if (note.getUserId().equals(reporterId)) {
