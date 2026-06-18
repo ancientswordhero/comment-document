@@ -21,35 +21,43 @@
         >注册</button>
       </div>
 
-      <div class="auth-form" v-if="tab === 'login'">
-        <div class="field">
-          <input v-model="loginForm.username" placeholder="用户名"
-            @keyup.enter="onLogin" />
+      <div class="card-stack">
+        <div
+          class="form-panel"
+          :class="tab === 'login' ? 'active' : 'behind'"
+        >
+          <div class="field">
+            <input v-model="loginForm.username" placeholder="用户名"
+              @keyup.enter="onLogin" />
+          </div>
+          <div class="field">
+            <input v-model="loginForm.password" type="password"
+              placeholder="密码" @keyup.enter="onLogin" />
+          </div>
+          <div class="error" v-if="loginError">{{ loginError }}</div>
+          <button class="btn-submit" @click="onLogin"
+            :disabled="loggingIn">{{ loggingIn ? '登录中...' : '登 录' }}</button>
         </div>
-        <div class="field">
-          <input v-model="loginForm.password" type="password"
-            placeholder="密码" @keyup.enter="onLogin" />
-        </div>
-        <div class="error" v-if="loginError">{{ loginError }}</div>
-        <button class="btn-submit" @click="onLogin"
-          :disabled="loggingIn">{{ loggingIn ? '登录中...' : '登 录' }}</button>
-      </div>
 
-      <div class="auth-form" v-else>
-        <div class="field">
-          <input v-model="regForm.username" placeholder="用户名（2-50字符）" />
+        <div
+          class="form-panel"
+          :class="tab === 'register' ? 'active' : 'behind'"
+        >
+          <div class="field">
+            <input v-model="regForm.username" placeholder="用户名（2-50字符）" />
+          </div>
+          <div class="field">
+            <input v-model="regForm.password" type="password"
+              placeholder="密码（至少6位）" />
+          </div>
+          <div class="field">
+            <input v-model="regForm.confirmPassword" type="password"
+              placeholder="确认密码" />
+          </div>
+          <div class="error" v-if="regError">{{ regError }}</div>
+          <button class="btn-submit" @click="onRegister"
+            :disabled="registering">{{ registering ? '注册中...' : '注 册' }}</button>
         </div>
-        <div class="field">
-          <input v-model="regForm.password" type="password"
-            placeholder="密码（至少6位）" />
-        </div>
-        <div class="field">
-          <input v-model="regForm.confirmPassword" type="password"
-            placeholder="确认密码" />
-        </div>
-        <div class="error" v-if="regError">{{ regError }}</div>
-        <button class="btn-submit" @click="onRegister"
-          :disabled="registering">{{ registering ? '注册中...' : '注 册' }}</button>
       </div>
     </div>
   </div>
@@ -169,15 +177,8 @@ async function onRegister() {
 .auth-card {
   position: relative;
   z-index: 3;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.6);
-  padding: var(--auth-padding);
   width: var(--auth-width);
   text-align: center;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
 }
 .auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
 .logo-icon {
@@ -201,7 +202,44 @@ async function onRegister() {
   color: var(--color-primary); border-bottom-color: var(--color-primary);
   font-weight: 500;
 }
-.auth-form { text-align: left; }
+
+/* ---- 卡片堆叠 ---- */
+.card-stack {
+  display: grid;
+  grid-template-areas: "stack";
+}
+.card-stack > * {
+  grid-area: stack;
+}
+
+.form-panel {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius);
+  padding: var(--auth-padding);
+  text-align: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-panel.active {
+  z-index: 2;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  box-shadow: var(--shadow-lg);
+}
+
+.form-panel.behind {
+  z-index: 1;
+  transform: translateY(14px) scale(0.96);
+  opacity: 0.55;
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+}
+
 .field { margin-bottom: 12px; }
 .field input {
   width: 100%; padding: 10px 12px;
