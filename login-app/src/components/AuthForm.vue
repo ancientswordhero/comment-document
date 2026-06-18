@@ -10,53 +10,48 @@
         <span class="logo-text">云图书馆</span>
       </div>
 
-      <div class="auth-tabs">
-        <button
-          :class="{ active: tab === 'login' }"
-          @click="switchTab('login')"
-        >登录</button>
-        <button
-          :class="{ active: tab === 'register' }"
-          @click="switchTab('register')"
-        >注册</button>
-      </div>
+      <div class="flip-container">
+        <div class="flip-inner" :class="{ flipped }">
+          <!-- 正面：登录 -->
+          <div class="flip-face flip-front">
+            <div class="face-title">登 录</div>
+            <div class="field">
+              <input v-model="loginForm.username" placeholder="用户名"
+                @keyup.enter="onLogin" />
+            </div>
+            <div class="field">
+              <input v-model="loginForm.password" type="password"
+                placeholder="密码" @keyup.enter="onLogin" />
+            </div>
+            <div class="error" v-if="loginError">{{ loginError }}</div>
+            <button class="btn-submit" @click="onLogin"
+              :disabled="loggingIn">{{ loggingIn ? '登录中...' : '登 录' }}</button>
+            <p class="flip-hint">
+              没有账号？<span class="flip-link" @click="flipCard">立即注册</span>
+            </p>
+          </div>
 
-      <div class="card-stack">
-        <div
-          class="form-panel"
-          :class="tab === 'login' ? 'active' : 'behind'"
-        >
-          <div class="field">
-            <input v-model="loginForm.username" placeholder="用户名"
-              @keyup.enter="onLogin" />
+          <!-- 背面：注册 -->
+          <div class="flip-face flip-back">
+            <div class="face-title">注 册</div>
+            <div class="field">
+              <input v-model="regForm.username" placeholder="用户名（2-50字符）" />
+            </div>
+            <div class="field">
+              <input v-model="regForm.password" type="password"
+                placeholder="密码（至少6位）" />
+            </div>
+            <div class="field">
+              <input v-model="regForm.confirmPassword" type="password"
+                placeholder="确认密码" />
+            </div>
+            <div class="error" v-if="regError">{{ regError }}</div>
+            <button class="btn-submit" @click="onRegister"
+              :disabled="registering">{{ registering ? '注册中...' : '注 册' }}</button>
+            <p class="flip-hint">
+              已有账号？<span class="flip-link" @click="flipCard">去登录</span>
+            </p>
           </div>
-          <div class="field">
-            <input v-model="loginForm.password" type="password"
-              placeholder="密码" @keyup.enter="onLogin" />
-          </div>
-          <div class="error" v-if="loginError">{{ loginError }}</div>
-          <button class="btn-submit" @click="onLogin"
-            :disabled="loggingIn">{{ loggingIn ? '登录中...' : '登 录' }}</button>
-        </div>
-
-        <div
-          class="form-panel"
-          :class="tab === 'register' ? 'active' : 'behind'"
-        >
-          <div class="field">
-            <input v-model="regForm.username" placeholder="用户名（2-50字符）" />
-          </div>
-          <div class="field">
-            <input v-model="regForm.password" type="password"
-              placeholder="密码（至少6位）" />
-          </div>
-          <div class="field">
-            <input v-model="regForm.confirmPassword" type="password"
-              placeholder="确认密码" />
-          </div>
-          <div class="error" v-if="regError">{{ regError }}</div>
-          <button class="btn-submit" @click="onRegister"
-            :disabled="registering">{{ registering ? '注册中...' : '注 册' }}</button>
         </div>
       </div>
     </div>
@@ -69,7 +64,7 @@ import { login, register } from '../api/auth'
 import RainCanvas from './RainCanvas.vue'
 import bgSrc from '../assets/login-bg.jpg'
 
-const tab = ref('login')
+const flipped = ref(false)
 const loggingIn = ref(false)
 const registering = ref(false)
 const loginError = ref('')
@@ -78,10 +73,10 @@ const regError = ref('')
 const loginForm = reactive({ username: '', password: '' })
 const regForm = reactive({ username: '', password: '', confirmPassword: '' })
 
-function switchTab(t) {
-  tab.value = t
+function flipCard() {
   loginError.value = ''
   regError.value = ''
+  flipped.value = !flipped.value
 }
 
 function validateLogin() {
@@ -191,28 +186,24 @@ async function onRegister() {
   font-weight: 600; font-size: 18px; color: var(--color-text);
   font-family: var(--font-serif); letter-spacing: 2px;
 }
-.auth-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--color-border); }
-.auth-tabs button {
-  flex: 1; padding: 8px 0; background: none; border: none;
-  font-size: 13px; color: var(--color-text-muted); cursor: pointer;
-  border-bottom: 2px solid transparent; font-family: var(--font-serif);
-  transition: all 0.2s;
-}
-.auth-tabs button.active {
-  color: var(--color-primary); border-bottom-color: var(--color-primary);
-  font-weight: 500;
-}
 
-/* ---- 卡片堆叠 ---- */
-.card-stack {
+/* ---- 3D 翻转 ---- */
+.flip-container {
+  perspective: 1200px;
+}
+.flip-inner {
   display: grid;
-  grid-template-areas: "stack";
+  grid-template-areas: "face";
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card-stack > * {
-  grid-area: stack;
+.flip-inner.flipped {
+  transform: rotateY(180deg);
 }
-
-.form-panel {
+.flip-face {
+  grid-area: face;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -220,24 +211,20 @@ async function onRegister() {
   border-radius: var(--radius);
   padding: var(--auth-padding);
   text-align: left;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-panel.active {
-  z-index: 2;
-  transform: translateY(0) scale(1);
-  opacity: 1;
   box-shadow: var(--shadow-lg);
 }
+.flip-back {
+  transform: rotateY(180deg);
+}
 
-.form-panel.behind {
-  z-index: 1;
-  transform: translateY(14px) scale(0.96);
-  opacity: 0.55;
-  box-shadow: var(--shadow-sm);
-  pointer-events: none;
+.face-title {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-primary);
+  font-family: var(--font-serif);
+  letter-spacing: 4px;
+  margin-bottom: 16px;
 }
 
 .field { margin-bottom: 12px; }
@@ -261,9 +248,21 @@ async function onRegister() {
 .btn-submit:hover { background: var(--color-primary-hover); }
 .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
+.flip-hint {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.flip-link {
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.flip-link:hover { color: var(--color-primary-hover); }
+
 @media (max-width: 480px) {
   .auth-wrapper { padding: 20px 12px; align-items: flex-start; padding-top: 60px; }
   .logo-text { font-size: 16px; }
-  .auth-tabs button { font-size: 12px; padding: 6px 0; }
 }
 </style>
