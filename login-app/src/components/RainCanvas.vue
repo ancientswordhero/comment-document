@@ -48,9 +48,10 @@ function draw() {
 
   ctx.clearRect(0, 0, w, h)
 
+  const [r, g, b] = props.color.split(',').map(v => parseInt(v.trim()))
+
   for (const d of drops) {
     const { x, y, length, opacity, thickness } = d
-    const [r, g, b] = props.color.split(',').map(v => parseInt(v.trim()))
 
     // 渐变：顶部淡 → 底部深
     const grad = ctx.createLinearGradient(x, y, x, y + length)
@@ -77,10 +78,11 @@ function update() {
   for (const d of drops) {
     d.y += d.speed
     if (d.y > h) {
-      d.y = -d.length
+      const newLen = props.minLength + Math.random() * (props.maxLength - props.minLength)
+      d.y = -newLen
       d.x = Math.random() * canvas.width
       d.speed = props.minSpeed + Math.random() * (props.maxSpeed - props.minSpeed)
-      d.length = props.minLength + Math.random() * (props.maxLength - props.minLength)
+      d.length = newLen
       d.opacity = 0.15 + Math.random() * 0.30
       d.thickness = 0.5 + Math.random() * 1.0
     }
@@ -98,9 +100,13 @@ function handleResize(entries) {
     const { width, height } = entry.contentRect
     if (ctx && width > 0 && height > 0) {
       const canvas = canvasRef.value
-      canvas.width = width
-      canvas.height = height
-      initDrops(width, height)
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      canvas.style.width = width + 'px'
+      canvas.style.height = height + 'px'
+      ctx.scale(dpr, dpr)
+      initDrops(canvas.width, canvas.height)
     }
   }
 }
@@ -121,9 +127,14 @@ function handleVisibility() {
 onMounted(() => {
   const canvas = canvasRef.value
   ctx = canvas.getContext('2d')
+  if (!ctx) return
 
-  canvas.width = canvas.offsetWidth
-  canvas.height = canvas.offsetHeight
+  const dpr = window.devicePixelRatio || 1
+  canvas.width = canvas.offsetWidth * dpr
+  canvas.height = canvas.offsetHeight * dpr
+  canvas.style.width = canvas.offsetWidth + 'px'
+  canvas.style.height = canvas.offsetHeight + 'px'
+  ctx.scale(dpr, dpr)
   initDrops(canvas.width, canvas.height)
 
   animId = requestAnimationFrame(loop)
