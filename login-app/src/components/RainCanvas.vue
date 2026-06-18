@@ -6,13 +6,13 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
-  count: { type: Number, default: 130 },
-  color: { type: String, default: '74,61,47' },
-  minSpeed: { type: Number, default: 1.5 },
-  maxSpeed: { type: Number, default: 3.0 },
-  minLength: { type: Number, default: 60 },
-  maxLength: { type: Number, default: 200 },
-  wind: { type: Number, default: 0.4 }
+  count: { type: Number, default: 80 },
+  color: { type: String, default: '201,169,110' },
+  minSpeed: { type: Number, default: 1.0 },
+  maxSpeed: { type: Number, default: 2.0 },
+  minLength: { type: Number, default: 50 },
+  maxLength: { type: Number, default: 150 },
+  wind: { type: Number, default: 0.25 }
 })
 
 const canvasRef = ref(null)
@@ -30,8 +30,8 @@ function createDrop(canvasW, canvasH) {
     hSpeed: props.wind * (0.7 + Math.random() * 0.6),
     slant: 0.08 + Math.random() * 0.12,
     length,
-    opacity: 0.40 + Math.random() * 0.35,
-    thickness: 1.2 + Math.random() * 1.8
+    opacity: 0.20 + Math.random() * 0.20,
+    thickness: 0.6 + Math.random() * 0.6
   }
 }
 
@@ -60,8 +60,8 @@ function draw() {
     // 渐变：顶部淡 → 底部深（沿斜线方向）
     const grad = ctx.createLinearGradient(x, y, bx, y + length)
     grad.addColorStop(0, `rgba(${r},${g},${b},0)`)
-    grad.addColorStop(0.1, `rgba(${r},${g},${b},${opacity * 0.5})`)
-    grad.addColorStop(0.5, `rgba(${r},${g},${b},${opacity * 0.85})`)
+    grad.addColorStop(0.15, `rgba(${r},${g},${b},${opacity * 0.4})`)
+    grad.addColorStop(0.5, `rgba(${r},${g},${b},${opacity * 0.8})`)
     grad.addColorStop(1, `rgba(${r},${g},${b},${opacity})`)
 
     ctx.beginPath()
