@@ -74,13 +74,14 @@ function update() {
   const canvas = canvasRef.value
   if (!canvas) return
   const h = canvas.height
+  const cssW = canvas.offsetWidth
 
   for (const d of drops) {
     d.y += d.speed
     if (d.y > h) {
       const newLen = props.minLength + Math.random() * (props.maxLength - props.minLength)
       d.y = -newLen
-      d.x = Math.random() * canvas.width
+      d.x = Math.random() * cssW
       d.speed = props.minSpeed + Math.random() * (props.maxSpeed - props.minSpeed)
       d.length = newLen
       d.opacity = 0.15 + Math.random() * 0.30
@@ -106,7 +107,7 @@ function handleResize(entries) {
       canvas.style.width = width + 'px'
       canvas.style.height = height + 'px'
       ctx.scale(dpr, dpr)
-      initDrops(canvas.width, canvas.height)
+      initDrops(width, height)
     }
   }
 }
@@ -135,7 +136,7 @@ onMounted(() => {
   canvas.style.width = canvas.offsetWidth + 'px'
   canvas.style.height = canvas.offsetHeight + 'px'
   ctx.scale(dpr, dpr)
-  initDrops(canvas.width, canvas.height)
+  initDrops(canvas.offsetWidth, canvas.offsetHeight)
 
   animId = requestAnimationFrame(loop)
 
