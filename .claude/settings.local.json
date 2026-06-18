@@ -83,7 +83,11 @@
       "Read(//c/Users/36295/**)",
       "Bash(dir \"C:\\\\Users\\\\36295\\\\Desktop\\\\shuhai\\\\library-server\\\\mvnw*\")",
       "Bash(grep -r \"spring.datasource\" src/main/resources/)",
-      "Bash(grep -r \"datasource\" src/main/resources/)"
+      "Bash(grep -r \"datasource\" src/main/resources/)",
+      "Bash(git log *)",
+      "Bash(npx --yes vue-tsc --noEmit --project tsconfig.json)",
+      "Bash(python3 -c \"import sys; data=sys.stdin.read\\(\\); print\\('z-index: 2' in data, 'z-index: 3' in data, 'RainCanvas' in data\\)\")",
+      "Bash(kill %1)"
     ]
   }
 }

@@ -160,9 +160,9 @@ async function onRegister() {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg,
-    rgba(245,240,232,0.6) 0%,
-    rgba(250,250,247,0.7) 50%,
-    rgba(245,240,232,0.6) 100%
+    rgba(245,240,232,0.45) 0%,
+    rgba(250,250,247,0.55) 50%,
+    rgba(245,240,232,0.45) 100%
   );
   z-index: 2;
 }
