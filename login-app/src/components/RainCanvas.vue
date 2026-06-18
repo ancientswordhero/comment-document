@@ -6,12 +6,12 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
-  count: { type: Number, default: 45 },
+  count: { type: Number, default: 90 },
   color: { type: String, default: '74,61,47' },
-  minSpeed: { type: Number, default: 0.3 },
-  maxSpeed: { type: Number, default: 0.8 },
-  minLength: { type: Number, default: 60 },
-  maxLength: { type: Number, default: 200 }
+  minSpeed: { type: Number, default: 1.2 },
+  maxSpeed: { type: Number, default: 2.5 },
+  minLength: { type: Number, default: 80 },
+  maxLength: { type: Number, default: 260 }
 })
 
 const canvasRef = ref(null)
@@ -27,8 +27,8 @@ function createDrop(canvasW, canvasH) {
     y: Math.random() * canvasH,
     speed: props.minSpeed + Math.random() * (props.maxSpeed - props.minSpeed),
     length,
-    opacity: 0.15 + Math.random() * 0.30,
-    thickness: 0.5 + Math.random() * 1.0
+    opacity: 0.25 + Math.random() * 0.35,
+    thickness: 0.8 + Math.random() * 1.2
   }
 }
 
