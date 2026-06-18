@@ -7,7 +7,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   count: { type: Number, default: 80 },
-  color: { type: String, default: '201,169,110' },
+  color: { type: String, default: '74,61,47' },
   minSpeed: { type: Number, default: 1.0 },
   maxSpeed: { type: Number, default: 2.0 },
   minLength: { type: Number, default: 50 },
@@ -27,8 +27,6 @@ function createDrop(canvasW, canvasH) {
     x: Math.random() * canvasW,
     y: Math.random() * canvasH,
     speed: props.minSpeed + Math.random() * (props.maxSpeed - props.minSpeed),
-    hSpeed: props.wind * (0.7 + Math.random() * 0.6),
-    slant: 0.08 + Math.random() * 0.12,
     length,
     opacity: 0.20 + Math.random() * 0.20,
     thickness: 0.6 + Math.random() * 0.6
@@ -54,8 +52,9 @@ function draw() {
   const [r, g, b] = props.color.split(',').map(v => parseInt(v.trim()))
 
   for (const d of drops) {
-    const { x, y, length, opacity, thickness, slant } = d
-    const bx = x + length * slant
+    const { x, y, length, opacity, thickness } = d
+    // 统一微风倾斜
+    const bx = x + length * props.wind
 
     // 渐变：顶部淡 → 底部深（沿斜线方向）
     const grad = ctx.createLinearGradient(x, y, bx, y + length)
@@ -82,20 +81,14 @@ function update() {
 
   for (const d of drops) {
     d.y += d.speed
-    d.x += d.hSpeed
-    // 水平方向循环
-    if (d.x > cssW + 20) d.x = -20
-    if (d.x < -20) d.x = cssW + 20
     if (d.y > h) {
       const newLen = props.minLength + Math.random() * (props.maxLength - props.minLength)
       d.y = -newLen
       d.x = Math.random() * cssW
       d.speed = props.minSpeed + Math.random() * (props.maxSpeed - props.minSpeed)
-      d.hSpeed = props.wind * (0.7 + Math.random() * 0.6)
-      d.slant = 0.08 + Math.random() * 0.12
       d.length = newLen
-      d.opacity = 0.40 + Math.random() * 0.35
-      d.thickness = 1.2 + Math.random() * 1.8
+      d.opacity = 0.20 + Math.random() * 0.20
+      d.thickness = 0.6 + Math.random() * 0.6
     }
   }
 }
