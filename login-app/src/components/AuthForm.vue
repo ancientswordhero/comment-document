@@ -1,6 +1,7 @@
 <template>
   <div class="auth-wrapper">
     <img :src="bgSrc" class="auth-bg" alt="" />
+    <RainCanvas />
     <div class="auth-overlay"></div>
 
     <div class="auth-card">
@@ -57,6 +58,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { login, register } from '../api/auth'
+import RainCanvas from './RainCanvas.vue'
 import bgSrc from '../assets/login-bg.jpg'
 
 const tab = ref('login')
@@ -162,11 +164,11 @@ async function onRegister() {
     rgba(250,250,247,0.7) 50%,
     rgba(245,240,232,0.6) 100%
   );
-  z-index: 1;
+  z-index: 2;
 }
 .auth-card {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
