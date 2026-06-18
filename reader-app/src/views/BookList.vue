@@ -175,7 +175,7 @@ function onBookSelect(book) {
 .home-body {
   display: flex;
   gap: 24px;
-  padding: 20px var(--content-padding) 32px;
+  padding: 36px var(--content-padding) 32px;
 }
 
 .home-main {
