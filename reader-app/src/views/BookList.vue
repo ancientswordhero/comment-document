@@ -11,7 +11,7 @@
       <div class="home-main">
         <!-- 搜索栏：融入主内容区 -->
         <div class="main-search-row">
-          <div class="main-brand">
+          <div class="main-brand" @click="goDiscover" title="书海墨韵">
             <span class="main-logo-icon">書</span>
             <span class="main-logo-text">云图书馆</span>
           </div>
@@ -166,6 +166,10 @@ function onBookSelect(book) {
   }
   router.push(`/book/${book.id}`)
 }
+
+function goDiscover() {
+  window.location.href = '/scene/index.html'
+}
 </script>
 
 <style scoped>
@@ -198,6 +202,7 @@ function onBookSelect(book) {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 }
 .main-logo-icon {
   width: 32px; height: 32px;

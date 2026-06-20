@@ -6,6 +6,7 @@ import Inbox from '../views/Inbox.vue'
 
 const routes = [
   { path: '/', name: 'home', component: BookList },
+
   { path: '/book/:id', name: 'book-detail', component: BookDetail, meta: { requiresAuth: true } },
   { path: '/bookshelf', name: 'bookshelf', component: Bookshelf, meta: { requiresAuth: true } },
   { path: '/inbox', name: 'inbox', component: Inbox, meta: { requiresAuth: true } },

@@ -2,7 +2,7 @@
   <div class="banner-wrapper">
     <!-- 导航栏：叠加在视差横幅上 -->
     <div class="banner-nav">
-      <div class="nav-left">
+      <div class="nav-left" @click="goDiscover" title="书海墨韵">
         <span class="nav-logo-icon">書</span>
         <span class="nav-logo-text">云图书馆</span>
       </div>
@@ -126,6 +126,10 @@ function onViewSelf() {
   if (!currentUserId.value) return
   profileUserId.value = currentUserId.value
   showProfile.value = true
+}
+
+function goDiscover() {
+  window.location.href = '/scene/index.html'
 }
 
 function onLogout() {
@@ -325,6 +329,7 @@ onBeforeUnmount(() => {
 .nav-left {
   display: flex; align-items: center; gap: 8px;
   flex: 1;
+  cursor: pointer;
 }
 .nav-right {
   display: flex; align-items: center; gap: 4px;

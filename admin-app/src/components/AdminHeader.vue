@@ -1,6 +1,6 @@
 <template>
   <header class="app-header">
-    <div class="header-left">
+    <div class="header-left" @click="goDiscover" title="书海墨韵">
       <span class="logo-icon">書</span>
       <span class="logo-text">云图书馆 · 管理后台</span>
     </div>
@@ -47,6 +47,10 @@ function logout() {
   window.location.href = 'http://localhost:5174'
 }
 
+function goDiscover() {
+  window.open('http://localhost:5174/scene/index.html', '_blank')
+}
+
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
 }
@@ -69,7 +73,7 @@ onUnmounted(() => {
   box-shadow: var(--shadow-sm);
   position: sticky; top: 0; z-index: 100;
 }
-.header-left { display: flex; align-items: center; gap: 8px; }
+.header-left { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .logo-icon {
   width: 30px; height: 30px;
   background: var(--color-primary); color: #fff;

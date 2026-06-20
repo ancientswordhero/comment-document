@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书海墨韵 · 图书推荐</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a href="/" id="seal" title="返回云图书馆">墨韵</a>
+<div id="title-area"><h1>书 海 墨 韵</h1><p>水墨之间 · 邂逅经典</p></div>
+<div id="hint">点墨生花 · 寻卷探幽</div>
+
+
+<button id="catalog-btn" title="图书目录">📖<span id="catalog-badge">0</span></button>
+
+<div id="catalog-backdrop"></div>
+<div id="catalog-panel">
+  <div class="cat-header">
+    <span class="cat-title">📖 藏书目录</span>
+    <button class="cat-close">✕</button>
+  </div>
+  <div class="cat-list" id="cat-list"></div>
+</div>
+
+<div id="book-detail">
+  <div class="backdrop"></div>
+  <div class="card" id="detail-card">
+    <button class="close-btn" id="detail-close-btn">✕</button>
+    <span class="book-emoji" id="detail-emoji"></span>
+    <h2 class="book-title" id="detail-title"></h2>
+    <p class="book-author" id="detail-author"></p>
+    <p class="book-desc" id="detail-desc"></p>
+    <blockquote class="book-quote" id="detail-quote"></blockquote>
+    <div id="detail-tags"></div>
+  </div>
+</div>
+
+<canvas id="scene"></canvas>
+
+<script src="books.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

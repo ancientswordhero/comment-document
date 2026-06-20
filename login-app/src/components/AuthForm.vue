@@ -5,7 +5,7 @@
     <div class="auth-overlay"></div>
 
     <div class="auth-card">
-      <div class="auth-logo">
+      <div class="auth-logo" @click="goDiscover" title="书海墨韵">
         <span class="logo-icon">書</span>
         <span class="logo-text">云图书馆</span>
       </div>
@@ -69,6 +69,10 @@ const loggingIn = ref(false)
 const registering = ref(false)
 const loginError = ref('')
 const regError = ref('')
+
+function goDiscover() {
+  window.open('http://localhost:5174/scene/index.html', '_blank')
+}
 
 const loginForm = reactive({ username: '', password: '' })
 const regForm = reactive({ username: '', password: '', confirmPassword: '' })
@@ -175,7 +179,7 @@ async function onRegister() {
   width: var(--auth-width);
   text-align: center;
 }
-.auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.auth-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; cursor: pointer; }
 .logo-icon {
   width: 36px; height: 36px;
   background: var(--color-primary); color: #fff;
