@@ -11,10 +11,6 @@
       <div class="home-main">
         <!-- 搜索栏：融入主内容区 -->
         <div class="main-search-row">
-          <div class="main-brand" @click="goDiscover" title="书海墨韵">
-            <span class="main-logo-icon">書</span>
-            <span class="main-logo-text">云图书馆</span>
-          </div>
           <div class="main-search">
             <input
               v-model="searchKeywords"
@@ -179,7 +175,8 @@ function goDiscover() {
 .home-body {
   display: flex;
   gap: 24px;
-  padding: 36px var(--content-padding) 32px;
+  padding: 0 var(--content-padding) 32px;
+  padding-top: 26px;
 }
 
 .home-main {
@@ -196,25 +193,6 @@ function goDiscover() {
   padding-bottom: 20px;
   margin-bottom: 8px;
   border-bottom: 1px solid var(--color-border, #e8e4dc);
-}
-
-.main-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-.main-logo-icon {
-  width: 32px; height: 32px;
-  background: var(--color-primary, #c9a96e);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; border-radius: 6px;
-}
-.main-logo-text {
-  font-weight: 700; font-size: 18px; color: var(--color-text, #4a3d2f);
-  font-family: var(--font-serif); letter-spacing: 4px;
-  white-space: nowrap;
 }
 
 .main-search {
@@ -292,8 +270,6 @@ function goDiscover() {
 @media (max-width: 480px) {
   .home-body { padding: 10px var(--content-padding) 16px; }
   .main-search-row { gap: 8px; padding-bottom: 10px; }
-  .main-logo-text { font-size: 15px; letter-spacing: 2px; }
-  .main-logo-icon { width: 26px; height: 26px; font-size: 13px; }
   .main-search-input { padding: 7px 10px; font-size: 12px; }
   .main-search-btn { padding: 7px 14px; font-size: 11px; }
 }

@@ -90,6 +90,12 @@
         </div>
       </div>
 
+      <!-- 品牌标识：banner 左下角 -->
+      <div class="banner-brand" @click="goDiscover" title="书海墨韵">
+        <span class="banner-logo-icon">書</span>
+        <span class="banner-logo-text">云图书馆</span>
+      </div>
+
       <!-- 渐变遮罩：底部融入页面背景 -->
       <div class="banner-mask"></div>
     </div>
@@ -431,14 +437,46 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
+/* ---- 品牌标识：banner 左下角 ---- */
+.banner-brand {
+  position: absolute;
+  left: 186px;
+  bottom: 24px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.banner-logo-icon {
+  width: 44px; height: 44px;
+  background: var(--color-primary, #c9a96e);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.banner-logo-text {
+  font-weight: 700; font-size: 24px; color: #fff;
+  font-family: var(--font-serif); letter-spacing: 6px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.25);
+  white-space: nowrap;
+}
+
 /* ---- 响应式 ---- */
 @media (max-width: 768px) {
   .banner-nav { padding: 6px 16px; }
   .nav-links { display: none; }
+  .banner-brand { left: 20px; bottom: 16px; gap: 8px; }
+  .banner-logo-icon { width: 34px; height: 34px; font-size: 16px; }
+  .banner-logo-text { font-size: 18px; letter-spacing: 4px; }
 }
 @media (max-width: 480px) {
   .banner-nav { padding: 4px 12px; }
   .nav-logo-text { font-size: 11px; }
+  .banner-brand { left: 14px; bottom: 12px; gap: 6px; }
+  .banner-logo-icon { width: 28px; height: 28px; font-size: 13px; border-radius: 6px; }
+  .banner-logo-text { font-size: 15px; letter-spacing: 3px; }
 }
 
 .badge {
