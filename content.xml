@@ -1,0 +1,230 @@
+<xmap-content xmlns="urn:xmind:xmap:xmlns:content:2.0" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" timestamp="20260621120000" version="2.0">
+  <sheet id="sheet1" timestamp="20260621120000">
+    <topic id="root" central="true" timestamp="20260621120000">
+      <title>云图书馆前端项目</title>
+      <children>
+        <topics type="attached">
+          <topic id="reader" timestamp="20260621120000">
+            <title>读者端 (:5176)</title>
+            <children>
+              <topics type="attached">
+                <topic id="reader_search" timestamp="20260621120000">
+                  <title>图书搜索与浏览</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rs1" timestamp="20260621120000"><title>多字段关键词搜索</title></topic>
+                      <topic id="rs2" timestamp="20260621120000"><title>分类筛选</title></topic>
+                      <topic id="rs3" timestamp="20260621120000"><title>分页加载</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_detail" timestamp="20260621120000">
+                  <title>图书详情查看</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rd1" timestamp="20260621120000"><title>封面、简介、内容</title></topic>
+                      <topic id="rd2" timestamp="20260621120000"><title>分类标签</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_review" timestamp="20260621120000">
+                  <title>书评系统</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rr1" timestamp="20260621120000"><title>发表书评</title></topic>
+                      <topic id="rr2" timestamp="20260621120000"><title>回复评论</title></topic>
+                      <topic id="rr3" timestamp="20260621120000"><title>点赞功能</title></topic>
+                      <topic id="rr4" timestamp="20260621120000"><title>排序功能</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_bookshelf" timestamp="20260621120000">
+                  <title>个人书架</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rb1" timestamp="20260621120000"><title>收藏图书</title></topic>
+                      <topic id="rb2" timestamp="20260621120000"><title>书架管理</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_report" timestamp="20260621120000">
+                  <title>举报功能</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rp1" timestamp="20260621120000"><title>举报不当书评</title></topic>
+                      <topic id="rp2" timestamp="20260621120000"><title>查看举报状态</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_notification" timestamp="20260621120000">
+                  <title>消息通知</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rn1" timestamp="20260621120000"><title>系统通知列表</title></topic>
+                      <topic id="rn2" timestamp="20260621120000"><title>未读消息计数</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="reader_profile" timestamp="20260621120000">
+                  <title>用户中心</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="rp3" timestamp="20260621120000"><title>个人主页</title></topic>
+                      <topic id="rp4" timestamp="20260621120000"><title>账号注销</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+              </topics>
+            </children>
+          </topic>
+          <topic id="admin" timestamp="20260621120000">
+            <title>管理端 (:5177)</title>
+            <children>
+              <topics type="attached">
+                <topic id="admin_book" timestamp="20260621120000">
+                  <title>图书管理</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="ab1" timestamp="20260621120000"><title>图书列表</title></topic>
+                      <topic id="ab2" timestamp="20260621120000"><title>新增图书</title></topic>
+                      <topic id="ab3" timestamp="20260621120000"><title>编辑图书</title></topic>
+                      <topic id="ab4" timestamp="20260621120000"><title>删除图书</title></topic>
+                      <topic id="ab5" timestamp="20260621120000"><title>上下架管理</title></topic>
+                      <topic id="ab6" timestamp="20260621120000"><title>封面上传</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="admin_category" timestamp="20260621120000">
+                  <title>分类管理</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="ac1" timestamp="20260621120000"><title>分类树形结构</title></topic>
+                      <topic id="ac2" timestamp="20260621120000"><title>分类列表</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="admin_report" timestamp="20260621120000">
+                  <title>举报审核</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="ar1" timestamp="20260621120000"><title>举报列表</title></topic>
+                      <topic id="ar2" timestamp="20260621120000"><title>举报详情</title></topic>
+                      <topic id="ar3" timestamp="20260621120000"><title>处理举报</title></topic>
+                      <topic id="ar4" timestamp="20260621120000"><title>状态筛选</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="admin_auth" timestamp="20260621120000">
+                  <title>管理员认证</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="aa1" timestamp="20260621120000"><title>管理员登录</title></topic>
+                      <topic id="aa2" timestamp="20260621120000"><title>Token验证</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+              </topics>
+            </children>
+          </topic>
+          <topic id="backend" timestamp="20260621120000">
+            <title>后端服务 (:8080)</title>
+            <children>
+              <topics type="attached">
+                <topic id="backend_book_api" timestamp="20260621120000">
+                  <title>图书接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bb1" timestamp="20260621120000"><title>GET /api/books</title></topic>
+                      <topic id="bb2" timestamp="20260621120000"><title>GET /api/books/{id}</title></topic>
+                      <topic id="bb3" timestamp="20260621120000"><title>GET /api/categories</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_review_api" timestamp="20260621120000">
+                  <title>书评接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="br1" timestamp="20260621120000"><title>GET /api/books/{id}/reviews</title></topic>
+                      <topic id="br2" timestamp="20260621120000"><title>POST /api/books/{id}/reviews</title></topic>
+                      <topic id="br3" timestamp="20260621120000"><title>POST /api/reviews/{id}/reply</title></topic>
+                      <topic id="br4" timestamp="20260621120000"><title>POST /api/reviews/{id}/like</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_bookshelf_api" timestamp="20260621120000">
+                  <title>书架接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bs1" timestamp="20260621120000"><title>GET /api/bookshelf</title></topic>
+                      <topic id="bs2" timestamp="20260621120000"><title>POST /api/bookshelf/{bookId}</title></topic>
+                      <topic id="bs3" timestamp="20260621120000"><title>DELETE /api/bookshelf/{bookId}</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_report_api" timestamp="20260621120000">
+                  <title>举报接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bp1" timestamp="20260621120000"><title>POST /api/reviews/{id}/report</title></topic>
+                      <topic id="bp2" timestamp="20260621120000"><title>GET /api/admin/reports</title></topic>
+                      <topic id="bp3" timestamp="20260621120000"><title>PUT /api/admin/reports/{id}/resolve</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_notification_api" timestamp="20260621120000">
+                  <title>通知接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bn1" timestamp="20260621120000"><title>GET /api/notifications</title></topic>
+                      <topic id="bn2" timestamp="20260621120000"><title>GET /api/notifications/unread-count</title></topic>
+                      <topic id="bn3" timestamp="20260621120000"><title>PUT /api/notifications/{id}/read</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_auth_api" timestamp="20260621120000">
+                  <title>认证接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="ba1" timestamp="20260621120000"><title>POST /api/auth/register</title></topic>
+                      <topic id="ba2" timestamp="20260621120000"><title>POST /api/auth/login</title></topic>
+                      <topic id="ba3" timestamp="20260621120000"><title>GET /api/auth/me</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_user_api" timestamp="20260621120000">
+                  <title>用户接口</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bu1" timestamp="20260621120000"><title>GET /api/users/{id}</title></topic>
+                      <topic id="bu2" timestamp="20260621120000"><title>PUT /api/users/profile</title></topic>
+                      <topic id="bu3" timestamp="20260621120000"><title>DELETE /api/users/account</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+                <topic id="backend_upload_api" timestamp="20260621120000">
+                  <title>文件上传</title>
+                  <children>
+                    <topics type="attached">
+                      <topic id="bup1" timestamp="20260621120000"><title>POST /api/admin/upload/cover</title></topic>
+                    </topics>
+                  </children>
+                </topic>
+              </topics>
+            </children>
+          </topic>
+          <topic id="tech_stack" timestamp="20260621120000">
+            <title>技术栈</title>
+            <children>
+              <topics type="attached">
+                <topic id="tech1" timestamp="20260621120000"><title>前端: Vue 3 + Vite</title></topic>
+                <topic id="tech2" timestamp="20260621120000"><title>后端: Spring Boot + JPA</title></topic>
+                <topic id="tech3" timestamp="20260621120000"><title>数据库: MySQL 8.0</title></topic>
+                <topic id="tech4" timestamp="20260621120000"><title>认证: JWT Token</title></topic>
+              </topics>
+            </children>
+          </topic>
+        </topics>
+      </children>
+    </topic>
+  </sheet>
+</xmap-content>

@@ -2,7 +2,7 @@
   <div class="banner-wrapper">
     <!-- 导航栏：叠加在视差横幅上 -->
     <div class="banner-nav">
-      <div class="nav-left" @click="goDiscover" title="书海墨韵">
+      <div class="nav-left" title="书海墨韵">
         <span class="nav-logo-icon">書</span>
         <span class="nav-logo-text">云图书馆</span>
       </div>
@@ -12,6 +12,8 @@
         <span class="nav-item" :class="{ active: $route.path === '/notes' }" @click="$router.push('/notes')">书余</span>
         <span class="nav-sep">|</span>
         <span class="nav-item" :class="{ active: $route.path === '/guide' }" @click="$router.push('/guide')">凡例</span>
+        <span class="nav-sep">|</span>
+        <span class="nav-item" @click="goDiscover">探索</span>
       </div>
       <div class="nav-right">
         <template v-if="isLoggedIn">
@@ -91,7 +93,7 @@
       </div>
 
       <!-- 品牌标识：banner 左下角 -->
-      <div class="banner-brand" @click="goDiscover" title="书海墨韵">
+      <div class="banner-brand" title="书海墨韵">
         <span class="banner-logo-icon">書</span>
         <span class="banner-logo-text">云图书馆</span>
       </div>
@@ -335,7 +337,6 @@ onBeforeUnmount(() => {
 .nav-left {
   display: flex; align-items: center; gap: 8px;
   flex: 1;
-  cursor: pointer;
 }
 .nav-right {
   display: flex; align-items: center; gap: 4px;
@@ -446,7 +447,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
 }
 .banner-logo-icon {
   width: 44px; height: 44px;

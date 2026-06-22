@@ -1,0 +1,202 @@
+{
+  "id": "root",
+  "title": "云图书馆前端项目",
+  "children": [
+    {
+      "id": "reader",
+      "title": "🚀 读者端 (:5176)",
+      "children": [
+        {
+          "id": "reader_search",
+          "title": "🔍 图书搜索与浏览",
+          "children": [
+            {"id": "reader_search_1", "title": "多字段关键词搜索（书名/作者/ISBN）"},
+            {"id": "reader_search_2", "title": "分类筛选（支持父子分类联动）"},
+            {"id": "reader_search_3", "title": "分页加载"}
+          ]
+        },
+        {
+          "id": "reader_detail",
+          "title": "📖 图书详情查看",
+          "children": [
+            {"id": "reader_detail_1", "title": "封面、简介、内容预览"},
+            {"id": "reader_detail_2", "title": "分类标签"}
+          ]
+        },
+        {
+          "id": "reader_review",
+          "title": "⭐ 书评系统",
+          "children": [
+            {"id": "reader_review_1", "title": "发表书评"},
+            {"id": "reader_review_2", "title": "回复评论"},
+            {"id": "reader_review_3", "title": "点赞功能"},
+            {"id": "reader_review_4", "title": "按时间/热度排序"}
+          ]
+        },
+        {
+          "id": "reader_bookshelf",
+          "title": "📚 个人书架",
+          "children": [
+            {"id": "reader_bookshelf_1", "title": "收藏图书"},
+            {"id": "reader_bookshelf_2", "title": "书架管理"}
+          ]
+        },
+        {
+          "id": "reader_report",
+          "title": "🚨 举报功能",
+          "children": [
+            {"id": "reader_report_1", "title": "举报不当书评"},
+            {"id": "reader_report_2", "title": "查看举报状态"}
+          ]
+        },
+        {
+          "id": "reader_notification",
+          "title": "🔔 消息通知",
+          "children": [
+            {"id": "reader_notification_1", "title": "系统通知列表"},
+            {"id": "reader_notification_2", "title": "未读消息计数"}
+          ]
+        },
+        {
+          "id": "reader_profile",
+          "title": "👤 用户中心",
+          "children": [
+            {"id": "reader_profile_1", "title": "个人主页"},
+            {"id": "reader_profile_2", "title": "账号注销"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "admin",
+      "title": "⚙️ 管理端 (:5177)",
+      "children": [
+        {
+          "id": "admin_book",
+          "title": "📋 图书管理",
+          "children": [
+            {"id": "admin_book_1", "title": "图书列表（搜索/筛选/分页）"},
+            {"id": "admin_book_2", "title": "新增图书"},
+            {"id": "admin_book_3", "title": "编辑图书信息"},
+            {"id": "admin_book_4", "title": "删除图书"},
+            {"id": "admin_book_5", "title": "上下架管理"},
+            {"id": "admin_book_6", "title": "封面图片上传"}
+          ]
+        },
+        {
+          "id": "admin_category",
+          "title": "📊 分类管理",
+          "children": [
+            {"id": "admin_category_1", "title": "分类树形结构"},
+            {"id": "admin_category_2", "title": "全部分类列表"}
+          ]
+        },
+        {
+          "id": "admin_report",
+          "title": "🚨 举报审核",
+          "children": [
+            {"id": "admin_report_1", "title": "举报列表查看"},
+            {"id": "admin_report_2", "title": "举报详情"},
+            {"id": "admin_report_3", "title": "处理举报（删除/忽略）"},
+            {"id": "admin_report_4", "title": "举报状态筛选"}
+          ]
+        },
+        {
+          "id": "admin_auth",
+          "title": "🔐 管理员认证",
+          "children": [
+            {"id": "admin_auth_1", "title": "管理员登录"},
+            {"id": "admin_auth_2", "title": "Token 验证"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "title": "🖥️ 后端服务 (:8080)",
+      "children": [
+        {
+          "id": "backend_book",
+          "title": "🎯 图书接口",
+          "children": [
+            {"id": "backend_book_1", "title": "GET /api/books - 图书列表"},
+            {"id": "backend_book_2", "title": "GET /api/books/{id} - 图书详情"},
+            {"id": "backend_book_3", "title": "GET /api/categories - 分类树"}
+          ]
+        },
+        {
+          "id": "backend_review",
+          "title": "📝 书评接口",
+          "children": [
+            {"id": "backend_review_1", "title": "GET /api/books/{id}/reviews"},
+            {"id": "backend_review_2", "title": "POST /api/books/{id}/reviews"},
+            {"id": "backend_review_3", "title": "POST /api/reviews/{id}/reply"},
+            {"id": "backend_review_4", "title": "POST /api/reviews/{id}/like"}
+          ]
+        },
+        {
+          "id": "backend_bookshelf",
+          "title": "📚 书架接口",
+          "children": [
+            {"id": "backend_bookshelf_1", "title": "GET /api/bookshelf - 我的书架"},
+            {"id": "backend_bookshelf_2", "title": "POST /api/bookshelf/{bookId}"},
+            {"id": "backend_bookshelf_3", "title": "DELETE /api/bookshelf/{bookId}"}
+          ]
+        },
+        {
+          "id": "backend_report",
+          "title": "🚨 举报接口",
+          "children": [
+            {"id": "backend_report_1", "title": "POST /api/reviews/{id}/report"},
+            {"id": "backend_report_2", "title": "GET /api/admin/reports"},
+            {"id": "backend_report_3", "title": "PUT /api/admin/reports/{id}/resolve"}
+          ]
+        },
+        {
+          "id": "backend_notification",
+          "title": "🔔 通知接口",
+          "children": [
+            {"id": "backend_notification_1", "title": "GET /api/notifications"},
+            {"id": "backend_notification_2", "title": "GET /api/notifications/unread-count"},
+            {"id": "backend_notification_3", "title": "PUT /api/notifications/{id}/read"}
+          ]
+        },
+        {
+          "id": "backend_auth",
+          "title": "🔐 认证接口",
+          "children": [
+            {"id": "backend_auth_1", "title": "POST /api/auth/register"},
+            {"id": "backend_auth_2", "title": "POST /api/auth/login"},
+            {"id": "backend_auth_3", "title": "GET /api/auth/me"}
+          ]
+        },
+        {
+          "id": "backend_user",
+          "title": "👤 用户接口",
+          "children": [
+            {"id": "backend_user_1", "title": "GET /api/users/{id}"},
+            {"id": "backend_user_2", "title": "PUT /api/users/profile"},
+            {"id": "backend_user_3", "title": "DELETE /api/users/account"}
+          ]
+        },
+        {
+          "id": "backend_upload",
+          "title": "☁️ 文件上传",
+          "children": [
+            {"id": "backend_upload_1", "title": "POST /api/admin/upload/cover"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "title": "💻 技术栈",
+      "children": [
+        {"id": "tech_frontend", "title": "前端：Vue 3 + Vite"},
+        {"id": "tech_backend", "title": "后端：Spring Boot + JPA"},
+        {"id": "tech_database", "title": "数据库：MySQL 8.0"},
+        {"id": "tech_auth", "title": "认证：JWT Token"}
+      ]
+    }
+  ]
+}

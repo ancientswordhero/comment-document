@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云图书馆系统 - 功能思维导图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .mindmap-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title h1 {
+            font-size: 42px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .title p {
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .mindmap {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .app-branch {
+            flex: 1;
+            min-width: 400px;
+            max-width: 500px;
+        }
+
+        .center-node {
+            background: linear-gradient(135deg, #c9a96e, #b8944d);
+            color: white;
+            padding: 25px 50px;
+            border-radius: 50px;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.4);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .center-node::before {
+            content: '📚';
+            margin-right: 15px;
+        }
+
+        .app-node {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .app-node.admin {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .app-node.server {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .app-node::before {
+            content: '🚀';
+            margin-right: 10px;
+        }
+
+        .app-node.admin::before {
+            content: '⚙️';
+        }
+
+        .app-node.server::before {
+            content: '🖥️';
+        }
+
+        .features-list {
+            list-style: none;
+            padding-left: 30px;
+        }
+
+        .features-list li {
+            position: relative;
+            padding: 12px 20px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 0 10px 10px 0;
+            font-size: 15px;
+            color: #2c3e50;
+            transition: all 0.3s;
+        }
+
+        .features-list li:hover {
+            transform: translateX(10px);
+            background: #e8f4f8;
+            border-left-color: #2980b9;
+        }
+
+        .features-list li::before {
+            content: '▸';
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .features-list.admin li {
+            background: #fff5f5;
+            border-left-color: #e74c3c;
+        }
+
+        .features-list.admin li:hover {
+            background: #ffe8e8;
+            border-left-color: #c0392b;
+        }
+
+        .features-list.admin li::before {
+            color: #e74c3c;
+        }
+
+        .features-list.server li {
+            background: #f0fff4;
+            border-left-color: #27ae60;
+        }
+
+        .features-list.server li:hover {
+            background: #e0ffed;
+            border-left-color: #1e8449;
+        }
+
+        .features-list.server li::before {
+            color: #27ae60;
+        }
+
+        .sub-features {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .sub-features li {
+            font-size: 13px;
+            color: #7f8c8d;
+            padding: 4px 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .sub-features li::before {
+            content: '•';
+            margin-right: 8px;
+            color: #bdc3c7;
+        }
+
+        .port-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .architecture-diagram {
+            margin-top: 60px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .architecture-diagram h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .arch-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .arch-box {
+            padding: 20px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .arch-box.reader {
+            background: #3498db;
+        }
+
+        .arch-box.admin {
+            background: #e74c3c;
+        }
+
+        .arch-box.backend {
+            background: #27ae60;
+        }
+
+        .arch-box.database {
+            background: #8e44ad;
+        }
+
+        .arch-arrow {
+            font-size: 30px;
+            color: #7f8c8d;
+        }
+
+        .tech-stack {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tech-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tech-item p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .mindmap {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .app-branch {
+                min-width: 100%;
+            }
+
+            .arch-flow {
+                flex-direction: column;
+            }
+
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mindmap-container">
+        <div class="title">
+            <h1>📚 云图书馆系统</h1>
+            <p>全栈项目功能架构思维导图</p>
+        </div>
+
+        <div class="mindmap">
+            <!-- 读者端 -->
+            <div class="app-branch">
+                <div class="app-node">
+                    读者端 <span class="port-badge">:5176</span>
+                </div>
+                <ul class="features-list">
+                    <li>
+                        🔍 图书搜索与浏览
+                        <ul class="sub-features">
+                            <li>多字段关键词搜索（书名/作者/ISBN）</li>
+                            <li>分类筛选（支持父子分类联动）</li>
+                            <li>分页加载</li>
+                        </ul>
+                    </li>
+                    <li>
+                        📖 图书详情查看
+                        <ul class="sub-features">
+                            <li>封面、简介、内容预览</li>
+                            <li>分类标签</li>
+                        </ul>
+                    </li>
+                    <li>
+                        ⭐ 书评系统
+                        <ul class="sub-features">
+                            <li>发表书评</li>
+                            <li>回复评论</li>
+                            <li>点赞功能</li>
+                            <li>按时间/热度排序</li>
+                        </ul>
+                    </li>
+                    <li>
+                        📚 个人书架
+                        <ul class="sub-features">
+                            <li>收藏图书</li>
+                            <li>书架管理</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🚨 举报功能
+                        <ul class="sub-features">
+                            <li>举报不当书评</li>
+                            <li>查看举报状态</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🔔 消息通知
+                        <ul class="sub-features">
+                            <li>系统通知列表</li>
+                            <li>未读消息计数</li>
+                        </ul>
+                    </li>
+                    <li>
+                        👤 用户中心
+                        <ul class="sub-features">
+                            <li>个人主页</li>
+                            <li>账号注销</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 管理端 -->
+            <div class="app-branch">
+                <div class="app-node admin">
+                    管理端 <span class="port-badge">:5177</span>
+                </div>
+                <ul class="features-list admin">
+                    <li>
+                        📋 图书管理
+                        <ul class="sub-features">
+                            <li>图书列表（搜索/筛选/分页）</li>
+                            <li>新增图书</li>
+                            <li>编辑图书信息</li>
+                            <li>删除图书</li>
+                            <li>上下架管理</li>
+                            <li>封面图片上传</li>
+                        </ul>
+                    </li>
+                    <li>
+                        📊 分类管理
+                        <ul class="sub-features">
+                            <li>分类树形结构</li>
+                            <li>全部分类列表</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🚨 举报审核
+                        <ul class="sub-features">
+                            <li>举报列表查看</li>
+                            <li>举报详情</li>
+                            <li>处理举报（删除/忽略）</li>
+                            <li>举报状态筛选</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🔐 管理员认证
+                        <ul class="sub-features">
+                            <li>管理员登录</li>
+                            <li>Token 验证</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 后端服务 -->
+            <div class="app-branch">
+                <div class="app-node server">
+                    后端服务 <span class="port-badge">:8080</span>
+                </div>
+                <ul class="features-list server">
+                    <li>
+                        🎯 图书接口
+                        <ul class="sub-features">
+                            <li>GET /api/books - 图书列表</li>
+                            <li>GET /api/books/{id} - 图书详情</li>
+                            <li>GET /api/categories - 分类树</li>
+                        </ul>
+                    </li>
+                    <li>
+                        📝 书评接口
+                        <ul class="sub-features">
+                            <li>GET /api/books/{id}/reviews</li>
+                            <li>POST /api/books/{id}/reviews</li>
+                            <li>POST /api/reviews/{id}/reply</li>
+                            <li>POST /api/reviews/{id}/like</li>
+                        </ul>
+                    </li>
+                    <li>
+                        📚 书架接口
+                        <ul class="sub-features">
+                            <li>GET /api/bookshelf - 我的书架</li>
+                            <li>POST /api/bookshelf/{bookId}</li>
+                            <li>DELETE /api/bookshelf/{bookId}</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🚨 举报接口
+                        <ul class="sub-features">
+                            <li>POST /api/reviews/{id}/report</li>
+                            <li>GET /api/admin/reports</li>
+                            <li>PUT /api/admin/reports/{id}/resolve</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🔔 通知接口
+                        <ul class="sub-features">
+                            <li>GET /api/notifications</li>
+                            <li>GET /api/notifications/unread-count</li>
+                            <li>PUT /api/notifications/{id}/read</li>
+                        </ul>
+                    </li>
+                    <li>
+                        🔐 认证接口
+                        <ul class="sub-features">
+                            <li>POST /api/auth/register</li>
+                            <li>POST /api/auth/login</li>
+                            <li>GET /api/auth/me</li>
+                        </ul>
+                    </li>
+                    <li>
+                        👤 用户接口
+                        <ul class="sub-features">
+                            <li>GET /api/users/{id}</li>
+                            <li>PUT /api/users/profile</li>
+                            <li>DELETE /api/users/account</li>
+                        </ul>
+                    </li>
+                    <li>
+                        ☁️ 文件上传
+                        <ul class="sub-features">
+                            <li>POST /api/admin/upload/cover</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 系统架构图 -->
+        <div class="architecture-diagram">
+            <h2>🏗️ 系统架构流程</h2>
+            <div class="arch-flow">
+                <div class="arch-box reader">读者端<br>:5176</div>
+                <div class="arch-arrow">⟷</div>
+                <div class="arch-box admin">管理端<br>:5177</div>
+                <div class="arch-arrow">⟷</div>
+                <div class="arch-box backend">后端服务<br>:8080</div>
+                <div class="arch-arrow">⟷</div>
+                <div class="arch-box database">MySQL<br>:3306</div>
+            </div>
+
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h4>前端技术</h4>
+                    <p>Vue 3 + Vite</p>
+                </div>
+                <div class="tech-item">
+                    <h4>后端技术</h4>
+                    <p>Spring Boot + JPA</p>
+                </div>
+                <div class="tech-item">
+                    <h4>数据库</h4>
+                    <p>MySQL 8.0</p>
+                </div>
+                <div class="tech-item">
+                    <h4>认证方式</h4>
+                    <p>JWT Token</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
