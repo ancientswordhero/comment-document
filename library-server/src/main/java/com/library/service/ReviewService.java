@@ -42,8 +42,11 @@ public class ReviewService {
         } else {
             sortObj = Sort.by(Sort.Direction.DESC, "createdAt");
         }
+
         Pageable pageable = PageRequest.of(page - 1, size, sortObj);
-        Page<Review> reviewPage = reviewRepository.findByBookIdAndParentIdIsNull(bookId, pageable);
+
+        Page<Review> reviewPage = reviewRepository.findByBookIdAndParentIdIsNull
+                                                    (bookId, pageable);
 
         List<Long> reviewIds = reviewPage.getContent().stream()
             .map(Review::getId).collect(Collectors.toList());

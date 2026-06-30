@@ -23,7 +23,8 @@ public class ReviewController {
             @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        return ApiResponse.success(reviewService.getReviews(bookId, sort, page, size, userId));
+        return ApiResponse.success(reviewService.getReviews
+                (bookId, sort, page, size, userId));
     }
 
     @PostMapping("/api/books/{bookId}/reviews")
