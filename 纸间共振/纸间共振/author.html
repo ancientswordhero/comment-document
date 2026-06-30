@@ -1,0 +1,76 @@
+<!--
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2026-06-08 18:29:30
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2026-06-08 18:54:30
+ * @FilePath: \纸间共振\author.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作者主页 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/author.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="author">
+
+  <!-- 作者信息 -->
+  <section class="author-hero">
+    <div class="container-narrow">
+      <div class="author-hero__layout">
+        <div class="author-hero__avatar" id="authorAvatar">✍️</div>
+        <div class="author-hero__info">
+          <h1 class="author-hero__name" id="authorName">加载中...</h1>
+          <p class="author-hero__years" id="authorYears"></p>
+          <blockquote class="author-hero__quote" id="authorQuote"></blockquote>
+          <div class="author-hero__stats" id="authorStats"></div>
+          <div class="author-hero__actions">
+            <button class="btn btn--primary">📚 关注作者</button>
+            <button class="btn btn--outline">✉️ 私信</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 作品列表 -->
+  <section class="author-works">
+    <div class="container">
+      <div class="author-works__header">
+        <h2 class="section-title">全部作品</h2>
+        <div class="author-works__sort">
+          <button class="sort-btn sort-btn--active" data-sort="time">按时间 ↑</button>
+          <button class="sort-btn" data-sort="rating">按热度 ↓</button>
+        </div>
+      </div>
+      <div class="author-works__grid" id="worksGrid"><!-- JS填充 --></div>
+    </div>
+  </section>
+
+  <!-- 创作年表 -->
+  <section class="author-timeline">
+    <div class="container-narrow">
+      <h2 class="section-title">创作年表</h2>
+      <div class="timeline" id="timeline"><!-- JS填充 --></div>
+    </div>
+  </section>
+
+  <!-- 创作标签 -->
+  <section class="author-tags">
+    <div class="container-narrow">
+      <h2 class="section-title">创作标签</h2>
+      <div class="author-tags__cloud" id="authorTags"><!-- JS填充 --></div>
+    </div>
+  </section>
+
+  <script src="data/books-data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/author.js"></script>
+</body>
+</html>

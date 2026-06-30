@@ -1,0 +1,86 @@
+<!--
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2026-06-08 18:32:12
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2026-06-09 20:54:39
+ * @FilePath: \纸间共振\profile.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人中心 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet"> -->
+</head>
+<body data-page="profile">
+
+  <!-- 用户信息 -->
+  <section class="profile-header">
+    <div class="container-narrow">
+      <div class="profile-header__layout">
+        <div class="profile-avatar" id="profileAvatar">🧑</div>
+        <div class="profile-info">
+          <h1 class="profile-name" id="profileName">读者</h1>
+          <p class="profile-bio" id="profileBio">在书页间找到另一个自己</p>
+          <div class="profile-stats" id="profileStats">
+            <span>📖 读过 <strong>0</strong></span>
+            <span>📝 评论 <strong>0</strong></span>
+            <span>⭐ 评分 <strong>0</strong></span>
+          </div>
+          <button class="btn btn--outline" id="btnEdit">✏️ 编辑资料</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab 导航 -->
+  <nav class="profile-tabs">
+    <div class="container-narrow">
+      <button class="p-tab p-tab--active" data-tab="comments">📖 我的评论</button>
+      <button class="p-tab" data-tab="ratings">⭐ 评分记录</button>
+      <button class="p-tab" data-tab="bookshelf">🔖 我的书架</button>
+      <button class="p-tab" data-tab="settings">⚙️ 设置</button>
+      <div class="p-tab-indicator" id="tabIndicator"></div>
+    </div>
+  </nav>
+
+  <!-- Tab 内容 -->
+  <section class="profile-content">
+    <div class="container-narrow">
+      <div class="p-content p-content--active" id="tab-comments"><!-- JS --></div>
+      <div class="p-content" id="tab-ratings"><!-- JS --></div>
+      <div class="p-content" id="tab-bookshelf"><!-- JS --></div>
+      <div class="p-content" id="tab-settings">
+        <div class="settings-group">
+          <h3>阅读偏好</h3>
+          <label>默认字号：<select id="settingFontSize"><option>16px</option><option>18px</option><option>20px</option></select></label>
+          <label>默认主题：<select id="settingTheme"><option>日间</option><option>柔和</option><option>暗夜</option></select></label>
+        </div>
+        <div class="settings-group">
+          <h3>账号设置</h3>
+          <button class="btn btn--outline" id="btnExport">📤 导出阅读记录</button>
+          <button class="btn btn--outline" id="btnClearData" style="color:var(--sakura);border-color:var(--sakura);">🗑️ 清除本地数据</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 阅读统计柱状图 -->
+  <section class="reading-chart">
+    <div class="container-narrow">
+      <h2 class="section-title">阅读统计</h2>
+      <div class="chart" id="readingChart"><!-- JS --></div>
+    </div>
+  </section>
+
+  <script src="data/books-data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

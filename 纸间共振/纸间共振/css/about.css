@@ -1,0 +1,137 @@
+/* ============================================
+   纸间共振 — 关于我们样式 (about.css)
+   ============================================ */
+
+/* ---- 页标题 ---- */
+.about-hero { 
+  padding: 72px 0 48px; 
+  text-align: center; 
+  background: linear-gradient(180deg, #faf7ed 0%, #f7f3e8 100%); 
+}
+.about-title { 
+  font-family: "Ma Shan Zheng", "STKaiti", cursive; 
+  font-size: 48px; letter-spacing: 
+  8px; margin-bottom: 12px; 
+}
+.about-subtitle { 
+  font-size: 16px; 
+  color: var(--text-secondary); 
+  letter-spacing: 4px; 
+}
+
+/* ---- 故事 ---- */
+.about-story { 
+  padding: 60px 0; 
+  background: var(--bg-warm); 
+}
+.story-text { 
+  max-width: var(--reader-width); 
+  margin: 0 auto; 
+}
+.story-text p { 
+  font-size: 17px; 
+  line-height: 2.2; 
+  color: var(--text-primary); 
+  margin-bottom: 24px; 
+  text-indent: 2em; 
+  letter-spacing: 1px; 
+}
+.story-text p:first-child { 
+  text-indent: 0; 
+}
+
+.drop-cap {
+  font-family: "Ma Shan Zheng", cursive;
+  font-size: 52px; 
+  float: left; 
+  line-height: 0.8;
+  color: var(--accent); 
+  margin-right: 8px; 
+  margin-top: 4px;
+}
+
+/* ---- 里程碑 ---- */
+.about-milestones { 
+  padding: 60px 0; 
+  background: var(--card-white); 
+}
+.milestones-grid { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 28px; 
+  margin-top: 36px; 
+}
+.milestone-card {
+  text-align: center; 
+  padding: 32px 20px;
+  background: var(--bg-warm); 
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border); 
+  transition: all var(--transition);
+}
+.milestone-card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 6px 24px rgba(100,140,100,0.1); 
+}
+.milestone-card__icon { 
+  font-size: 36px; 
+  margin-bottom: 12px; 
+}
+.milestone-card__num { 
+  font-size: 36px; 
+  font-weight: 700; 
+  color: var(--accent); 
+  letter-spacing: 2px; 
+}
+.milestone-card__label { 
+  font-size: 14px; 
+  color: var(--text-secondary); 
+  margin-top: 4px; 
+  letter-spacing: 1px; 
+}
+
+.milestone-card:nth-child(2) .milestone-card__num { color: var(--sky-blue); }
+.milestone-card:nth-child(3) .milestone-card__num { color: var(--apricot); }
+.milestone-card:nth-child(4) .milestone-card__num { color: var(--sakura); }
+
+/* ---- 联系我们 ---- */
+.about-contact { 
+  padding: 60px 0; 
+  background: var(--bg-warm); 
+}
+.contact-info { 
+  text-align: center; 
+  margin-bottom: 24px; 
+}
+.contact-email {
+  display: inline-block; 
+  padding: 10px 28px;
+  background: rgba(122,168,200,0.08); 
+  border: 1px solid var(--sky-blue);
+  border-radius: var(--radius-xl); 
+  font-size: 15px; color: var(--sky-blue);
+  letter-spacing: 1px;
+}
+.contact-form { 
+  max-width: 500px; 
+  margin: 0 auto; 
+  display: flex; 
+  flex-direction: 
+  column; gap: 12px; 
+}
+.contact-textarea {
+  width: 100%; 
+  padding: 16px; 
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md); 
+  font-family: inherit; 
+  font-size: 15px;
+  background: var(--card-white); 
+  resize: vertical; 
+  outline: none;
+  color: var(--text-primary); 
+  transition: border-color var(--transition);
+}
+.contact-textarea:focus { 
+  border-color: var(--accent); 
+}

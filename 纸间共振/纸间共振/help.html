@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>帮助中心 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/help.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="help">
+
+  <!-- 搜索区 -->
+  <section class="help-hero">
+    <div class="container-narrow">
+      <h1 class="about-title">需要帮助？</h1>
+      <p class="about-subtitle">我们随时为你提供支持</p>
+      <div class="help-search-box">
+        <span>🔍</span>
+        <input type="text" id="faqSearch" placeholder="输入关键词搜索问题...">
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ 手风琴 -->
+  <section class="help-faq">
+    <div class="container-narrow">
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>如何使用阅读器？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>点击任意书籍的「开始阅读」按钮进入阅读器。你可以在顶部工具栏调整字号（14-24px）、行距（窄/中/宽）和主题（日间/柔和/暗夜），所有设置会自动保存到你的浏览器。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>如何发表评论和评分？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>在书籍详情页底部，点击「⭐ 写评论」按钮，选择星级（1-5星）并填写评论内容即可提交。评论和评分会保存在你的浏览器本地存储中。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>如何开始创作自己的作品？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>进入「创作」页面，点击左侧「+ 新建作品」按钮，在编辑器中书写标题和正文。支持实时字数统计和自动保存功能。完成后点击「发布作品」即可。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>阅读记录可以导出吗？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>你的阅读记录保存于浏览器的 localStorage 中。进入「个人中心」→「设置」，点击「导出阅读记录」，功能即将上线。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>忘记密码怎么办？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>纸间共振使用浏览器本地存储模拟登录，密码仅保存在你的设备上。如果忘记了密码，可以重新注册一个账号，或清除浏览器数据后重新开始。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>如何关注喜欢的作者？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>在「作者主页」点击「📚 关注作者」按钮即可关注。关注后你可以在个人中心查看已关注的作者动态。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>网站需要付费吗？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>完全免费。</strong>纸间共振是一个开源项目，所有的文学作品均可免费阅读。我们相信，优秀的文字不应该被付费墙阻挡。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>创作的作品会丢失吗？</span>
+            <span class="faq-arrow">▼</span>
+          </button>
+          <div class="faq-answer">
+            <p>你的作品每隔30秒自动保存到浏览器本地存储。发布后的作品会永久保留。建议定期导出重要作品作为备份（功能开发中）。注意：清除浏览器数据会删除本地作品。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 快速指引 -->
+  <section class="help-guides">
+    <div class="container">
+      <h2 class="section-title">快速指引</h2>
+      <div class="guides-grid">
+        <a href="book.html?id=1" class="guide-card">
+          <div class="guide-card__icon">📖</div>
+          <h3>阅读指南</h3>
+          <p>3 篇文章</p>
+          <span class="guide-card__arrow">→</span>
+        </a>
+        <a href="creator.html" class="guide-card">
+          <div class="guide-card__icon">✍️</div>
+          <h3>创作指南</h3>
+          <p>2 篇文章</p>
+          <span class="guide-card__arrow">→</span>
+        </a>
+        <a href="#" class="guide-card">
+          <div class="guide-card__icon">🔧</div>
+          <h3>常见问题</h3>
+          <p>8 篇问答</p>
+          <span class="guide-card__arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 未解决入口 -->
+  <section class="help-footer-actions">
+    <div class="container-narrow">
+      <h3 class="section-title">还没有解决？</h3>
+      <div class="help-actions">
+        <a href="about.html#contact" class="btn btn--outline">📧 邮件联系</a>
+        <a href="about.html#contact" class="btn btn--outline">💬 在线反馈</a>
+        <a href="#" class="btn btn--outline">📋 查看更新日志</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script src="js/help.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>创作后台 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/creator.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="creator">
+
+  <!-- 统计概览 -->
+  <section class="creator-stats">
+    <div class="container">
+      <h1 class="page-title" style="text-align:center;">✍️ 创作后台</h1>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__icon">📖</div>
+          <div class="stat-card__num" id="statPublished">0</div>
+          <div class="stat-card__label">已发布</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">✏️</div>
+          <div class="stat-card__num" id="statWords">0</div>
+          <div class="stat-card__label">总字数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">👁️</div>
+          <div class="stat-card__num" id="statReads">0</div>
+          <div class="stat-card__label">总阅读</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__icon">❤️</div>
+          <div class="stat-card__num" id="statLikes">0</div>
+          <div class="stat-card__label">获赞</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 作品列表 + 编辑器 -->
+  <section class="creator-workspace">
+    <div class="container">
+      <div class="workspace-layout">
+        <!-- 左侧作品列表 -->
+        <aside class="workspace-sidebar">
+          <div class="workspace-tabs">
+            <button class="ws-tab ws-tab--active" data-tab="published">已发布</button>
+            <button class="ws-tab" data-tab="drafts">草稿</button>
+          </div>
+          <ul class="workspace-list" id="worksList"></ul>
+          <button class="btn btn--primary" style="width:100%;margin-top:12px;" id="btnNewWork">+ 新建作品</button>
+        </aside>
+
+        <!-- 右侧编辑器 -->
+        <div class="workspace-editor">
+          <input type="text" class="editor-title" id="editorTitle" placeholder="作品标题...">
+          <textarea class="editor-body" id="editorBody" placeholder="在此开始书写...&#10;&#10;你的文字，就是这片空间最珍贵的财富。"></textarea>
+          <div class="editor-toolbar">
+            <span class="editor-wordcount">📊 字数：<strong id="wordCount">0</strong></span>
+            <span class="editor-save-status" id="saveStatus">💾 已自动保存 ✓</span>
+            <div class="editor-actions">
+              <button class="btn btn--outline" id="btnSaveDraft">保存草稿</button>
+              <button class="btn btn--primary" id="btnPublish">📤 发布作品</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 灵感卡片 -->
+  <section class="inspiration">
+    <div class="container-narrow">
+      <div class="inspiration-card">
+        <p class="inspiration-card__text" id="inspoText">"写作是一条认识自己、认识真理的路，你只要喜欢写，就应该随时动笔去写。"</p>
+        <span class="inspiration-card__author" id="inspoAuthor">—— 罗兰</span>
+        <button class="btn btn--outline inspiration-card__btn" id="btnInspo">🔄 换一句</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/common.js"></script>
+  <script src="js/creator.js"></script>
+</body>
+</html>

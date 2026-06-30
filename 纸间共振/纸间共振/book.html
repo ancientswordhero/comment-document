@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>阅读 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/book.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="book">
+
+  <!-- 书籍信息 -->
+  <section class="book-info" id="bookInfo">
+    <div class="container-narrow">
+      <div class="book-info__layout">
+        <div class="book-info__cover" id="bookCover">
+          <span style="font-size:56px;">📖</span>
+        </div>
+        <div class="book-info__details">
+          <h1 class="book-info__title" id="bookTitle"></h1>
+          <p class="book-info__author" id="bookAuthor"></p>
+          <div class="book-info__rating" id="bookRating"></div>
+          <p class="book-info__meta" id="bookMeta"></p>
+          <p class="book-info__desc" id="bookDesc"></p>
+          <div class="book-info__actions">
+            <button class="btn btn--primary" id="btnStartRead">📖 开始阅读</button>
+            <button class="btn btn--outline" id="btnBookmark">🔖 加入书架</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 阅读工具栏 -->
+  <div class="reader-toolbar" id="readerToolbar">
+    <div class="reader-toolbar__inner">
+      <div class="tool-group">
+        <span class="tool-label">字号</span>
+        <button class="tool-btn" data-action="fontSize" data-value="-1" title="缩小">A⁻</button>
+        <span class="tool-value" id="fontSizeVal">18px</span>
+        <button class="tool-btn" data-action="fontSize" data-value="1" title="放大">A⁺</button>
+      </div>
+      <div class="tool-group">
+        <span class="tool-label">行距</span>
+        <button class="tool-btn tool-btn--active" data-action="lineHeight" data-value="1.6">窄</button>
+        <button class="tool-btn" data-action="lineHeight" data-value="2.0">中</button>
+        <button class="tool-btn" data-action="lineHeight" data-value="2.4">宽</button>
+      </div>
+      <div class="tool-group">
+        <span class="tool-label">主题</span>
+        <button class="tool-btn tool-btn--active" data-action="theme" data-value="light">☀ 日间</button>
+        <button class="tool-btn" data-action="theme" data-value="mild">☁ 柔和</button>
+        <button class="tool-btn" data-action="theme" data-value="dark">🌙 暗夜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 正文区 -->
+  <section class="reader-content" id="readerContent">
+    <div class="container-narrow">
+      <div class="reader-content__header" id="chapterTitle">
+        <h2>第一章</h2>
+      </div>
+      <div class="reader-content__body" id="bookContent">
+        <p>加载中...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 评论区 -->
+  <section class="comments-section">
+    <div class="container-narrow">
+      <div class="comments-header">
+        <h2 class="section-title">读者评论</h2>
+        <button class="btn btn--outline" id="btnAddComment">⭐ 写评论</button>
+      </div>
+      <div class="comments-list" id="commentsList">
+        <!-- JS 动态填充 -->
+      </div>
+      <!-- 写评论表单 (隐藏) -->
+      <div class="comment-form" id="commentForm" style="display:none;">
+        <div class="comment-form__rating" id="commentRating">
+          <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
+        </div>
+        <textarea class="comment-form__textarea" id="commentText" placeholder="写下你的感受..." rows="3"></textarea>
+        <button class="btn btn--primary" id="btnSubmitComment">提交评论</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="data/books-data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>

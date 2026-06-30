@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "bookId": 1,
+    "username": "墨香书虫",
+    "avatar": "../assets/images/avatars/default1.jpg",
+    "rating": 5,
+    "content": "每次重读鲁迅，都会被他的文字深深震撼。那种穿透时代的洞察力，在今天读来依然让人心惊。",
+    "date": "2024-03-15"
+  },
+  {
+    "id": 2,
+    "bookId": 1,
+    "username": "清风翻页",
+    "avatar": "../assets/images/avatars/default2.jpg",
+    "rating": 5,
+    "content": "《狂人日记》里那句\"救救孩子\"，一百年后依然振聋发聩。这就是经典的力量。",
+    "date": "2024-02-28"
+  },
+  {
+    "id": 3,
+    "bookId": 3,
+    "username": "纸上行旅",
+    "avatar": "../assets/images/avatars/default3.jpg",
+    "rating": 4,
+    "content": "张爱玲的文字有一种冷艳的美，像深秋夜里的一盏孤灯，照亮了人性的幽微之处。",
+    "date": "2024-03-10"
+  },
+  {
+    "id": 4,
+    "bookId": 4,
+    "username": "夜深读书人",
+    "avatar": "../assets/images/avatars/default4.jpg",
+    "rating": 5,
+    "content": "祥子的悲剧不是一个人的悲剧，而是一个时代的悲剧。老舍用最朴实的语言写出了最深的痛。",
+    "date": "2024-01-20"
+  },
+  {
+    "id": 5,
+    "bookId": 5,
+    "username": "北国书生",
+    "avatar": "../assets/images/avatars/default1.jpg",
+    "rating": 5,
+    "content": "萧红的文字里有东北大地的苍凉，也有女性最柔软的温情。《呼兰河传》是一首写在雪地上的诗。",
+    "date": "2024-03-05"
+  },
+  {
+    "id": 6,
+    "bookId": 6,
+    "username": "城市漫游者",
+    "avatar": "../assets/images/avatars/default2.jpg",
+    "rating": 5,
+    "content": "钱钟书的幽默是智慧的幽默，每一句话都藏着机锋。读《围城》像在品尝一杯陈年佳酿，越品越有味道。",
+    "date": "2024-02-14"
+  },
+  {
+    "id": 7,
+    "bookId": 2,
+    "username": "湘西来客",
+    "avatar": "../assets/images/avatars/default3.jpg",
+    "rating": 5,
+    "content": "沈从文笔下的湘西，是中国文学史上最纯净的一片土地。翠翠、爷爷、那只黄狗，都成了永恒的文学记忆。",
+    "date": "2024-03-18"
+  },
+  {
+    "id": 8,
+    "bookId": 7,
+    "username": "春日读书郎",
+    "avatar": "../assets/images/avatars/default4.jpg",
+    "rating": 4,
+    "content": "巴金写的是一个家族的命运，却让每一个年轻人都能从中找到自己的影子。觉醒的勇气，永远不过时。",
+    "date": "2024-03-01"
+  },
+  {
+    "id": 9,
+    "bookId": 11,
+    "username": "剧场魅影",
+    "avatar": "../assets/images/avatars/default1.jpg",
+    "rating": 5,
+    "content": "曹禺的天才在于，他用最日常的对话写出了最惊心动魄的命运。每一句台词都像一记重锤。",
+    "date": "2024-01-08"
+  },
+  {
+    "id": 10,
+    "bookId": 12,
+    "username": "江南烟雨",
+    "avatar": "../assets/images/avatars/default2.jpg",
+    "rating": 5,
+    "content": "每次读到父亲翻过月台的那一段，眼眶都会湿润。最朴素的语言，最深沉的爱。这就是朱自清的力量。",
+    "date": "2024-03-22"
+  },
+  {
+    "id": 11,
+    "bookId": 1,
+    "username": "午夜图书馆",
+    "avatar": "../assets/images/avatars/default3.jpg",
+    "rating": 4,
+    "content": "第一次读《呐喊》是在高中，当时只觉得沉重。十年后再读，才真正理解了什么叫\"哀其不幸，怒其不争\"。",
+    "date": "2024-02-05"
+  },
+  {
+    "id": 12,
+    "bookId": 8,
+    "username": "燕京过客",
+    "avatar": "../assets/images/avatars/default4.jpg",
+    "rating": 4,
+    "content": "林语堂是向西方讲述中国故事最成功的人。《京华烟云》的格局之大，令人叹为观止。",
+    "date": "2024-03-12"
+  }
+]

@@ -1,0 +1,102 @@
+<!--
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2026-06-09 21:25:55
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2026-06-15 14:07:17
+ * @FilePath: \纸间共振\browse.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浏览书库 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/browse.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="browse">
+
+  <!-- 搜索区域 -->
+  <section class="search-area">
+    <div class="container-narrow">
+      <h1 class="page-title">探索书库</h1>
+      <div class="search-box">
+        <span class="search-box__icon">🔍</span>
+        <input type="text" id="searchInput" class="search-box__input" placeholder="输入书名、作者或关键词搜索...">
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab filter-tab--active" data-cat="全部">全部</button>
+        <button class="filter-tab" data-cat="小说">小说</button>
+        <button class="filter-tab" data-cat="散文">散文</button>
+        <button class="filter-tab" data-cat="诗歌">诗歌</button>
+        <button class="filter-tab" data-cat="戏剧">戏剧</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主内容区：筛选 + 书籍网格 -->
+  <section class="browse-main">
+    <div class="container">
+      <div class="browse-layout">
+        <!-- 左侧筛选面板 -->
+        <aside class="browse-sidebar">
+          <div class="filter-group">
+            <h3 class="filter-group__title">年代</h3>
+            <label class="filter-radio"><input type="radio" name="era" value="all" checked> 全部</label>
+            <label class="filter-radio"><input type="radio" name="era" value="modern"> 近代 (1840-1919)</label>
+            <label class="filter-radio"><input type="radio" name="era" value="modern-contemp"> 现代 (1919-1949)</label>
+            <label class="filter-radio"><input type="radio" name="era" value="contemp"> 当代 (1949后)</label>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-group__title">篇幅</h3>
+            <label class="filter-radio"><input type="radio" name="wordCount" value="all" checked> 全部</label>
+            <label class="filter-radio"><input type="radio" name="wordCount" value="短篇"> 短篇</label>
+            <label class="filter-radio"><input type="radio" name="wordCount" value="中篇"> 中篇</label>
+            <label class="filter-radio"><input type="radio" name="wordCount" value="长篇"> 长篇</label>
+          </div>
+          <div class="filter-group">
+            <h3 class="filter-group__title">排序</h3>
+            <label class="filter-radio"><input type="radio" name="sort" value="default" checked> 默认</label>
+            <label class="filter-radio"><input type="radio" name="sort" value="rating"> 评分最高</label>
+            <label class="filter-radio"><input type="radio" name="sort" value="newest"> 最新出版</label>
+            <label class="filter-radio"><input type="radio" name="sort" value="popular"> 最多阅读</label>
+          </div>
+        </aside>
+
+        <!-- 右侧书籍网格 -->
+        <div class="browse-grid" id="browseGrid">
+          <!-- JS 动态填充 -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 热门标签 -->
+  <section class="tag-cloud-section">
+    <div class="container-narrow">
+      <h2 class="section-title">热门标签</h2>
+      <div class="tag-cloud" id="tagCloud">
+        <!-- JS 动态填充 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 推荐作者 -->
+  <section class="author-scroll-section">
+    <div class="container">
+      <h2 class="section-title">推荐作者</h2>
+      <div class="author-scroll" id="authorScroll">
+        <!-- JS 动态填充 -->
+      </div>
+    </div>
+  </section>
+
+  <script src="data/books-data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/browse.js"></script>
+</body>
+</html>

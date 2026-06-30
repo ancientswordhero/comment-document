@@ -1,0 +1,159 @@
+/* ============================================
+   纸间共振 — 登录/注册样式 (login.css)
+   ============================================ */
+
+/* ---- Canvas 背景 ---- */
+#particleCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---- 容器 ---- */
+.login-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  perspective: 1200px;
+}
+
+/* ---- 3D 翻转卡片 ---- */
+.login-card {
+  position: relative;
+  width: 420px;
+  min-height: 520px;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.login-card--flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: rgba(251, 252, 249, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 48px 40px;
+  box-shadow: 0 8px 48px rgba(100, 140, 100, 0.1);
+}
+
+.card-face--back { transform: rotateY(180deg); }
+
+.login-card__title {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 30px;
+  text-align: center;
+  letter-spacing: 4px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.login-card__subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+
+/* ---- 表单 ---- */
+.login-form { display: flex; flex-direction: column; gap: 16px; }
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: var(--card-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 14px;
+  transition: border-color var(--transition);
+}
+
+.input-group:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(107, 170, 122, 0.06);
+}
+
+.input-icon { font-size: 16px; opacity: 0.5; margin-right: 8px; }
+
+.login-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px 0;
+  font-size: 15px;
+  background: transparent;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+
+.login-input::placeholder { color: var(--text-secondary); opacity: 0.4; }
+
+.input-toggle {
+  font-size: 16px;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 4px;
+  transition: opacity var(--transition);
+}
+
+.input-toggle:hover { opacity: 1; }
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.remember-me input { accent-color: var(--accent); }
+
+.forgot-link { color: var(--text-secondary); font-size: 13px; }
+.forgot-link:hover { color: var(--accent); }
+
+.login-submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+.login-switch {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 20px;
+}
+
+.login-switch a {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ---- 底部装饰 ---- */
+.login-footer-decor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  opacity: 0.6;
+}

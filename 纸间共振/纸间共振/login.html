@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 — 纸间共振</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="login">
+
+  <!-- Canvas 粒子背景 -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- 表单卡片 -->
+  <div class="login-container">
+    <div class="login-card" id="loginCard">
+      <!-- 正面：登录 -->
+      <div class="card-face card-face--front">
+        <h1 class="login-card__title">欢迎回到纸间共振</h1>
+        <p class="login-card__subtitle">阅读，是与另一个灵魂的相遇</p>
+        <form class="login-form" id="loginForm" autocomplete="off">
+          <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input type="text" class="login-input" id="loginUser" placeholder="用户名 / 邮箱" required>
+          </div>
+          <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="login-input" id="loginPass" placeholder="密码" required>
+            <button type="button" class="input-toggle" id="togglePass">👁️</button>
+          </div>
+          <div class="login-options">
+            <label class="remember-me"><input type="checkbox" id="rememberMe"> 记住我</label>
+            <a href="#" class="forgot-link">忘记密码?</a>
+          </div>
+          <button type="submit" class="btn btn--primary login-submit">登 录</button>
+        </form>
+        <p class="login-switch">还没有账号？<a href="#" id="switchToRegister">立即注册</a></p>
+      </div>
+
+      <!-- 背面：注册 -->
+      <div class="card-face card-face--back">
+        <h1 class="login-card__title">创建你的阅读身份</h1>
+        <p class="login-card__subtitle">加入纸间，遇见共鸣</p>
+        <form class="login-form" id="registerForm" autocomplete="off">
+          <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input type="text" class="login-input" id="regUser" placeholder="昵称" required>
+          </div>
+          <div class="input-group">
+            <span class="input-icon">📧</span>
+            <input type="email" class="login-input" id="regEmail" placeholder="邮箱" required>
+          </div>
+          <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="login-input" id="regPass" placeholder="密码" required>
+          </div>
+          <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="login-input" id="regPassConfirm" placeholder="确认密码" required>
+          </div>
+          <button type="submit" class="btn btn--primary login-submit">注 册</button>
+        </form>
+        <p class="login-switch">已有账号？<a href="#" id="switchToLogin">去登录</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部装饰 -->
+  <div class="login-footer-decor">
+    <span>🎋 阅读，是与另一个灵魂的相遇</span>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

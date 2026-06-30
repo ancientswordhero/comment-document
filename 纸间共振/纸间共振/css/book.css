@@ -1,0 +1,292 @@
+/* ============================================
+   纸间共振 — 书籍详情/阅读器样式 (book.css)
+   ============================================ */
+
+/* ---- 书籍信息 ---- */
+.book-info {
+  padding: 48px 0 36px;
+  background: linear-gradient(180deg, #f8f5f0 0%, #f5f1ec 100%);
+}
+
+.book-info__layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.book-info__cover {
+  width: 200px;
+  height: 280px;
+  background: linear-gradient(135deg, #f5f1ec, #e8e4d8);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px var(--shadow);
+  overflow: hidden;
+}
+
+.book-info__title {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 36px;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.book-info__author {
+  font-size: 17px;
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.book-info__rating { 
+  margin-bottom: 8px;
+}
+
+.book-info__meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.book-info__desc {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+
+.book-info__actions { display: flex; gap: 12px; }
+
+/* ---- 阅读工具栏 ---- */
+.reader-toolbar {
+  position: sticky;
+  top: var(--nav-height-shrunk);
+  z-index: 100;
+  background: rgba(245, 241, 236, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+}
+
+.reader-toolbar__inner {
+  max-width: var(--reader-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 0 20px;
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-right: 6px;
+}
+
+.tool-btn {
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: var(--card-white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tool-btn:hover { 
+  border-color: var(--accent); 
+  color: var(--accent); 
+}
+
+.tool-btn--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.tool-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  min-width: 32px;
+  text-align: center;
+}
+
+/* ---- 正文区 ---- */
+.reader-content {
+  padding: 40px 0 60px;
+  background: var(--bg-neutral);
+  min-height: 60vh;
+}
+
+.reader-content__header h2 {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 28px;
+  text-align: center;
+  letter-spacing: 4px;
+  margin-bottom: 32px;
+  color: var(--text-primary);
+}
+
+.reader-content__body {
+  font-size: 18px;
+  line-height: 2;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  max-width: var(--reader-width);
+  margin: 0 auto;
+}
+
+.reader-content__body p {
+  text-indent: 2em;
+  margin-bottom: 1.2em;
+}
+
+/* 主题变体 */
+body.theme-light .reader-content { 
+  background: #faf7ed; 
+}
+body.theme-light .reader-content__body { 
+  color: #3d4f3d; 
+}
+
+body.theme-mild .reader-content { 
+  background: #eef5ed; 
+}
+body.theme-mild .reader-content__body { 
+  color: #3a4f3a; 
+}
+
+body.theme-dark .reader-content { 
+  background: #2a3228; 
+}
+body.theme-dark .reader-content__body { 
+  color: #c8d8c0; 
+}
+body.theme-dark .reader-content__header h2 { 
+  color: #c8d8c0; 
+}
+
+/* ---- 评论区 ---- */
+.comments-section { 
+  padding: 60px 0; 
+  background: var(--card-white); 
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.comments-list { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px; 
+}
+
+.comment-card {
+  background: var(--bg-warm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+}
+
+.comment-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.comment-card__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.comment-card__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.comment-card__date {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.comment-card__rating { 
+  font-size: 14px; 
+  color: var(--apricot); 
+  margin-bottom: 6px; 
+}
+
+.comment-card__content {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+/* 评论表单 */
+.comment-form {
+  margin-top: 24px;
+  background: var(--bg-warm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+}
+
+.comment-form__rating {
+  font-size: 28px;
+  color: var(--border);
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.comment-form__rating span { 
+  transition: color 0.2s; 
+}
+.comment-form__rating span.active,
+.comment-form__rating span:hover { 
+  color: var(--apricot); 
+}
+
+.comment-form__textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 15px;
+  background: var(--card-white);
+  color: var(--text-primary);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.comment-form__textarea:focus { 
+  border-color: var(--accent); 
+}
+
+#btnSubmitComment {
+   margin-top: 12px;
+}

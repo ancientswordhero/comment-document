@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>纸间共振 — 在文字之间，遇见共鸣</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/home.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="index">
+
+  <!-- ====== Hero 区域 ====== -->
+  <section class="hero" id="hero">
+    <div class="hero__parallax" id="heroParallax">
+      <div class="hero__layer hero__layer--1"></div>
+      <div class="hero__layer hero__layer--2"></div>
+      <div class="hero__layer hero__layer--3"></div>
+    </div>
+    <div class="hero__content">
+      <h1 class="hero__title">纸间共振</h1>
+      <p class="hero__subtitle">在文字之间，遇见共鸣</p>
+      <div class="hero__divider">
+        <span class="hero__divider-line"></span>
+        <span class="hero__divider-icon">✦</span>
+        <span class="hero__divider-line"></span>
+      </div>
+      <p class="hero__desc">收录近现代中文文学经典，为每一位热爱阅读的人<br>留一盏安静的灯</p>
+      <!-- 精选书影 -->
+      <!-- <div class="hero__featured" id="heroFeatured">
+        <div class="hero__book-glow"></div>
+        <div class="hero__book-card">
+          <div class="hero__book-cover">
+            <span class="hero__book-icon">📖</span>
+          </div>
+          <span class="hero__book-name">呼兰河传</span>
+        </div>
+      </div> -->
+      <a href="browse.html" class="hero__cta">探索书库</a>
+    </div>
+    <div class="hero__scroll-hint">
+      <span>向下探索</span>
+      <div class="hero__scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ====== 精选推荐 ====== -->
+  <section class="featured section-padding">
+    <div class="container">
+      <h2 class="section-title">精选推荐</h2>
+      <p class="section-subtitle">本编辑精心挑选的经典之作</p>
+      <div class="featured__grid" id="featuredGrid">
+        <!-- JS 动态填充 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 分类入口 ====== -->
+  <section class="categories section-padding">
+    <div class="container">
+      <h2 class="section-title">分类探索</h2>
+      <p class="section-subtitle">按你的兴趣寻找文字</p>
+      <div class="categories__grid">
+        <a href="browse.html?cat=小说" class="category-card">
+          <div class="category-card__icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="14" x2="34" y2="14" stroke="currentColor" stroke-width="1"/><line x1="14" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="1"/><line x1="14" y1="26" x2="34" y2="26" stroke="currentColor" stroke-width="1"/><line x1="14" y1="32" x2="26" y2="32" stroke="currentColor" stroke-width="1"/></svg>
+          </div>
+          <span class="category-card__name">小说</span>
+          <span class="category-card__count">8 部作品</span>
+        </a>
+        <a href="browse.html?cat=散文" class="category-card">
+          <div class="category-card__icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="8" width="28" height="32" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="18" r="4" stroke="currentColor" stroke-width="1"/><path d="M16 30c2-2 6-2 8 0" stroke="currentColor" stroke-width="1"/><line x1="16" y1="36" x2="32" y2="36" stroke="currentColor" stroke-width="1"/></svg>
+          </div>
+          <span class="category-card__name">散文</span>
+          <span class="category-card__count">2 部作品</span>
+        </a>
+        <a href="browse.html?cat=诗歌" class="category-card">
+          <div class="category-card__icon">
+            <svg viewBox="0 0 48 48" fill="none"><path d="M14 36V12l20 8-20 8v8" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="24" cy="20" r="2" fill="currentColor" opacity="0.3"/><circle cx="28" cy="16" r="1.5" fill="currentColor" opacity="0.2"/></svg>
+          </div>
+          <span class="category-card__name">诗歌</span>
+          <span class="category-card__count">即将上线</span>
+        </a>
+        <a href="browse.html?cat=评论" class="category-card">
+          <div class="category-card__icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="16" x2="34" y2="16" stroke="currentColor" stroke-width="1"/><line x1="14" y1="22" x2="28" y2="22" stroke="currentColor" stroke-width="1"/><circle cx="24" cy="30" r="1" fill="currentColor" opacity="0.5"/></svg>
+          </div>
+          <span class="category-card__name">评论</span>
+          <span class="category-card__count">1 部作品</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 今日寄语 ====== -->
+  <section class="quote section-padding">
+    <div class="container-narrow">
+      <div class="quote__card">
+        <div class="quote__text">
+          <span class="quote__mark">"</span>
+          <p id="quoteContent">读书的意义大概就是用生活所感去读书，用读书所得去生活。</p>
+          <span class="quote__author" id="quoteAuthor">—— 杨绛</span>
+        </div>
+        <div class="quote__image">
+          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="10" width="160" height="120" rx="4" stroke="var(--border)" stroke-width="1" fill="none"/>
+            <line x1="50" y1="50" x2="150" y2="50" stroke="var(--border)" stroke-width="0.5" opacity="0.5"/>
+            <line x1="50" y1="65" x2="130" y2="65" stroke="var(--border)" stroke-width="0.5" opacity="0.5"/>
+            <line x1="50" y1="80" x2="140" y2="80" stroke="var(--border)" stroke-width="0.5" opacity="0.5"/>
+            <circle cx="160" cy="120" r="8" fill="var(--accent)" opacity="0.1"/>
+            <circle cx="50" cy="130" r="6" fill="var(--apricot)" opacity="0.15"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 最近更新 ====== -->
+  <section class="recent section-padding">
+    <div class="container">
+      <h2 class="section-title">最近更新</h2>
+      <p class="section-subtitle">书库持续丰富中，常来看看</p>
+      <div class="recent__timeline" id="recentTimeline">
+        <!-- JS 动态填充 -->
+      </div>
+    </div>
+  </section>
+
+  <script src="data/books-data.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+/* ============================================
+   纸间共振 — 公共样式 (common.css)
+   清新淡彩水墨风 · 桌面端
+   ============================================ */
+
+/* ---- CSS 变量 ---- */
+:root {
+  /* 页面底色 */
+  --bg-warm:    #f7f3e8;   /* 淡黄熟宣 */
+  --bg-cool:    #eef2ed;   /* 淡青冷宣 */
+  --bg-neutral: #f5f1ec;   /* 浅茶半熟宣 */
+  --bg-focus:   #f0efe8;   /* 竹纤维白宣 */
+
+  /* 主配色 */
+  --text-primary:   #3d4f3d;   /* 嫩叶绿 */
+  --text-secondary: #7a9a7a;   /* 浅青苔色 */
+  --accent:         #6baa7a;   /* 新竹绿 */
+  --accent-hover:   #4d8a5d;   /* 雨竹加深 */
+  --sky-blue:       #7ba8c8;   /* 淡天青 */
+  --apricot:        #d4b87a;   /* 杏黄 */
+  --sakura:         #d49a9a;   /* 浅绯 */
+  --lavender:       #b0a0c0;   /* 淡紫 */
+  --card-white:     #fbfcf9;   /* 透光白宣 */
+  --border:         #d8e0d0;   /* 嫩竹纤维 */
+  --shadow:         rgba(100,140,100,0.06);
+
+  /* 间距 */
+  --nav-height: 72px;
+  --nav-height-shrunk: 56px;
+  --max-width: 1200px;
+  --content-width: 900px;
+  --reader-width: 720px;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* 过渡 */
+  --transition: 0.3s ease;
+}
+
+/* ---- CSS Reset ---- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: "Noto Serif SC", "STSong", "SimSun", "Songti SC", serif;
+  color: var(--text-primary);
+  background-color: var(--bg-warm);
+  line-height: 1.8;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover { color: var(--accent-hover); }
+
+ul, ol { list-style: none; }
+
+img { 
+  max-width: 100%; 
+  height: auto; 
+  display: block; 
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ---- 滚动条 ---- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--card-white); }
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-hover); }
+
+/* ---- 容器 ---- */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.container-narrow {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ---- 导航栏 ---- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  transition: all var(--transition);
+  background: transparent;
+}
+
+.nav--scrolled {
+  height: var(--nav-height-shrunk);
+  background: rgba(247, 243, 232, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 20px var(--shadow);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Logo */
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 28px;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+  transition: all var(--transition);
+}
+
+.nav--scrolled .nav__logo { font-size: 24px; }
+
+.nav__logo-icon {
+  width: 36px;
+  height: 36px;
+  opacity: 0.8;
+}
+
+/* 导航链接 */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav__link {
+  font-size: 15px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  position: relative;
+  transition: color var(--transition);
+  letter-spacing: 1px;
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition);
+  border-radius: 1px;
+}
+
+.nav__link:hover,
+.nav__link--active { color: var(--accent); }
+
+.nav__link:hover::after,
+.nav__link--active::after { width: 100%; }
+
+/* 右侧操作区 */
+.nav__actions { display: flex; align-items: center; gap: 16px; }
+
+.nav__btn-login {
+  padding: 8px 24px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: all var(--transition);
+  border: 1px solid var(--accent);
+}
+
+.nav__btn-login:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+.nav__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: border-color var(--transition);
+  object-fit: cover;
+}
+
+.nav__avatar:hover { border-color: var(--accent); }
+
+/* ---- 页脚 ---- */
+.footer {
+  text-align: center;
+  padding: 40px 48px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  letter-spacing: 1px;
+  background: var(--card-white);
+}
+
+.footer__brand {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 22px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: 3px;
+}
+
+/* ---- 通用按钮 ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 28px;
+  border-radius: var(--radius-xl);
+  font-size: 15px;
+  letter-spacing: 1px;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.btn--outline:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ---- 通用卡片 ---- */
+.card {
+  background: var(--card-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 20px var(--shadow);
+  transition: all var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(100, 140, 100, 0.12);
+  border-color: var(--accent);
+}
+
+/* ---- 星级评分 ---- */
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--apricot);
+  font-size: 16px;
+}
+
+.stars .star--empty { color: var(--border); }
+
+/* ---- 标签 ---- */
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: var(--radius-xl);
+  font-size: 13px;
+  letter-spacing: 1px;
+  background: var(--card-white);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(107, 170, 122, 0.05);
+}
+
+/* ---- 分隔装饰线 ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 0;
+  color: var(--border);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+}
+
+.divider__icon {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+/* ---- 区域标题 ---- */
+.section-title {
+  font-family: "Ma Shan Zheng", "STKaiti", cursive;
+  font-size: 32px;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-align: center;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+/* ---- 响应式提示 ---- */
+@media (max-width: 768px) {
+  .container, .container-narrow { padding: 0 20px; }
+  .nav { padding: 0 20px; }
+  .nav__links { gap: 20px; }
+}

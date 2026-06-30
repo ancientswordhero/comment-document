@@ -1,0 +1,110 @@
+/* ============================================
+   纸间共振 — 帮助/FAQ 样式 (help.css)
+   ============================================ */
+
+/* ---- 搜索区 ---- */
+.help-hero { padding: 60px 0 32px; text-align: center; background: linear-gradient(180deg, #f2f5f0 0%, #eef2ed 100%); }
+
+.help-search-box {
+  display: flex; align-items: center; max-width: 480px; margin: 24px auto 0;
+  background: var(--card-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius-xl); padding: 0 18px;
+  transition: border-color var(--transition);
+}
+
+.help-search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(107,170,122,0.06);
+}
+
+.help-search-box span { font-size: 18px; opacity: 0.5; }
+
+.help-search-box input {
+  flex: 1; border: none; outline: none; padding: 14px 12px;
+  font-size: 15px; background: transparent; color: var(--text-primary);
+}
+
+.help-search-box input::placeholder { color: var(--text-secondary); opacity: 0.4; }
+
+/* ---- FAQ 手风琴 ---- */
+.help-faq { padding: 48px 0 60px; background: var(--bg-cool); }
+
+.faq-list { display: flex; flex-direction: column; gap: 12px; }
+
+.faq-item {
+  background: var(--card-white); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: hidden;
+  transition: all var(--transition);
+}
+
+.faq-item--active { border-color: var(--accent); box-shadow: 0 2px 16px rgba(100,140,100,0.06); }
+
+.faq-question {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 24px; font-size: 16px; font-weight: 600;
+  color: var(--text-primary); background: transparent; cursor: pointer;
+  letter-spacing: 1px; transition: color var(--transition);
+}
+
+.faq-question:hover { color: var(--accent); }
+
+.faq-arrow {
+  font-size: 12px; color: var(--text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.faq-item--active .faq-arrow { transform: rotate(180deg); color: var(--accent); }
+
+.faq-answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.faq-item--active .faq-answer {
+  max-height: 300px;
+  padding: 0 24px 20px;
+}
+
+.faq-answer p {
+  font-size: 15px; line-height: 1.9; color: var(--text-primary);
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
+
+/* ---- 快速指引 ---- */
+.help-guides { padding: 60px 0; background: var(--card-white); }
+
+.guides-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 28px; }
+
+.guide-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 36px 24px; background: var(--bg-cool);
+  border-radius: var(--radius-lg); border: 1px solid var(--border);
+  text-decoration: none; color: inherit; transition: all var(--transition);
+  position: relative;
+}
+
+.guide-card:hover { transform: translateY(-4px); box-shadow: 0 6px 24px rgba(100,140,100,0.1); border-color: var(--accent); }
+
+.guide-card__icon { font-size: 36px; margin-bottom: 4px; }
+
+.guide-card h3 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+
+.guide-card p { font-size: 13px; color: var(--text-secondary); }
+
+.guide-card__arrow {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+  font-size: 20px; color: var(--border); transition: all var(--transition);
+}
+
+.guide-card:hover .guide-card__arrow { color: var(--accent); transform: translateY(-50%) translateX(4px); }
+
+/* ---- 未解决入口 ---- */
+.help-footer-actions { padding: 48px 0 60px; background: var(--bg-cool); }
+
+.help-actions { display: flex; justify-content: center; gap: 16px; margin-top: 24px; }
+
+/* ---- FAQ 搜索无结果 ---- */
+.faq-no-result {
+  text-align: center; padding: 40px; color: var(--text-secondary);
+  font-size: 15px; letter-spacing: 1px;
+}
